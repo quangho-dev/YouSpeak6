@@ -9,31 +9,16 @@ import MenuIcon from '@material-ui/icons/Menu';
 import logo from '../assets/eagleLogo.png';
 
 import useScrollTrigger from '@material-ui/core/useScrollTrigger';
-import Tabs from '@material-ui/core/Tabs';
-import Tab from '@material-ui/core/Tab';
 import { Link } from 'react-router-dom';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer';
-import List from '@material-ui/core/List';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemText from '@material-ui/core/ListItemText';
+
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
-import TextField from '@material-ui/core/TextField';
 import Grid from '@material-ui/core/Grid';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import Input from '@material-ui/core/Input';
-import InputAdornment from '@material-ui/core/InputAdornment';
-import Visibility from '@material-ui/icons/Visibility';
-import VisibilityOff from '@material-ui/icons/VisibilityOff';
-import FormHelperText from '@material-ui/core/FormHelperText';
 import Avatar from '@material-ui/core/Avatar';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import Container from '@material-ui/core/Container';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import Box from '@material-ui/core/Box';
 import CloseIcon from '@material-ui/icons/Close';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import LoginForm from './Formik/LoginForm';
@@ -142,26 +127,13 @@ export default function Header(props) {
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
 
-  const [openSignIn, setOpenSignIn] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [openSignIn, setOpenSignIn] = useState(false);;
 
   const [name, setName] = useState('');
 
   const [email, setEmail] = useState('');
-  const [emailHelper, setEmailHelper] = useState('');
-
-  const [phone, setPhone] = useState('');
-  const [phoneHelper, setPhoneHelper] = useState('');
 
   const [password, setPassword] = useState('');
-  const [passwordHelper, setPasswordHelper] = useState('');
-
-  const [confirmPassword, setConfirmPassword] = useState('');
-  const [confirmPasswordHelper, setConfirmPasswordHelper] = useState('');
-
-  // const [alert, setAlert] = useState({ open: false, color: '' });
-  // const [alertMessage, setAlertMessage] = useState('');
-
 
   const onSignUpConfirm = () => {
     setOpenSignUp(false);
@@ -204,9 +176,18 @@ export default function Header(props) {
         <Button
           variant="text"
           onClick={() => setOpenSignUp(true)}
-          style={{ color: 'white', textTransform: 'none' }}
+          style={{ color: 'white', textTransform: 'none', marginRight: '1.5em' }}
         >
           Đăng ký
+        </Button>
+      </Grid>
+      <Grid item>
+        <Button
+          variant="text"
+          onClick={() => setOpenSignUp(true)}
+          style={{ color: 'white', textTransform: 'none' }}
+        >
+          Trở thành giáo viên
         </Button>
       </Grid>
     </Grid>
@@ -256,6 +237,15 @@ export default function Header(props) {
               style={{ color: 'white', textTransform: 'none' }}
             >
               Đăng ký
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button
+              variant="text"
+              onClick={() => setOpenSignUp(true)}
+              style={{ color: 'white', textTransform: 'none' }}
+            >
+              Trở thành giáo viên
             </Button>
           </Grid>
         </Grid>

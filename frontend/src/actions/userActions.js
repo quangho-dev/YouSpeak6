@@ -32,11 +32,12 @@ export const login = (email, password) => async (dispatch) => {
       payload: data,
     })
 
+    dispatch(
+      setAlert('Đăng nhập thành công!', '#4BB543')
+     )
+
     localStorage.setItem('userInfo', JSON.stringify(data))
 
-    dispatch(
-     setAlert('Bạn đã đăng ký tài khoản thành công!', '#4BB543')
-    )
   } catch (err) {
     const error = err.response && err.response.data.message
     ? err.response.data.message
@@ -87,15 +88,24 @@ export const register = (name, email, password) => async (dispatch) => {
       payload: data,
     })
 
+    dispatch(
+      setAlert('Đăng ký tài khoản thành công!', '#4BB543')
+     )
+
     localStorage.setItem('userInfo', JSON.stringify(data))
-  } catch (error) {
+  } catch (err) {
+    const error = err.response && err.response.data.message
+    ? err.response.data.message
+    : err.message
     dispatch({
       type: USER_REGISTER_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
+      payload: error,
     })
+
+    dispatch(
+      setAlert(error, '#FF3232')
+    )
+    
   }
 }
 

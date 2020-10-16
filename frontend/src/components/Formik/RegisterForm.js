@@ -30,14 +30,14 @@ const RegistrationForm = () => {
   };
 
   const validationSchema = Yup.object({
-    name: Yup.string().required('Không được để trống.'),
+    name: Yup.string().required('Không được để trống'),
     email: Yup.string()
-      .email('Email không đúng.')
-      .required('Không được để trống.'),
-    password: Yup.string().required('Không được để trống.'),
+      .email('Email không đúng')
+      .required('Không được để trống'),
+    password: Yup.string().required('Không được để trống'),
     confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), ''], 'Mật khẩu không trùng khớp.')
-      .required('Không được để trống.'),
+      .oneOf([Yup.ref('password'), ''], 'Mật khẩu không trùng khớp')
+      .required('Không được để trống'),
   });
 
   const onSubmit = async (values, { resetForm }) => {

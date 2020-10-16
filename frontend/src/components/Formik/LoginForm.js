@@ -25,8 +25,8 @@ const LoginForm = () => {
   const { loading, error, userInfo } = userLogin
 
   const validationSchema = Yup.object({
-    email: Yup.string().email('Email không đúng!').required('Cần điền!'),
-    password: Yup.string().required('Cần điền!'),
+    email: Yup.string().email('Email không đúng').required('Không được để trống'),
+    password: Yup.string().required('Không được để trống'),
   });
 
   const onSubmit = async (values) => {
