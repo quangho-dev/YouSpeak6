@@ -1,4 +1,5 @@
 import React, { Fragment, useEffect, useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -101,6 +102,10 @@ const useStyles = makeStyles((theme) => ({
     zIndex: theme.zIndex.modal + 1,
     backgroundColor: 'rgba(0,0,0,0.2)',
   },
+  appbarLoggedIn: {
+    zIndex: theme.zIndex.modal + 1,
+    backgroundColor: 'white',
+  },
   avatar: {
     margin: '0.7em',
     backgroundColor: theme.palette.common.green,
@@ -123,6 +128,9 @@ export default function Header(props) {
   const theme = useTheme();
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
+
+  const userLogin = useSelector((state) => state.userLogin)
+  const {userInfo}  = userLogin
 
   const [openDrawer, setOpenDrawer] = useState(false);
   const [openSignUp, setOpenSignUp] = useState(false);
@@ -193,6 +201,32 @@ export default function Header(props) {
     </Grid>
   );
 
+// tabs when logged in
+const tabsLoggedIn = (
+  <Grid item container alignItems='center'>
+    <Grid item>
+      <Button
+        variant="text"
+        onClick={() => setOpenSignIn(true)}
+        style={{
+          color: '#333',
+          textTransform: 'none',
+          marginRight: '1.5em',
+        }}
+      >
+        Tìm một giáo viên
+      </Button>
+    </Grid>
+    <Grid item>
+      <Avatar style={{width: '3em', height: '3em'}}
+        src='https://source.unsplash.com/random/200x200'
+      >
+        Đăng ký
+      </Avatar>
+    </Grid>
+  </Grid>
+);
+
   const drawer = (
     <Fragment>
       <SwipeableDrawer
@@ -262,7 +296,32 @@ export default function Header(props) {
 
   return (
     <Fragment>
-      <ElevationScroll>
+     {userInfo ? <><ElevationScroll>
+        <AppBar position="fixed" className={classes.appbarLoggedIn}>
+          <Toolbar variant="dense" disableGutters>
+            <Grid
+              container
+              justify="space-between"
+              alignItems="center"
+              style={{ paddingLeft: '3em', paddingRight: '3em' }}
+            >
+              <Grid item>
+                <Button
+                  component={Link}
+                  to="/"
+                  disableRipple
+                  onClick={() => props.setValue(0)}
+                  className={classes.logoContainer}
+                >
+                  <img alt="company logo" className={classes.logo} src={logo} />
+                </Button>
+              </Grid>
+              <Grid item>{matches ? drawer : tabsLoggedIn}</Grid>
+            </Grid>
+          </Toolbar>
+        </AppBar>
+      </ElevationScroll>
+      </> : <><ElevationScroll>
         <AppBar position="fixed" className={classes.appbar}>
           <Toolbar variant="dense" disableGutters>
             <Grid
@@ -411,7 +470,8 @@ export default function Header(props) {
             </Grid>
           </Grid>
         </DialogContent>
-      </Dialog>
+      </Dialog></> }
+      
     </Fragment>
   );
 }

@@ -7,15 +7,40 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    dashboardID: {
+      type: Number,
+      unique: true,
+    },
+    address: {
+      type: String
+    },
+    avatar: {
+      type: String
+    },
+    dateOfBirth: {
+      type: Date
+    },
+    gender: {
+      type: String
+    },
+    englishLevel: {
+      type: Number,
+    },
     email: {
       type: String,
       required: true,
-      unique: true,
+      unique: true
     },
     password: {
       type: String,
       required: true,
-    }
+    },
+    communicationTool: {
+      type: String,
+    },
+    introduction: {
+      type: String,
+    },
   },
   {
     timestamps: true,

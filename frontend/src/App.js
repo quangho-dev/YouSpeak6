@@ -6,6 +6,8 @@ import Header from './components/Header';
 import Footer from './components/Footer';
 import LandingScreen from './screens/LandingScreen';
 import Alert from './components/Alert';
+import DashboardScreen from './screens/DashboardScreen'
+import UserProfileScreen from './screens/UserProfileScreen'
 
 const App = () => {
   return (
@@ -15,6 +17,8 @@ const App = () => {
             <Header />
             <Switch>
               <Route exact path="/" component={LandingScreen} />
+              <Route exact path="/dashboard" component={DashboardScreen} />
+              <Route exact path="/user/:id" component={UserProfileScreen} />
             </Switch>
             <Footer />
         </Router>
