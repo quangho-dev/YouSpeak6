@@ -693,4 +693,4 @@ const Landing = (props) => {
   );
 };
 
-export default Landing;
+export default Landing
