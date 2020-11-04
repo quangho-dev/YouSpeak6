@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { Formik, Form } from 'formik';
 import * as Yup from 'yup';
 import FormikControl from './FormikControl';
@@ -7,6 +7,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { register } from '../../actions/userActions'
 import { useDispatch, useSelector } from 'react-redux'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -14,13 +17,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RegistrationForm = () => {
+const RegistrationForm = ({ location, history }) => {
   const classes = useStyles();
 
   const dispatch = useDispatch()
 
+  const redirect = location.search ? location.search.split('=')[1] : '/'
+
   const userRegister = useSelector((state) => state.userRegister)
+
   const { loading, error, userInfo } = userRegister
+
+  useEffect(() => {
+    if (userInfo) {
+      history.push(redirect)
+    }
+  }, [history, userInfo, redirect])
 
   const initialValues = {
     name: '',
@@ -98,6 +110,31 @@ const RegistrationForm = () => {
                   'Đăng ký'
                 )}
               </Button>
+              <Grid
+                container
+                alignItems="center"
+                justify="center"
+                style={{ margin: '0.7em 0' }}
+              >
+                <Grid item>
+                  <Typography variant="body1">Bạn đã có tài khoản?</Typography>
+                </Grid>
+                <Grid item>
+                  <Button
+                    component={Link}
+                    to={redirect ? `/login?redirect=${redirect}` : '/login'}
+                    variant="text"
+                    style={{
+                      fontSize: '1rem',
+                      textTransform: 'none',
+                      fontWeight: '600',
+                    }}
+                    disableRipple
+                  >
+                    Đăng nhập
+                  </Button>
+                </Grid>
+              </Grid>
             </Form>
           );
         }}

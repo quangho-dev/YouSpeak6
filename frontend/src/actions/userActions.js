@@ -119,7 +119,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     const {
       userLogin: { userInfo },
     } = getState()
-
+console.log(userInfo)
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -128,6 +128,8 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     }
 
     const { data } = await axios.put(`/api/users/profile`, user, config)
+
+console.log(`day la data ${data}`)
 
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,

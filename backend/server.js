@@ -7,6 +7,7 @@ import { notFound, errorHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
 import uploadRoutes from './routes/uploadRoutes.js'
 import userRoutes from './routes/userRoutes.js'
+import HttpError from './models/http-error.js'
 
 dotenv.config();
 
@@ -22,6 +23,11 @@ app.use(express.json())
 
 app.use('/api/users', userRoutes)
 app.use('/api/upload', uploadRoutes)
+
+app.use((req, res, next) => {
+  const error = new HttpError('Could not find this route.', 404);
+  throw error;
+});
 
 const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))

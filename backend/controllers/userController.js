@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import generateToken from '../utils/generateToken.js'
 import User from '../models/userModel.js'
+import HttpError from '../models/http-error.js'
 
 // @desc    Auth user & get token
 // @route   POST /api/users/login
@@ -85,10 +86,17 @@ const getUserProfile = asyncHandler(async (req, res) => {
 // @desc    Update user profile
 // @route   PUT /api/users/profile
 // @access  Private
-const updateUserProfile = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.user._id)
-
-  if (user) {
+const updateUserProfile = async (req, res, next) => {
+  let user
+  try {
+    user = await User.findById(req.user._id)
+  } catch (err) {
+const error = new HttpError('Something went wrong, could not update user.', 500)
+return next(error)
+  }
+  
+console.log(user)
+// console.log(req.body)
     user.name = req.body.name || user.name
     user.email = req.body.email || user.email
     user.avatar = req.body.avatar || user.avatar
@@ -102,27 +110,18 @@ const updateUserProfile = asyncHandler(async (req, res) => {
       user.password = req.body.password
     }
 
-    const updatedUser = await user.save()
+    try {
+      await user.save()
+    } catch (err) {
+      const error = new HttpError(
+        'Something went wrong, could not update user.',
+        500
+      )
+      return next(error)
+    }
 
-    res.json({
-      _id: updatedUser._id,
-      name: updatedUser.name,
-      email: updatedUser.email,
-      avatar: updatedUser.isAdmin,
-      address: updatedUser.address,
-      dateOfBirth: updatedUser.dateOfBirth,
-      gender: updatedUser.gender,
-      englishLevel: updatedUser.englishLevel,
-      dashboardID: updatedUser.dashboardID,
-      communicationTool: updatedUser.communicationTool,
-      introduction: updatedUser.introduction,
-      token: generateToken(updatedUser._id),
-    })
-  } else {
-    res.status(404)
-    throw new Error('Không tìm thấy người dùng')
+    res.status(200).json({ user: user.toObject({ getters: true }) })
   }
-})
 
 export {
   authUser,

@@ -14,7 +14,6 @@ import LinearProgress from '@material-ui/core/LinearProgress'
 import axios from 'axios'
 import { Formik, Form, Field, ErrorMessage } from 'formik'
 import MyTextField from '../components/Formik/MyTextField'
-import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -22,14 +21,17 @@ import { MuiPickersUtilsProvider, KeyboardDatePicker } from '@material-ui/picker
 import FormGroup from '@material-ui/core/FormGroup'
 import TextField from '@material-ui/core/TextField'
 import * as yup from 'yup'
-import Rating from '../components/Rating'
 import MyCheckBox from '../components/Formik/MyCheckBox'
+import { useDispatch, useSelector } from 'react-redux'
+import { updateUserProfile } from '../actions/userActions'
 
 const validationSchema = yup.object().shape({
   dateOfBirth: yup.date().nullable()
   })
 
 const UserProfileScreen = () => {
+const dispatch = useDispatch()
+
   const useStyles = makeStyles((theme) => ({
     toolbarMargin: {
       ...theme.mixins.toolbar,
@@ -137,7 +139,6 @@ Chỉnh sửa Profile
             </Grid>
               </Grid>
            
-           
             </Grid>
             <Grid item>
               <Grid container justify='space-between'
@@ -159,11 +160,13 @@ Chỉnh sửa Profile
     // style={{ display: "none" }}
     onChange={uploadFileHandler}
   /> */}
-  <Formik initialValues={{avatarImage: '', name: '', dateOfBirth: null, gender: '', address: '', englishLevel: 0, communicationTool: [], introduction: ''}} validationSchema={validationSchema}
+  <Formik initialValues={{name: '', dateOfBirth: null, gender: '', address: '', englishLevel: 0, communicationTool: [], introduction: 'Thông tin khác về bạn...'}} validationSchema={validationSchema}
   onSubmit={(values, { setSubmitting}) => { setTimeout(() => {
-setSubmitting(false)
+const user = { ...values, avatar: imageAvatar}
+    dispatch(updateUserProfile(user))
+    setSubmitting(false)
   }, 400)}}>
-{({values, errors, isSubmitting, setFieldValue}) => (
+{({values, errors, isSubmitting, isValidating, setFieldValue}) => (
 <Form>
   <Grid container direction='column'>
     <Grid item className={classes.formControl}>
@@ -231,17 +234,26 @@ setSubmitting(false)
         </Field>
       </FormGroup>
     </Grid>
-    <Grid item>
+    <Grid item className={classes.formControl}>
       <label>Chọn phần mềm video mà bạn dùng để học:</label>
       <FormGroup>
       <MyCheckBox name='communicationTool' value='skype' label='Skype' color='primary' />
       <MyCheckBox name='communicationTool' value='google hangouts' label='Google Hangouts' color='primary' />
       <MyCheckBox name='communicationTool' value='viber' label='Viber' color='primary' />
       </FormGroup>
-      
+    </Grid>
+    <Grid item className={classes.formControl}>
+    <FormGroup>
+        <Field name='introduction' as={TextField} label='Thông tin thêm' multiline rows={4} />
+        <ErrorMessage name='introduction' />
+      </FormGroup>    
     </Grid>
   </Grid>
+
+  <Button fullWidth variant='contained' color='primary' type="submit" disabled={isSubmitting || isValidating} style={{color: 'white', fontWeight: 600}}>Lưu lại</Button>
+
   <Grid item className={classes.formControl}>
+
     <pre>{JSON.stringify(values, null, 2)}</pre>
             <pre>{JSON.stringify(errors, null, 2)}</pre>
     </Grid>

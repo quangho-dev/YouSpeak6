@@ -24,6 +24,10 @@ import CloseIcon from '@material-ui/icons/Close';
 import LockOpenIcon from '@material-ui/icons/LockOpen';
 import LoginForm from './Formik/LoginForm';
 import RegisterForm from './Formik/RegisterForm';
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
+import { logout } from '../actions/userActions'
+import { Route } from 'react-router-dom'
 
 function ElevationScroll(props) {
   const { children } = props;
@@ -98,6 +102,19 @@ const useStyles = makeStyles((theme) => ({
       opacity: 1,
     },
   },
+  drawerAvatar: {
+    backgroundColor: 'white',
+  },
+  drawerItem: {
+    ...theme.typography.tab,
+    color: '#444',
+    opacity: 0.7,
+  },
+  drawerItemSelected: {
+    '& .MuiListItemText-root': {
+      opacity: 1,
+    },
+  },
   appbar: {
     zIndex: theme.zIndex.modal + 1,
     backgroundColor: 'rgba(0,0,0,0.2)',
@@ -121,6 +138,20 @@ const useStyles = makeStyles((theme) => ({
     right: '1em',
     top: '1em',
   },
+  menu: {
+    backgroundColor: theme.palette.common.blue,
+    color: 'white',
+    borderRadius: '0px',
+  },
+  menuItem: {
+    ...theme.typography.tab,
+    opacity: 0.7,
+    color: '#555',
+    '&:hover': {
+      opacity: 1,
+      color: '#555'
+    },
+  },
 }));
 
 export default function Header(props) {
@@ -129,41 +160,40 @@ export default function Header(props) {
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent);
   const matches = useMediaQuery(theme.breakpoints.down('sm'));
 
+const dispatch = useDispatch()
+
   const userLogin = useSelector((state) => state.userLogin)
   const {userInfo}  = userLogin
 
   const [openDrawer, setOpenDrawer] = useState(false);
+
+const [anchorEl, setAnchorEl] = useState(null)
+
+  const [openMenu, setOpenMenu] = useState(false)
+
   const [openSignUp, setOpenSignUp] = useState(false);
 
-  const [openSignIn, setOpenSignIn] = useState(false);;
-
-  const [name, setName] = useState('');
-
-  const [email, setEmail] = useState('');
-
-  const [password, setPassword] = useState('');
-
-  const onSignUpConfirm = () => {
-    setOpenSignUp(false);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
+  const [openSignIn, setOpenSignIn] = useState(false);
 
   const onSignUpClose = () => {
     setOpenSignUp(false);
-    setName('');
-    setEmail('');
-    setPassword('');
   };
 
   const onSignInClose = () => {
     setOpenSignIn(false);
-    setName('');
-    setEmail('');
-    setPassword('');
   };
+
+const handleClose = () => {
+  setAnchorEl(null)
+}
+
+const onMouseOver = (e) => {
+setAnchorEl(e.currentTarget)
+}
+
+const logoutHandler = () => {
+  dispatch(logout())
+}
 
   const tabs = (
     <Grid item container>
@@ -200,32 +230,6 @@ export default function Header(props) {
       </Grid>
     </Grid>
   );
-
-// tabs when logged in
-const tabsLoggedIn = (
-  <Grid item container alignItems='center'>
-    <Grid item>
-      <Button
-        variant="text"
-        onClick={() => setOpenSignIn(true)}
-        style={{
-          color: '#333',
-          textTransform: 'none',
-          marginRight: '1.5em',
-        }}
-      >
-        Tìm một giáo viên
-      </Button>
-    </Grid>
-    <Grid item>
-      <Avatar style={{width: '3em', height: '3em'}}
-        src='https://source.unsplash.com/random/200x200'
-      >
-        Đăng ký
-      </Avatar>
-    </Grid>
-  </Grid>
-);
 
   const drawer = (
     <Fragment>
@@ -293,6 +297,48 @@ const tabsLoggedIn = (
       </IconButton>
     </Fragment>
   );
+// tabs when logged in
+const tabsLoggedIn = (
+  <Grid item container alignItems='center'>
+    <Grid item>
+      <Button
+        variant="text"
+        onClick={() => setOpenSignIn(true)}
+        style={{
+          color: '#333',
+          textTransform: 'none',
+          marginRight: '1.5em',
+        }}
+      >
+        Tìm một giáo viên
+      </Button>
+    </Grid>
+    <Grid item>
+    <Button aria-controls="simple-menu" aria-haspopup="true" onMouseOver={onMouseOver}>
+      <img style={{width: '3em', height: '3em', borderRadius: '50%'}}
+        src='https://source.unsplash.com/random/200x200'
+      />
+      </Button>
+      <Menu
+        id="simple-menu"
+        anchorEl={anchorEl}
+        keepMounted
+        open={Boolean(anchorEl)}
+        onClose={handleClose}
+        MenuListProps={{
+          onMouseLeave: handleClose,
+        }}
+        elevation={0}
+        style={{ zIndex: 1302 }}
+        classes={{ paper: classes.menu }}
+      >
+        <MenuItem classes={{ root: classes.menuItem }} onClick={handleClose}>Profile</MenuItem>
+        <MenuItem classes={{ root: classes.menuItem }}onClick={handleClose}>My account</MenuItem>
+        <MenuItem classes={{ root: classes.menuItem }} onClick={logoutHandler}>Đăng xuất</MenuItem>
+      </Menu>
+    </Grid>
+  </Grid>
+);
 
   return (
     <Fragment>
@@ -375,34 +421,8 @@ const tabsLoggedIn = (
                 Đăng ký tài khoản
               </Typography>
             </Grid>
-
             <Grid item>
-              <RegisterForm />
-              <Grid
-                container
-                alignItems="center"
-                justify="center"
-                style={{ margin: '0.7em 0' }}
-              >
-                <Grid item>
-                  <Typography variant="body1">Bạn đã có tài khoản?</Typography>
-                </Grid>
-                <Grid item>
-                  <Button
-                    component={Link}
-                    to="/user/signin"
-                    variant="text"
-                    style={{
-                      fontSize: '1rem',
-                      textTransform: 'none',
-                      fontWeight: '600',
-                    }}
-                    disableRipple
-                  >
-                    Đăng nhập
-                  </Button>
-                </Grid>
-              </Grid>
+              <Route render={({location, history}) => <RegisterForm location={location} history={history} />} />
             </Grid>
           </Grid>
         </DialogContent>
@@ -426,7 +446,7 @@ const tabsLoggedIn = (
                 <CloseIcon />
               </IconButton>
             </Grid>
-            <Grid item>
+            <Grid item>  
               <Avatar className={classes.avatar}>
                 <LockOpenIcon />
               </Avatar>
@@ -436,37 +456,8 @@ const tabsLoggedIn = (
                 Đăng nhập
               </Typography>
             </Grid>
-
             <Grid item>
-              <LoginForm />
-              <Grid
-                container
-                alignItems="center"
-                justify="center"
-                style={{ margin: '0.7em 0' }}
-              >
-                <Grid item>
-                  <Typography variant="body1">
-                    Bạn chưa có tài khoản?
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Button
-                    component={Link}
-                    to="/user/signup"
-                    variant="text"
-                    style={{
-                      fontSize: '1rem',
-                      textTransform: 'none',
-                      fontWeight: '600',
-                    }}
-                    disableRipple
-                  >
-                    Đăng ký
-                  </Button>
-                </Grid>
-              </Grid>
-              {/* </form> */}
+              <Route render={(location, history) => <LoginForm history={history} location={location} />} />
             </Grid>
           </Grid>
         </DialogContent>
