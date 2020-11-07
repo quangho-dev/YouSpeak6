@@ -1,19 +1,19 @@
-import path from 'path';
-import express from 'express';
-import dotenv from 'dotenv';
-import colors from 'colors';
-import morgan from 'morgan';
-import { notFound, errorHandler } from './middleware/errorMiddleware.js';
-import connectDB from './config/db.js';
+import path from 'path'
+import express from 'express'
+import dotenv from 'dotenv'
+import colors from 'colors'
+import morgan from 'morgan'
+import { notFound, errorHandler } from './middleware/errorMiddleware.js'
+import connectDB from './config/db.js'
 import uploadRoutes from './routes/uploadRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import HttpError from './models/http-error.js'
 
-dotenv.config();
+dotenv.config()
 
-connectDB();
+connectDB()
 
-const app = express();
+const app = express()
 
 if (process.env.NODE_ENV === 'development') {
   app.use(morgan('dev'))
@@ -25,9 +25,9 @@ app.use('/api/users', userRoutes)
 app.use('/api/upload', uploadRoutes)
 
 app.use((req, res, next) => {
-  const error = new HttpError('Could not find this route.', 404);
-  throw error;
-});
+  const error = new HttpError('Could not find this route.', 404)
+  throw error
+})
 
 const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))

@@ -16,7 +16,6 @@ const authUser = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      isAdmin: user.isAdmin,
       token: generateToken(user._id),
     })
   } else {
@@ -68,7 +67,7 @@ const getUserProfile = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
-      avatar: user.avatar,
+      imageAvatar: user.imageAvatar,
       address: user.address,
       dateOfBirth: user.dateOfBirth,
       gender: user.gender,
@@ -91,41 +90,38 @@ const updateUserProfile = async (req, res, next) => {
   try {
     user = await User.findById(req.user._id)
   } catch (err) {
-const error = new HttpError('Something went wrong, could not update user.', 500)
-return next(error)
-  }
-  
-console.log(user)
-// console.log(req.body)
-    user.name = req.body.name || user.name
-    user.email = req.body.email || user.email
-    user.avatar = req.body.avatar || user.avatar
-    user.dashboardID = req.body.dashboardID || user.dashboardID
-    user.address = req.body.address || user.address
-    user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth
-    user.gender = req.body.gender || user.gender
-    user.englishLevel = req.body.englishLevel || user.englishLevel
-    user.communicationTool = req.body.communicationTool || user.communicationTool
-    if (req.body.password) {
-      user.password = req.body.password
-    }
-
-    try {
-      await user.save()
-    } catch (err) {
-      const error = new HttpError(
-        'Something went wrong, could not update user.',
-        500
-      )
-      return next(error)
-    }
-
-    res.status(200).json({ user: user.toObject({ getters: true }) })
+    const error = new HttpError(
+      'Something went wrong, could not update user.',
+      500
+    )
+    return next(error)
   }
 
-export {
-  authUser,
-  registerUser,
-  updateUserProfile,
-  getUserProfile 
+  console.log(user)
+  // console.log(req.body)
+  user.name = req.body.name || user.name
+  user.email = req.body.email || user.email
+  user.imageAvatar = req.body.imageAvatar || user.imageAvatar
+  user.address = req.body.address || user.address
+  user.dateOfBirth = req.body.dateOfBirth || user.dateOfBirth
+  user.gender = req.body.gender || user.gender
+  user.englishLevel = req.body.englishLevel || user.englishLevel
+  user.communicationTool = req.body.communicationTool || user.communicationTool
+  if (req.body.password) {
+    user.password = req.body.password
+  }
+
+  try {
+    await user.save()
+  } catch (err) {
+    const error = new HttpError(
+      'Something went wrong, could not update user.',
+      500
+    )
+    return next(error)
+  }
+
+  res.status(200).json({ user: user.toObject({ getters: true }) })
 }
+
+export { authUser, registerUser, updateUserProfile, getUserProfile }

@@ -1,4 +1,6 @@
 import axios from 'axios'
+import { Router } from 'react-router'
+import createBrowserHistory from 'history/createBrowserHistory'
 import {
   USER_LOGIN_FAIL,
   USER_LOGIN_REQUEST,
@@ -13,10 +15,11 @@ import {
   USER_DETAILS_SUCCESS,
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
-  USER_UPDATE_PROFILE_FAIL
+  USER_UPDATE_PROFILE_FAIL,
 } from '../constants/userConstants'
 import { setAlert } from './alertActions'
 
+const history = createBrowserHistory()
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({
@@ -40,25 +43,20 @@ export const login = (email, password) => async (dispatch) => {
       payload: data,
     })
 
-    dispatch(
-      setAlert('Đăng nhập thành công!', '#4BB543')
-     )
+    dispatch(setAlert('Đăng nhập thành công!', '#4BB543'))
 
     localStorage.setItem('userInfo', JSON.stringify(data))
-
   } catch (err) {
-    const error = err.response && err.response.data.message
-    ? err.response.data.message
-    : err.message
+    const error =
+      err.response && err.response.data.message
+        ? err.response.data.message
+        : err.message
     dispatch({
       type: USER_LOGIN_FAIL,
-      payload:
-        error,
+      payload: error,
     })
-    dispatch(
-      setAlert(error, '#FF3232')
-    )
-}
+    dispatch(setAlert(error, '#FF3232'))
+  }
 }
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -89,24 +87,20 @@ export const register = (name, email, password) => async (dispatch) => {
       payload: data,
     })
 
-    dispatch(
-      setAlert('Đăng ký tài khoản thành công!', '#4BB543')
-     )
+    dispatch(setAlert('Đăng ký tài khoản thành công!', '#4BB543'))
 
     localStorage.setItem('userInfo', JSON.stringify(data))
   } catch (err) {
-    const error = err.response && err.response.data.message
-    ? err.response.data.message
-    : err.message
+    const error =
+      err.response && err.response.data.message
+        ? err.response.data.message
+        : err.message
     dispatch({
       type: USER_REGISTER_FAIL,
       payload: error,
     })
 
-    dispatch(
-      setAlert(error, '#FF3232')
-    )
-    
+    dispatch(setAlert(error, '#FF3232'))
   }
 }
 
@@ -119,7 +113,7 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
     const {
       userLogin: { userInfo },
     } = getState()
-console.log(userInfo)
+    console.log(userInfo)
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -129,7 +123,7 @@ console.log(userInfo)
 
     const { data } = await axios.put(`/api/users/profile`, user, config)
 
-console.log(`day la data ${data}`)
+    console.log(data)
 
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
@@ -181,6 +175,7 @@ export const getUserDetails = (id) => async (dispatch, getState) => {
 
 export const logout = () => (dispatch) => {
   localStorage.removeItem('userInfo')
+  history.push('/')
   dispatch({ type: USER_LOGOUT })
   dispatch({ type: USER_DETAILS_RESET })
 }

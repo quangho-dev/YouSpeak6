@@ -1,11 +1,11 @@
-import React from 'react';
-import MuiInput from './MuiInput';
+import React from 'react'
+import MuiInput from './MuiInput'
 
 function FormikControl(props) {
-  const { control, ...rest } = props;
+  const { control, ...rest } = props
   switch (control) {
     case 'input':
-      return <MuiInput {...rest} />;
+      return <MuiInput {...rest} />
     // case 'textarea':
     //   return <Textarea {...rest} />
     // case 'select':
@@ -19,8 +19,8 @@ function FormikControl(props) {
     // case 'chakraInput':
     //   return <ChakraInput {...rest} />
     default:
-      return null;
+      return null
   }
 }
 
-export default FormikControl;
+export default FormikControl

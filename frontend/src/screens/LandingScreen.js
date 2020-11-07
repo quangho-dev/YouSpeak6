@@ -1,24 +1,24 @@
-import React, { Fragment, useEffect, useState } from 'react';
-import { makeStyles, useTheme } from '@material-ui/core/styles';
-import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import { Link } from 'react-router-dom';
-import SearchIcon from '@material-ui/icons/Search';
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import IconButton from '@material-ui/core/IconButton';
-import { Link as LinkScroll } from 'react-scroll';
-import Card from '@material-ui/core/Card';
-import CardActionArea from '@material-ui/core/CardActionArea';
-import CardContent from '@material-ui/core/CardContent';
-import CardMedia from '@material-ui/core/CardMedia';
-import Avatar from '@material-ui/core/Avatar';
-import Box from '@material-ui/core/Box';
-import useMediaQuery from '@material-ui/core/useMediaQuery';
-import Header from '../components/Header';
-import Footer from '../components/Footer';
+import React, { Fragment, useEffect, useState } from 'react'
+import { makeStyles, useTheme } from '@material-ui/core/styles'
+import Grid from '@material-ui/core/Grid'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import { Link } from 'react-router-dom'
+import SearchIcon from '@material-ui/icons/Search'
+import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
+import IconButton from '@material-ui/core/IconButton'
+import { Link as LinkScroll } from 'react-scroll'
+import Card from '@material-ui/core/Card'
+import CardActionArea from '@material-ui/core/CardActionArea'
+import CardContent from '@material-ui/core/CardContent'
+import CardMedia from '@material-ui/core/CardMedia'
+import Avatar from '@material-ui/core/Avatar'
+import Box from '@material-ui/core/Box'
+import useMediaQuery from '@material-ui/core/useMediaQuery'
+import Header from '../components/Header'
+import Footer from '../components/Footer'
 
-import landing1 from '../assets/landing1.jpg';
+import landing1 from '../assets/landing1.jpg'
 
 const useStyles = makeStyles((theme) => ({
   background: {
@@ -69,15 +69,15 @@ const useStyles = makeStyles((theme) => ({
   // comment: {
   //   maxWidth: '25em',
   // },
-}));
+}))
 
 const Landing = (props) => {
-  const classes = useStyles();
-  const theme = useTheme();
-  const matchesSM = useMediaQuery(theme.breakpoints.down('sm'));
+  const classes = useStyles()
+  const theme = useTheme()
+  const matchesSM = useMediaQuery(theme.breakpoints.down('sm'))
 
-  const [open, setOpen] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [open, setOpen] = useState(false)
+  const [loading, setLoading] = useState(false)
 
   return (
     <Fragment>
@@ -690,7 +690,7 @@ const Landing = (props) => {
         </Grid>
       </Grid>
     </Fragment>
-  );
-};
+  )
+}
 
 export default Landing

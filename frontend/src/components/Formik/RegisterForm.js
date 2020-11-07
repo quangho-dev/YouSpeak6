@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const RegistrationForm = ({ location, history }) => {
+const RegistrationForm = ({ location, history, setOpenSignUp }) => {
   const classes = useStyles();
 
   const dispatch = useDispatch()
@@ -55,7 +55,8 @@ const RegistrationForm = ({ location, history }) => {
   const onSubmit = async (values, { resetForm }) => {
     const { name, email, password } = values;
     dispatch(register(name, email, password))
-    resetForm({ name: '', email: '', password: '' });
+    resetForm({ name: '', email: '', password: '' })
+    setOpenSignUp(false);
   };
 
   return (

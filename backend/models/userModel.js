@@ -7,21 +7,17 @@ const userSchema = mongoose.Schema(
       type: String,
       required: true,
     },
-    dashboardID: {
-      type: Number,
-      unique: true,
-    },
     address: {
-      type: String
+      type: String,
     },
-    avatar: {
-      type: String
+    imageAvatar: {
+      type: String,
     },
     dateOfBirth: {
-      type: Date
+      type: Date,
     },
     gender: {
-      type: String
+      type: String,
     },
     englishLevel: {
       type: Number,
@@ -29,15 +25,13 @@ const userSchema = mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     password: {
       type: String,
       required: true,
     },
-    communicationTool: {
-      type: String,
-    },
+    communicationTool: [{ type: String }],
     introduction: {
       type: String,
     },
