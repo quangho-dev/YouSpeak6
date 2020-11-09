@@ -16,8 +16,15 @@ import {
   USER_UPDATE_PROFILE_REQUEST,
   USER_UPDATE_PROFILE_SUCCESS,
   USER_UPDATE_PROFILE_FAIL,
+  USER_UPDATE_REQUEST,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_FAIL,
 } from '../constants/userConstants'
 import { setAlert } from './alertActions'
+
+// Alert colors:
+const successColor = '#4BB543'
+const errorColor = '#FF3232'
 
 const history = createBrowserHistory()
 export const login = (email, password) => async (dispatch) => {
@@ -43,7 +50,7 @@ export const login = (email, password) => async (dispatch) => {
       payload: data,
     })
 
-    dispatch(setAlert('Đăng nhập thành công!', '#4BB543'))
+    dispatch(setAlert('Đăng nhập thành công!', successColor))
 
     localStorage.setItem('userInfo', JSON.stringify(data))
   } catch (err) {
@@ -55,7 +62,7 @@ export const login = (email, password) => async (dispatch) => {
       type: USER_LOGIN_FAIL,
       payload: error,
     })
-    dispatch(setAlert(error, '#FF3232'))
+    dispatch(setAlert(error, errorColor))
   }
 }
 
@@ -87,7 +94,7 @@ export const register = (name, email, password) => async (dispatch) => {
       payload: data,
     })
 
-    dispatch(setAlert('Đăng ký tài khoản thành công!', '#4BB543'))
+    dispatch(setAlert('Đăng ký tài khoản thành công!', successColor))
 
     localStorage.setItem('userInfo', JSON.stringify(data))
   } catch (err) {
@@ -100,7 +107,7 @@ export const register = (name, email, password) => async (dispatch) => {
       payload: error,
     })
 
-    dispatch(setAlert(error, '#FF3232'))
+    dispatch(setAlert(error, errorColor))
   }
 }
 
@@ -123,12 +130,16 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
 
     const { data } = await axios.put(`/api/users/profile`, user, config)
 
-    console.log(data)
-
     dispatch({
       type: USER_UPDATE_PROFILE_SUCCESS,
       payload: data,
     })
+
+    if (data) {
+      dispatch(
+        setAlert('Cập nhật thông tin người dùng thành công!', successColor)
+      )
+    }
   } catch (error) {
     dispatch({
       type: USER_UPDATE_PROFILE_FAIL,
@@ -137,6 +148,12 @@ export const updateUserProfile = (user) => async (dispatch, getState) => {
           ? error.response.data.message
           : error.message,
     })
+
+    if (error) {
+      dispatch(
+        setAlert('Cập nhật thông tin người dùng không thành công', errorColor)
+      )
+    }
   }
 }
 
@@ -178,4 +195,39 @@ export const logout = () => (dispatch) => {
   history.push('/')
   dispatch({ type: USER_LOGOUT })
   dispatch({ type: USER_DETAILS_RESET })
+
+  dispatch(setAlert('Đăng xuất tài khoản thành công', successColor))
+}
+
+export const updateUser = (user) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: USER_UPDATE_REQUEST,
+    })
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+
+    const { data } = await axios.put(`/api/users/${user._id}`, user, config)
+
+    dispatch({ type: USER_UPDATE_SUCCESS })
+
+    dispatch({ type: USER_DETAILS_SUCCESS, payload: data })
+  } catch (error) {
+    dispatch({
+      type: USER_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
 }

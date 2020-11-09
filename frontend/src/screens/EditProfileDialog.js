@@ -71,19 +71,16 @@ const EditProfileDialog = ({
 
   const [uploading, setUploading] = useState(false)
 
-  const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
-
   const userDetails = useSelector((state) => state.userDetails)
   const { loading, error, user } = userDetails
 
-  const userUpdateProfile = useSelector((state) => state.userUpdateProfile)
+  const userUpdate = useSelector((state) => state.userUpdate)
 
   const {
     loading: loadingUpdate,
     error: errorUpdate,
     success: successUpdate,
-  } = userUpdateProfile
+  } = userUpdate
 
   const validationSchema = yup.object().shape({
     dateOfBirth: yup.date().nullable(),
@@ -158,7 +155,6 @@ const EditProfileDialog = ({
               }) => (
                 <Form>
                   <Grid container direction="column">
-                    {loadingUpdate && <CircularProgress />}
                     {errorUpdate && (
                       <Message severity="error">{errorUpdate}</Message>
                     )}
@@ -166,9 +162,11 @@ const EditProfileDialog = ({
                     {error && <Message severity="error">{error}</Message>}
                     <Grid item style={{ margin: 'auto' }}>
                       <Avatar
-                        src="https://source.unsplash.com/random/100x100"
+                        src={imageAvatar}
                         style={{ width: '4em', height: '4em' }}
+                        alt="avatar-image"
                       />
+                      {console.log({ imageAvatar })}
                     </Grid>
                     <Grid item style={{ margin: 'auto' }}>
                       <p>
@@ -189,7 +187,7 @@ const EditProfileDialog = ({
                           type="file"
                           style={{ display: 'none' }}
                           onChange={async (event) => {
-                            const file = event.target.files[0]
+                            const file = event.currentTarget.files[0]
                             const formData = new FormData()
                             formData.append('imageAvatar', file)
                             setUploading(true)
@@ -205,7 +203,7 @@ const EditProfileDialog = ({
                                 formData,
                                 config
                               )
-
+                              setImageAvatar(data)
                               setFieldValue('imageAvatar', data)
                               setUploading(false)
                             } catch (error) {
@@ -337,6 +335,9 @@ const EditProfileDialog = ({
                     style={{ color: 'white', fontWeight: 600 }}
                   >
                     Lưu lại
+                    <span style={{ marginLeft: '1em' }}>
+                      {loadingUpdate && <CircularProgress color="secondary" />}
+                    </span>
                   </Button>
 
                   <Grid item className={classes.formControl}>

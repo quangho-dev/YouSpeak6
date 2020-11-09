@@ -97,8 +97,6 @@ const updateUserProfile = async (req, res, next) => {
     return next(error)
   }
 
-  console.log(user)
-  // console.log(req.body)
   user.name = req.body.name || user.name
   user.email = req.body.email || user.email
   user.imageAvatar = req.body.imageAvatar || user.imageAvatar
@@ -107,6 +105,7 @@ const updateUserProfile = async (req, res, next) => {
   user.gender = req.body.gender || user.gender
   user.englishLevel = req.body.englishLevel || user.englishLevel
   user.communicationTool = req.body.communicationTool || user.communicationTool
+  user.introduction = req.body.introduction || user.introduction
   if (req.body.password) {
     user.password = req.body.password
   }
