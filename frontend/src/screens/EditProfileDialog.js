@@ -102,7 +102,7 @@ const EditProfileDialog = ({
       setCommunicationTool(user.communicationTool)
       setIntroduction(user.introduction)
     }
-  }, [dispatch, user._id, successUpdate, user])
+  }, [dispatch, user, successUpdate, user])
 
   return (
     <Dialog

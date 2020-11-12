@@ -8,6 +8,8 @@ import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
 import EditProfileDialog from './EditProfileDialog'
 import { Route } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import Chip from '@material-ui/core/Chip'
 
 const UserProfileScreen = () => {
   const useStyles = makeStyles((theme) => ({
@@ -23,6 +25,11 @@ const UserProfileScreen = () => {
     },
   }))
   const classes = useStyles()
+
+  const dispatch = useDispatch()
+
+  const userDetails = useSelector((state) => state.userDetails)
+  const { loading, error, user } = userDetails
 
   const [openEditProfile, setOpenEditProfile] = useState(false)
 
@@ -41,16 +48,17 @@ const UserProfileScreen = () => {
         <Grid item xs={4}>
           <Card>
             <CardContent>
-              <Avatar
-                src="https://source.unsplash.com/random/100x100"
-                style={{ margin: 'auto' }}
-              />
-              <Typography variant="body1" gutterBottom>
-                Name
-              </Typography>
-              <Typography variant="body1" gutterBottom>
-                Address
-              </Typography>
+              <Grid
+                container
+                justify="center"
+                alignItems="center"
+                direction="column"
+              >
+                <Chip label={`${user._id}.slice(0, 5)}`} />
+                <Grid item>
+                  <Avatar src={user.imageAvatar} style={{ margin: 'auto' }} />
+                </Grid>
+              </Grid>
             </CardContent>
           </Card>
         </Grid>
