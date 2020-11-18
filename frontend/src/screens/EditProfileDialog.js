@@ -20,15 +20,13 @@ import {
   MuiPickersUtilsProvider,
   KeyboardDatePicker,
 } from '@material-ui/pickers'
-import { updateUserProfile, getUserDetails } from '../actions/userActions'
+import { getCurrentProfile, createOrUpdateProfile } from '../actions/profile'
 import MyCheckBox from '../components/Formik/MyCheckBox'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/styles'
-import { USER_UPDATE_RESET } from '../constants/userConstants'
 import axios from 'axios'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import Message from '../components/ui/Message'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -71,38 +69,28 @@ const EditProfileDialog = ({
 
   const [uploading, setUploading] = useState(false)
 
-  const userDetails = useSelector((state) => state.userDetails)
-  const { loading, error, user } = userDetails
-
-  const userUpdate = useSelector((state) => state.userUpdate)
-
-  const {
-    loading: loadingUpdate,
-    error: errorUpdate,
-    success: successUpdate,
-  } = userUpdate
+  const profile = useSelector((state) => state.profile)
+  const { loading, profile: profileUser } = profile
 
   const validationSchema = yup.object().shape({
     dateOfBirth: yup.date().nullable(),
   })
 
   useEffect(() => {
-    if (successUpdate) {
-      dispatch({ type: USER_UPDATE_RESET })
+    if (!profileUser) {
+      dispatch(getCurrentProfile())
     }
-    if (!user.name) {
-      dispatch(getUserDetails('profile'))
-    } else {
-      setName(user.name)
-      setImageAvatar(user.imageAvatar)
-      setAddress(user.address)
-      setDateOfBirth(user.dateOfBirth)
-      setGender(user.gender)
-      setEnglishLevel(user.englishLevel)
-      setCommunicationTool(user.communicationTool)
-      setIntroduction(user.introduction)
+    if (!loading && profileUser) {
+      setName(profileUser.name)
+      setImageAvatar(profileUser.imageAvatar)
+      setAddress(profileUser.address)
+      setDateOfBirth(profileUser.dateOfBirth)
+      setGender(profileUser.gender)
+      setEnglishLevel(profileUser.englishLevel)
+      setCommunicationTool(profileUser.communicationTool)
+      setIntroduction(profileUser.introduction)
     }
-  }, [dispatch, user, successUpdate, user])
+  }, [getCurrentProfile, profileUser, loading, dispatch])
 
   return (
     <Dialog
@@ -141,7 +129,13 @@ const EditProfileDialog = ({
               validationSchema={validationSchema}
               onSubmit={(values, { setSubmitting }) => {
                 setTimeout(() => {
-                  dispatch(updateUserProfile(values))
+                  dispatch(
+                    createOrUpdateProfile(
+                      values,
+                      history,
+                      profileUser ? true : false
+                    )
+                  )
                   setSubmitting(false)
                 }, 400)
               }}
@@ -155,11 +149,6 @@ const EditProfileDialog = ({
               }) => (
                 <Form>
                   <Grid container direction="column">
-                    {errorUpdate && (
-                      <Message severity="error">{errorUpdate}</Message>
-                    )}
-                    {loading && <CircularProgress />}
-                    {error && <Message severity="error">{error}</Message>}
                     <Grid item style={{ margin: 'auto' }}>
                       <Avatar
                         src={imageAvatar}
@@ -336,7 +325,7 @@ const EditProfileDialog = ({
                   >
                     Lưu lại
                     <span style={{ marginLeft: '1em' }}>
-                      {loadingUpdate && <CircularProgress color="secondary" />}
+                      {loading && <CircularProgress color="secondary" />}
                     </span>
                   </Button>
 

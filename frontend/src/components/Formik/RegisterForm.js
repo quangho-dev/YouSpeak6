@@ -1,45 +1,40 @@
-import React, { Fragment, useEffect } from 'react';
-import { Formik, Form } from 'formik';
-import * as Yup from 'yup';
-import FormikControl from './FormikControl';
-import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
-import CircularProgress from '@material-ui/core/CircularProgress';
-import { register } from '../../actions/userActions'
+import React, { Fragment, useEffect } from 'react'
+import { Formik, Form } from 'formik'
+import * as Yup from 'yup'
+import FormikControl from './FormikControl'
+import Button from '@material-ui/core/Button'
+import { makeStyles } from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import { register } from '../../actions/auth'
 import { useDispatch, useSelector } from 'react-redux'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
     marginBottom: '1em',
   },
-}));
+}))
 
 const RegistrationForm = ({ location, history, setOpenSignUp }) => {
-  const classes = useStyles();
+  const classes = useStyles()
 
   const dispatch = useDispatch()
 
-  const redirect = location.search ? location.search.split('=')[1] : '/'
+  const auth = useSelector((state) => state.auth)
+  const { isAuthenticated, loading } = auth
 
-  const userRegister = useSelector((state) => state.userRegister)
-
-  const { loading, error, userInfo } = userRegister
-
-  useEffect(() => {
-    if (userInfo) {
-      history.push(redirect)
-    }
-  }, [history, userInfo, redirect])
+  if (isAuthenticated) {
+    return <Redirect to="/dashboard" />
+  }
 
   const initialValues = {
     name: '',
     email: '',
     password: '',
     confirmPassword: '',
-  };
+  }
 
   const validationSchema = Yup.object({
     name: Yup.string().required('Không được để trống'),
@@ -50,17 +45,17 @@ const RegistrationForm = ({ location, history, setOpenSignUp }) => {
     confirmPassword: Yup.string()
       .oneOf([Yup.ref('password'), ''], 'Mật khẩu không trùng khớp')
       .required('Không được để trống'),
-  });
+  })
 
   const onSubmit = async (values, { resetForm }) => {
-    const { name, email, password } = values;
-    dispatch(register(name, email, password))
+    const { name, email, password } = values
+    dispatch(register({ name, email, password }))
     resetForm({ name: '', email: '', password: '' })
-    setOpenSignUp(false);
-  };
+    setOpenSignUp(false)
+  }
 
   return (
- <Fragment>
+    <Fragment>
       <Formik
         initialValues={initialValues}
         validationSchema={validationSchema}
@@ -105,11 +100,7 @@ const RegistrationForm = ({ location, history, setOpenSignUp }) => {
                 disabled={!formik.isValid}
                 style={{ color: 'white' }}
               >
-                {loading ? (
-                  <CircularProgress color="secondary" />
-                ) : (
-                  'Đăng ký'
-                )}
+                {loading ? <CircularProgress color="secondary" /> : 'Đăng ký'}
               </Button>
               <Grid
                 container
@@ -123,7 +114,7 @@ const RegistrationForm = ({ location, history, setOpenSignUp }) => {
                 <Grid item>
                   <Button
                     component={Link}
-                    to={redirect ? `/login?redirect=${redirect}` : '/login'}
+                    to="/login"
                     variant="text"
                     style={{
                       fontSize: '1rem',
@@ -137,11 +128,11 @@ const RegistrationForm = ({ location, history, setOpenSignUp }) => {
                 </Grid>
               </Grid>
             </Form>
-          );
+          )
         }}
       </Formik>
     </Fragment>
-  );
-};
+  )
+}
 
 export default RegistrationForm

@@ -1,18 +1,19 @@
 import express from 'express'
 const router = express.Router()
-import {
-  authUser,
-  registerUser,
-  getUserProfile,
-  updateUserProfile,
-} from '../controllers/userController.js'
-import { protect } from '../middleware/authMiddleware.js'
+import { registerUser } from '../controllers/userController.js'
+import { check } from 'express-validator'
 
-router.post('/', registerUser)
-router.post('/login', authUser)
-router
-  .route('/profile')
-  .get(protect, getUserProfile)
-  .put(protect, updateUserProfile)
+router.post(
+  '/',
+  [
+    check('name', 'Name is required').not().isEmpty(),
+    check('email', 'Please include a valid email').isEmail(),
+    check(
+      'password',
+      'Please enter a password with 6 or more characters'
+    ).isLength({ min: 6 }),
+  ],
+  registerUser
+)
 
 export default router

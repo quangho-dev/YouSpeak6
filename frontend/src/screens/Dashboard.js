@@ -11,7 +11,7 @@ import { Route } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Chip from '@material-ui/core/Chip'
 
-const UserProfileScreen = () => {
+const Dashboard = () => {
   const useStyles = makeStyles((theme) => ({
     toolbarMargin: {
       ...theme.mixins.toolbar,
@@ -28,8 +28,8 @@ const UserProfileScreen = () => {
 
   const dispatch = useDispatch()
 
-  const userDetails = useSelector((state) => state.userDetails)
-  const { loading, error, user } = userDetails
+  const auth = useSelector((state) => state.auth)
+  const { isAuthenticated, loading } = auth
 
   const [openEditProfile, setOpenEditProfile] = useState(false)
 
@@ -54,9 +54,9 @@ const UserProfileScreen = () => {
                 alignItems="center"
                 direction="column"
               >
-                <Chip label={`${user._id}.slice(0, 5)}`} />
+                {/* <Chip label={`${user._id}`} /> */}
                 <Grid item>
-                  <Avatar src={user.imageAvatar} style={{ margin: 'auto' }} />
+                  {/* <Avatar src={user.imageAvatar} style={{ margin: 'auto' }} /> */}
                 </Grid>
               </Grid>
             </CardContent>
@@ -79,4 +79,4 @@ const UserProfileScreen = () => {
     </div>
   )
 }
-export default UserProfileScreen
+export default Dashboard

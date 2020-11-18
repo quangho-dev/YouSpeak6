@@ -20,7 +20,7 @@ import {
   USER_UPDATE_SUCCESS,
   USER_UPDATE_FAIL,
 } from '../constants/userConstants'
-import { setAlert } from './alertActions'
+import { setAlert } from './alert'
 
 // Alert colors:
 const successColor = '#4BB543'

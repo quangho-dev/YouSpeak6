@@ -26,7 +26,8 @@ import LoginForm from './Formik/LoginForm'
 import RegisterForm from './Formik/RegisterForm'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
-import { logout } from '../actions/userActions'
+import { logout } from '../actions/auth'
+import AlertMessage from './ui/AlertMessage'
 
 function ElevationScroll(props) {
   const { children } = props
@@ -161,8 +162,8 @@ export default function Header(props) {
 
   const dispatch = useDispatch()
 
-  const userLogin = useSelector((state) => state.userLogin)
-  const { userInfo } = userLogin
+  const auth = useSelector((state) => state.auth)
+  const { isAuthenticated } = auth
 
   const [openDrawer, setOpenDrawer] = useState(false)
 
@@ -359,7 +360,7 @@ export default function Header(props) {
 
   return (
     <Fragment>
-      {userInfo ? (
+      {isAuthenticated ? (
         <>
           <ElevationScroll>
             <AppBar position="fixed" className={classes.appbarLoggedIn}>
@@ -450,6 +451,9 @@ export default function Header(props) {
                   <Typography variant="h4" gutterBottom>
                     Đăng ký tài khoản
                   </Typography>
+                </Grid>
+                <Grid item>
+                  <AlertMessage />
                 </Grid>
                 <Grid item>
                   <Route
