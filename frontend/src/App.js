@@ -5,12 +5,12 @@ import theme from './components/Theme'
 import Header from './components/Header'
 import Footer from './components/Footer'
 // import Message from './components/Message'
-import Dashboard from './screens/Dashboard'
 import Routes from './components/routing/Routes'
 import LandingScreen from './screens/LandingScreen'
 import Message from './components/Message'
 
 // Redux
+import { Provider } from 'react-redux'
 import store from './store'
 import { loadUser } from './actions/auth'
 import setAuthToken from './utils/setAuthToken'
@@ -22,17 +22,19 @@ const App = () => {
   }, [])
 
   return (
-    <ThemeProvider theme={theme}>
-      <Router>
-        <Header />
-        <Message />
-        <Switch>
-          <Route exact path="/" component={LandingScreen} />
-          <Route exact path="/dashboard" component={Dashboard} />
-        </Switch>
-        <Footer />
-      </Router>
-    </ThemeProvider>
+    <Provider store={store}>
+      <ThemeProvider theme={theme}>
+        <Router>
+          <Header />
+          <Message />
+          <Switch>
+            <Route exact path="/" component={LandingScreen} />
+            <Route component={Routes} />
+          </Switch>
+          {/* <Footer /> */}
+        </Router>
+      </ThemeProvider>
+    </Provider>
   )
 }
 export default App

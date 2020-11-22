@@ -14,16 +14,8 @@ import { Link, Route } from 'react-router-dom'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
-
-import Dialog from '@material-ui/core/Dialog'
-import DialogContent from '@material-ui/core/DialogContent'
 import Grid from '@material-ui/core/Grid'
 import Avatar from '@material-ui/core/Avatar'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
-import CloseIcon from '@material-ui/icons/Close'
-import LockOpenIcon from '@material-ui/icons/LockOpen'
-import LoginForm from './Formik/LoginForm'
-import RegisterForm from './Formik/RegisterForm'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import { logout } from '../actions/auth'
@@ -165,23 +157,12 @@ export default function Header(props) {
   const auth = useSelector((state) => state.auth)
   const { isAuthenticated } = auth
 
+  const profile = useSelector((state) => state.profile)
+  const { profile: profileUser } = profile
+
   const [openDrawer, setOpenDrawer] = useState(false)
 
   const [anchorEl, setAnchorEl] = useState(null)
-
-  const [openMenu, setOpenMenu] = useState(false)
-
-  const [openSignUp, setOpenSignUp] = useState(false)
-
-  const [openSignIn, setOpenSignIn] = useState(false)
-
-  const onSignUpClose = () => {
-    setOpenSignUp(false)
-  }
-
-  const onSignInClose = () => {
-    setOpenSignIn(false)
-  }
 
   const handleClose = () => {
     setAnchorEl(null)
@@ -193,14 +174,16 @@ export default function Header(props) {
 
   const logoutHandler = () => {
     dispatch(logout())
+    setAnchorEl(null)
   }
 
   const tabs = (
     <Grid item container>
       <Grid item>
         <Button
+          component={Link}
           variant="text"
-          onClick={() => setOpenSignIn(true)}
+          to="/login"
           style={{
             color: 'white',
             textTransform: 'none',
@@ -212,8 +195,9 @@ export default function Header(props) {
       </Grid>
       <Grid item>
         <Button
+          component={Link}
           variant="text"
-          onClick={() => setOpenSignUp(true)}
+          to="/register"
           style={{
             color: 'white',
             textTransform: 'none',
@@ -226,7 +210,8 @@ export default function Header(props) {
       <Grid item>
         <Button
           variant="text"
-          onClick={() => setOpenSignUp(true)}
+          component={Link}
+          to="/becometeacher"
           style={{ color: 'white', textTransform: 'none' }}
         >
           Trở thành giáo viên
@@ -262,8 +247,8 @@ export default function Header(props) {
             }}
           >
             <Button
+              component={Link}
               variant="text"
-              onClick={() => setOpenSignIn(true)}
               style={{
                 color: 'white',
                 textTransform: 'none',
@@ -275,7 +260,8 @@ export default function Header(props) {
           <Grid item>
             <Button
               variant="text"
-              onClick={() => setOpenSignUp(true)}
+              component={Link}
+              to="/register"
               style={{ color: 'white', textTransform: 'none' }}
             >
               Đăng ký
@@ -284,7 +270,8 @@ export default function Header(props) {
           <Grid item>
             <Button
               variant="text"
-              onClick={() => setOpenSignUp(true)}
+              component={Link}
+              to="/becometeacher"
               style={{ color: 'white', textTransform: 'none' }}
             >
               Trở thành giáo viên
@@ -307,7 +294,7 @@ export default function Header(props) {
       <Grid item>
         <Button
           variant="text"
-          onClick={() => setOpenSignIn(true)}
+          // onClick={() => setOpenSignIn(true)}
           style={{
             color: '#333',
             textTransform: 'none',
@@ -323,9 +310,10 @@ export default function Header(props) {
           aria-haspopup="true"
           onMouseOver={onMouseOver}
         >
-          <img
+          <Avatar
             style={{ width: '3em', height: '3em', borderRadius: '50%' }}
-            src="https://source.unsplash.com/random/200x200"
+            src={profileUser && profileUser.imageAvatar}
+            alt="image avatar"
           />
         </Button>
         <Menu
@@ -341,7 +329,13 @@ export default function Header(props) {
           style={{ zIndex: 1302 }}
           classes={{ paper: classes.menu }}
         >
-          <MenuItem classes={{ root: classes.menuItem }} onClick={handleClose}>
+          <MenuItem
+            component={Link}
+            classes={{ root: classes.menuItem }}
+            onClick={handleClose}
+            to="/create-profile"
+            disableRipple
+          >
             Profile
           </MenuItem>
           <MenuItem classes={{ root: classes.menuItem }} onClick={handleClose}>
@@ -376,7 +370,6 @@ export default function Header(props) {
                       component={Link}
                       to="/"
                       disableRipple
-                      onClick={() => props.setValue(0)}
                       className={classes.logoContainer}
                     >
                       <img
@@ -408,7 +401,6 @@ export default function Header(props) {
                       component={Link}
                       to="/"
                       disableRipple
-                      onClick={() => props.setValue(0)}
                       className={classes.logoContainer}
                     >
                       <img
@@ -423,95 +415,6 @@ export default function Header(props) {
               </Toolbar>
             </AppBar>
           </ElevationScroll>
-
-          {/* Register Dialog */}
-          <Dialog
-            open={openSignUp}
-            style={{ zIndex: 1302 }}
-            onClose={onSignUpClose}
-          >
-            <DialogContent>
-              <Grid
-                container
-                direction="column"
-                justify="center"
-                alignItems="center"
-              >
-                <Grid item className={classes.closeButton}>
-                  <IconButton aria-label="close" onClick={onSignUpClose}>
-                    <CloseIcon />
-                  </IconButton>
-                </Grid>
-                <Grid item>
-                  <Avatar className={classes.avatar}>
-                    <LockOutlinedIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h4" gutterBottom>
-                    Đăng ký tài khoản
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <AlertMessage />
-                </Grid>
-                <Grid item>
-                  <Route
-                    render={({ location, history }) => (
-                      <RegisterForm
-                        setOpenSignUp={setOpenSignUp}
-                        location={location}
-                        history={history}
-                      />
-                    )}
-                  />
-                </Grid>
-              </Grid>
-            </DialogContent>
-          </Dialog>
-
-          {/* Sign In Dialog */}
-          <Dialog
-            open={openSignIn}
-            style={{ zIndex: 1302 }}
-            onClose={onSignInClose}
-          >
-            <DialogContent>
-              <Grid
-                container
-                direction="column"
-                justify="center"
-                alignItems="center"
-              >
-                <Grid item className={classes.closeButton}>
-                  <IconButton aria-label="close" onClick={onSignInClose}>
-                    <CloseIcon />
-                  </IconButton>
-                </Grid>
-                <Grid item>
-                  <Avatar className={classes.avatar}>
-                    <LockOpenIcon />
-                  </Avatar>
-                </Grid>
-                <Grid item>
-                  <Typography variant="h4" gutterBottom>
-                    Đăng nhập
-                  </Typography>
-                </Grid>
-                <Grid item>
-                  <Route
-                    render={({ history, location }) => (
-                      <LoginForm
-                        history={history}
-                        location={location}
-                        setOpenSignIn={setOpenSignIn}
-                      />
-                    )}
-                  />
-                </Grid>
-              </Grid>
-            </DialogContent>
-          </Dialog>
         </>
       )}
     </Fragment>

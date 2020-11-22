@@ -44,9 +44,6 @@ export const createOrUpdateProfile = (
       payload: res.data,
     })
 
-    // if (!edit) {
-    //   history.push('/dashboard')
-    // }
     // dispatch(setAlert(edit ? {'Profile Updated', 'success'} : {'Profile Created', 'success'}))
 
     dispatch(
@@ -67,9 +64,9 @@ export const createOrUpdateProfile = (
           }
     )
 
-    // if (!edit) {
-    //   history.push('/dashboard')
-    // }
+    if (!edit) {
+      history.push('/dashboard')
+    }
   } catch (err) {
     const errors = err.response.data.errors
 

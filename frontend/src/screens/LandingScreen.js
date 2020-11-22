@@ -3,7 +3,7 @@ import { makeStyles, useTheme } from '@material-ui/core/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import SearchIcon from '@material-ui/icons/Search'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import IconButton from '@material-ui/core/IconButton'
@@ -17,7 +17,7 @@ import Box from '@material-ui/core/Box'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import Header from '../components/Header'
 import Footer from '../components/Footer'
-
+import { useSelector } from 'react-redux'
 import landing1 from '../assets/landing1.jpg'
 
 const useStyles = makeStyles((theme) => ({
@@ -78,6 +78,13 @@ const Landing = (props) => {
 
   const [open, setOpen] = useState(false)
   const [loading, setLoading] = useState(false)
+
+  const auth = useSelector((state) => state.auth)
+  const { isAuthenticated } = auth
+
+  if (isAuthenticated) {
+    return <Redirect to="/dashboard" />
+  }
 
   return (
     <Fragment>

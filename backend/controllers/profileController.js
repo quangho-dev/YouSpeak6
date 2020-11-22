@@ -25,10 +25,7 @@ const getCurrentProfile = async (req, res) => {
 // @desc     Create or update user profile
 // @access   Private
 const createOrUpdateProfile = async (req, res) => {
-  console.log(req.user)
-
   const {
-    name,
     address,
     imageAvatar,
     dateOfBirth,
@@ -49,10 +46,6 @@ const createOrUpdateProfile = async (req, res) => {
     introduction,
   }
 
-  const userFields = {
-    name,
-  }
-
   try {
     // Using upsert option (creates new doc if no match is found):
     let profile = await Profile.findOneAndUpdate(
@@ -61,34 +54,7 @@ const createOrUpdateProfile = async (req, res) => {
       { new: true, upsert: true }
     )
 
-    const {
-      address,
-      imageAvatar,
-      dateOfBirth,
-      gender,
-      englishLevel,
-      communicationTool,
-      introduction,
-    } = profile
-
-    let user = await User.findOneAndUpdate(
-      { _id: req.user.id },
-      { $set: userFields },
-      { new: true, upsert: true }
-    )
-
-    const { name } = user
-
-    res.json({
-      name,
-      address,
-      imageAvatar,
-      dateOfBirth,
-      gender,
-      englishLevel,
-      communicationTool,
-      introduction,
-    })
+    res.json(profile)
   } catch (err) {
     console.error(err.message)
     res.status(500).send('Server Error')

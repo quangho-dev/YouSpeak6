@@ -2,33 +2,40 @@ import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import Spinner from '../layout/Spinner'
+import CircularProgress from '@material-ui/core/CircularProgress'
+import { useDispatch, useSelector } from 'react-redux'
 
-const PrivateRoute = ({
-  component: Component,
-  auth: { isAuthenticated, loading },
-  ...rest
-}) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      loading ? (
-        <Spinner />
-      ) : isAuthenticated ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to="/login" />
-      )
-    }
-  />
-)
-
-PrivateRoute.propTypes = {
-  auth: PropTypes.object.isRequired,
+const PrivateRoute = ({ component: Component, ...rest }) => {
+  const auth = useSelector((state) => state.auth)
+  const { isAuthenticated, loading } = auth
+  console.log(isAuthenticated)
+  console.log(auth)
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        loading ? (
+          <div
+            style={{
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              marginRight: '-50%',
+              transform: 'translate(-50%, -50%)',
+            }}
+          >
+            <CircularProgress style={{ width: '60px' }} />
+          </div>
+        ) : isAuthenticated ? (
+          <Component {...props} />
+        ) : (
+          <Redirect to="/login" />
+        )
+      }
+    />
+  )
 }
+// const auth = useSelector((state) => state.auth)
+// const { loading, isAuthenticated } = auth
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-})
-
-export default connect(mapStateToProps)(PrivateRoute)
+export default PrivateRoute

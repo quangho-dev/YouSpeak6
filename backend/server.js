@@ -10,6 +10,7 @@ import userRoutes from './routes/userRoutes.js'
 import HttpError from './models/http-error.js'
 import authRoutes from './routes/authRoutes.js'
 import profileRoutes from './routes/profileRoutes.js'
+import teachersRoutes from './routes/teachersRoutes.js'
 
 dotenv.config()
 
@@ -27,6 +28,7 @@ app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/profile', profileRoutes)
+app.use('/api/teachers', teachersRoutes)
 
 // app.use((req, res, next) => {
 //   const error = new HttpError('Could not find this route.', 404)

@@ -58,7 +58,6 @@ const EditProfileDialog = ({
 
   const dispatch = useDispatch()
 
-  const [name, setName] = useState('')
   const [imageAvatar, setImageAvatar] = useState('')
   const [address, setAddress] = useState('')
   const [dateOfBirth, setDateOfBirth] = useState(null)
@@ -81,7 +80,6 @@ const EditProfileDialog = ({
       dispatch(getCurrentProfile())
     }
     if (!loading && profileUser) {
-      setName(profileUser.name)
       setImageAvatar(profileUser.imageAvatar)
       setAddress(profileUser.address)
       setDateOfBirth(profileUser.dateOfBirth)
@@ -118,7 +116,6 @@ const EditProfileDialog = ({
             <Formik
               initialValues={{
                 imageAvatar,
-                name,
                 dateOfBirth,
                 gender,
                 address,
@@ -204,7 +201,7 @@ const EditProfileDialog = ({
                       </Button>
                       {uploading && <LinearProgress color="secondary" />}
                     </Grid>
-                    <Grid item className={classes.formControl}>
+                    {/* <Grid item className={classes.formControl}>
                       <FormGroup>
                         <Field
                           autoComplete="off"
@@ -214,7 +211,7 @@ const EditProfileDialog = ({
                         />
                         <ErrorMessage name="name" />
                       </FormGroup>
-                    </Grid>
+                    </Grid> */}
                     <Grid item className={classes.formControl}>
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
