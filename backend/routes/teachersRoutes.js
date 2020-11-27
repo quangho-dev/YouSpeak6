@@ -1,6 +1,6 @@
 import express from 'express'
 const router = express.Router()
-import { registerTeacher } from '../controllers/TeacherController.js'
+import { registerTeacher } from '../controllers/teacherController.js'
 import { check } from 'express-validator'
 
 router.post(

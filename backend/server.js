@@ -9,6 +9,7 @@ import uploadRoutes from './routes/uploadRoutes.js'
 import userRoutes from './routes/userRoutes.js'
 import HttpError from './models/http-error.js'
 import authRoutes from './routes/authRoutes.js'
+import authTeacherRoutes from './routes/authTeacherRoutes.js'
 import profileRoutes from './routes/profileRoutes.js'
 import teachersRoutes from './routes/teachersRoutes.js'
 
@@ -26,6 +27,7 @@ app.use(express.json())
 
 app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
+app.use('/api/auth-teacher', authTeacherRoutes)
 app.use('/api/upload', uploadRoutes)
 app.use('/api/profile', profileRoutes)
 app.use('/api/teachers', teachersRoutes)
