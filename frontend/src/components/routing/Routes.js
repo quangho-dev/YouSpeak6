@@ -5,6 +5,9 @@ import PrivateRoute from '../routing/PrivateRoute'
 import ProfileFormScreen from '../../screens/ProfileFormScreen'
 import LogInScreen from '../../screens/LogInScreen'
 import RegisterScreen from '../../screens/RegisterScreen'
+import RegisterTeacherScreen from '../../screens/teachers/RegisterTeacherScreen'
+import LoginTeacherScreen from '../../screens/teachers/LoginTeacherScreen'
+import ForTeacherScreen from '../../screens/teachers/ForTeacherScreen'
 
 const Routes = (props) => {
   return (
@@ -18,6 +21,15 @@ const Routes = (props) => {
           path="/create-profile"
           component={ProfileFormScreen}
         />
+
+        {/* Teacher routes */}
+        <Route exact path="/for-teacher" component={ForTeacherScreen} />
+        <Route
+          exact
+          path="/teachers/register"
+          component={RegisterTeacherScreen}
+        />
+        <Route exact path="/teachers/login" component={LoginTeacherScreen} />
       </Switch>
     </section>
   )

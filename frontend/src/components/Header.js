@@ -211,10 +211,10 @@ export default function Header(props) {
         <Button
           variant="text"
           component={Link}
-          to="/becometeacher"
+          to="/for-teacher"
           style={{ color: 'white', textTransform: 'none' }}
         >
-          Trở thành giáo viên
+          Dành cho giáo viên
         </Button>
       </Grid>
     </Grid>
@@ -271,10 +271,10 @@ export default function Header(props) {
             <Button
               variant="text"
               component={Link}
-              to="/becometeacher"
+              to="/for-teacher"
               style={{ color: 'white', textTransform: 'none' }}
             >
-              Trở thành giáo viên
+              Dành cho giáo viên
             </Button>
           </Grid>
         </Grid>

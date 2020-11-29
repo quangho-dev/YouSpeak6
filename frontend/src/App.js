@@ -13,12 +13,14 @@ import Message from './components/Message'
 import { Provider } from 'react-redux'
 import store from './store'
 import { loadUser } from './actions/auth'
+import { loadTeacher } from './actions/authTeacher'
 import setAuthToken from './utils/setAuthToken'
 
 const App = () => {
   useEffect(() => {
     setAuthToken(localStorage.token)
     store.dispatch(loadUser())
+    store.dispatch(loadTeacher())
   }, [])
 
   return (

@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 
 // @desc    Register a new user
-// @route   POST /api/users
+// @route   POST /api/users/
 // @access  Public
 const registerUser = async (req, res) => {
   const errors = validationResult(req)

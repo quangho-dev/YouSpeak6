@@ -30,6 +30,10 @@ store.subscribe(() => {
     const token = currentState.auth.token
     setAuthToken(token)
   }
+  if (previousState.authTeacher.token !== currentState.authTeacher.token) {
+    const token = currentState.authTeacher.token
+    setAuthToken(token)
+  }
 })
 
 export default store
