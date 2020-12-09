@@ -12,9 +12,8 @@ import {
   Stepper,
 } from '@material-ui/core'
 
-const FormikStepper = ({ children, ...props }) => {
+const FormikStepper = ({ children, isPro, step, setStep, ...props }) => {
   const childrenArray = React.Children.toArray(children)
-  const [step, setStep] = useState(0)
   const currentChild = childrenArray[step]
   const [completed, setCompleted] = useState(false)
 
@@ -49,36 +48,42 @@ const FormikStepper = ({ children, ...props }) => {
 
           {currentChild}
 
-          <Grid container spacing={2}>
+          <Grid container justify="center" spacing={2}>
             {step > 0 ? (
               <Grid item>
                 <Button
+                  disableRipple
                   disabled={isSubmitting}
                   variant="contained"
                   color="primary"
                   onClick={() => setStep((s) => s - 1)}
+                  style={{ color: 'white' }}
                 >
-                  Back
+                  Trở về
                 </Button>
               </Grid>
             ) : null}
-            <Grid item>
-              <Button
-                startIcon={
-                  isSubmitting ? <CircularProgress size="1rem" /> : null
-                }
-                disabled={isSubmitting}
-                variant="contained"
-                color="primary"
-                type="submit"
-              >
-                {isSubmitting
-                  ? 'Đang gửi'
-                  : isLastStep()
-                  ? 'Gửi đăng ký'
-                  : 'Tiếp tục'}
-              </Button>
-            </Grid>
+            {step !== 1 && (
+              <Grid item>
+                <Button
+                  disableRipple
+                  startIcon={
+                    isSubmitting ? <CircularProgress size="1rem" /> : null
+                  }
+                  disabled={isSubmitting}
+                  variant="contained"
+                  color="primary"
+                  type="submit"
+                  style={{ color: 'white' }}
+                >
+                  {isSubmitting
+                    ? 'Đang gửi'
+                    : isLastStep()
+                    ? 'Gửi đăng ký'
+                    : 'Tiếp tục'}
+                </Button>
+              </Grid>
+            )}
           </Grid>
           <div>
             <pre>{JSON.stringify(values, null, 2)}</pre>

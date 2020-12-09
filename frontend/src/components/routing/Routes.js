@@ -24,17 +24,17 @@ const Routes = (props) => {
         />
 
         {/* Teacher routes */}
-        <Route exact path="/for-teacher" component={FormRegisterTeacher} />
+        <Route exact path="/for-teacher" component={ForTeacherScreen} />
         {/* <Route
           exact
           path="/teachers/register"
-          component={RegisterTeacherScreen}
+          component={FormRegisterTeacher}
         /> */}
         <Route exact path="/teachers/login" component={LoginTeacherScreen} />
         <Route
           exact
           path="/teachers/register"
-          component={FormRegisterTeacherScreen}
+          component={FormRegisterTeacher}
         />
       </Switch>
     </section>

@@ -12,6 +12,9 @@ import authRoutes from './routes/authRoutes.js'
 import authTeacherRoutes from './routes/authTeacherRoutes.js'
 import profileRoutes from './routes/profileRoutes.js'
 import teachersRoutes from './routes/teachersRoutes.js'
+import uploadVideoRoutes from './routes/uploadVideoRoutes.js'
+import uploadExpImagesRoutes from './routes/uploadExpImagesRoutes.js'
+import profileTeacherRoutes from './routes/profileTeacherRoutes.js'
 
 dotenv.config()
 
@@ -29,7 +32,10 @@ app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/auth-teacher', authTeacherRoutes)
 app.use('/api/upload', uploadRoutes)
+app.use('/api/uploadVideo', uploadVideoRoutes)
+app.use('/api/expImages', uploadExpImagesRoutes)
 app.use('/api/profile', profileRoutes)
+app.use('/api/profileTeacher', profileTeacherRoutes)
 app.use('/api/teachers', teachersRoutes)
 
 // app.use((req, res, next) => {
