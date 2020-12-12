@@ -16,13 +16,15 @@ const ProfileTeacherSchema = new mongoose.Schema(
     isCommutor: {
       type: String,
     },
-    degree: {
-      type: String,
-      required: true,
+    degreeImages: {
+      type: [{ type: String }],
     },
     teacherAvatar: {
       type: String,
       required: true,
+    },
+    expImages: {
+      type: [{ type: String }],
     },
     dateOfBirth: {
       type: Date,
@@ -37,9 +39,15 @@ const ProfileTeacherSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    introVideo: {
+    video: {
       type: String,
       required: true,
+    },
+    thumbnail: {
+      type: String,
+    },
+    duration: {
+      type: String,
     },
     expImages: {
       type: [{ type: String }],

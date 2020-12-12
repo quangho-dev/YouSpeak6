@@ -45,7 +45,6 @@ const FormikStepper = ({ children, isPro, step, setStep, ...props }) => {
               </Step>
             ))}
           </Stepper>
-
           {currentChild}
 
           <Grid container justify="center" spacing={2}>

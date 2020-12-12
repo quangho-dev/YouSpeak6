@@ -15,6 +15,8 @@ import teachersRoutes from './routes/teachersRoutes.js'
 import uploadVideoRoutes from './routes/uploadVideoRoutes.js'
 import uploadExpImagesRoutes from './routes/uploadExpImagesRoutes.js'
 import profileTeacherRoutes from './routes/profileTeacherRoutes.js'
+import uploadDegreeImagesRoutes from './routes/uploadDegreeImagesRoutes.js'
+import uploadTeacherAvatarRoutes from './routes/uploadTeacherAvatarRoutes.js'
 
 dotenv.config()
 
@@ -32,7 +34,9 @@ app.use('/api/users', userRoutes)
 app.use('/api/auth', authRoutes)
 app.use('/api/auth-teacher', authTeacherRoutes)
 app.use('/api/upload', uploadRoutes)
+app.use('/api/upload-teacher-avatar', uploadTeacherAvatarRoutes)
 app.use('/api/uploadVideo', uploadVideoRoutes)
+app.use('/api/uploadDegreeImages', uploadDegreeImagesRoutes)
 app.use('/api/expImages', uploadExpImagesRoutes)
 app.use('/api/profile', profileRoutes)
 app.use('/api/profileTeacher', profileTeacherRoutes)

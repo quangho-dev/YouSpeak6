@@ -152,7 +152,6 @@ const EditProfileDialog = ({
                         style={{ width: '4em', height: '4em' }}
                         alt="avatar-image"
                       />
-                      {console.log({ imageAvatar })}
                     </Grid>
                     <Grid item style={{ margin: 'auto' }}>
                       <p>

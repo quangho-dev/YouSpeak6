@@ -1,5 +1,5 @@
 import React from 'react'
 
-const FormikStep = ({ children }) => <>{children}</>
+const FormikStep = ({ children, values }) => <>{children}</>
 
 export default FormikStep

@@ -10,6 +10,11 @@ import {
   Stepper,
   Typography,
   CardActions,
+  LinearProgress,
+  Avatar,
+  FormControl,
+  InputLabel,
+  MenuItem,
 } from '@material-ui/core'
 import {
   Field,
@@ -19,7 +24,7 @@ import {
   FormikValues,
   ErrorMessage,
 } from 'formik'
-import { CheckboxWithLabel, TextField } from 'formik-material-ui'
+import { CheckboxWithLabel, TextField, Select } from 'formik-material-ui'
 import React, { useState } from 'react'
 import { mixed, number, object, string } from 'yup'
 import FormikStep from './FormikStep'
@@ -28,6 +33,23 @@ import * as Yup from 'yup'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import axios from 'axios'
+import DateFnsUtils from '@date-io/date-fns'
+import {
+  MuiPickersUtilsProvider,
+  KeyboardDatePicker,
+} from '@material-ui/pickers'
+import { DatePicker, DateTimePicker } from 'formik-material-ui-pickers'
+import ReactFlagsSelect from 'react-flags-select'
+import 'react-flags-select/css/react-flags-select.css'
+import {
+  Autocomplete,
+  ToggleButtonGroup,
+  AutocompleteRenderInputParams,
+} from 'formik-material-ui-lab'
+import MuiTextField from '@material-ui/core/TextField'
+import Dropzone from 'react-dropzone'
+import AddIcon from '@material-ui/icons/Add'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -63,12 +85,23 @@ const useStyles = makeStyles((theme) => ({
       color: 'inherit',
     },
   },
+  formControl: {
+    marginBottom: '1em',
+  },
 }))
 
 const FormRegisterTeacher = () => {
   const [isPro, setIsPro] = useState(false)
   const [isCommutor, setIsCommutor] = useState(false)
   const [step, setStep] = useState(0)
+  const [teacherAvatarState, setTeacherAvatarState] = useState('')
+  const [uploadingTeacherAvatar, setUploadingTeacherAvatar] = useState(false)
+  const [uploadingVideo, setUploadingVideo] = useState(false)
+  const [homeTownState, setHomeTownState] = useState('VN')
+  const [videoState, setVideoState] = useState('')
+  const [thumbnail, setThumbnail] = useState('')
+  const [duration, setDuration] = useState('')
+  const [videoFilePath, setVideoFilePath] = useState('')
 
   const classes = useStyles()
 
@@ -85,12 +118,49 @@ const FormRegisterTeacher = () => {
     setStep((s) => s + 1)
     console.log('isCommutor', isCommutor)
   }
+
+  const onSelectFlag = (countryCode) => {
+    setHomeTownState(countryCode)
+  }
+
+  const onDrop = (files) => {
+    let formData = new FormData()
+    const config = {
+      header: { 'content-type': 'multipart/form-data' },
+    }
+    console.log(files)
+    formData.append('video', files[0])
+
+    axios.post('/api/uploadVideo', formData, config).then((response) => {
+      if (response.data.success) {
+        let variable = {
+          url: response.data.url,
+          fileName: response.data.fileName,
+        }
+        setVideoFilePath(response.data.url)
+
+        //gerenate thumbnail with this filepath !
+
+        axios.post('/api/uploadVideo/thumbnail', variable).then((response) => {
+          if (response.data.success) {
+            setDuration(response.data.fileDuration)
+            setThumbnail(response.data.url)
+          } else {
+            alert('Failed to make the thumbnails')
+          }
+        })
+      } else {
+        alert('failed to save the video in server')
+      }
+    })
+  }
   return (
     <div style={{ backgroundColor: '#888', minHeight: '100vh ' }}>
       <div className={classes.toolbarMargin}></div>
       <Card>
         <CardContent>
           <FormikStepper
+            enableReinitialize
             initialValues={{
               name: '',
               email: '',
@@ -98,6 +168,12 @@ const FormRegisterTeacher = () => {
               confirmPassword: '',
               degreeImages: [],
               expImages: [],
+              teacherAvatar: teacherAvatarState,
+              dateOfBirth: null,
+              homeTown: homeTownState,
+              communicationTool: [],
+              introduction: '',
+              video: videoState,
             }}
             onSubmit={async (values) => {
               console.log('values', { isPro, isCommutor, ...values })
@@ -106,7 +182,7 @@ const FormRegisterTeacher = () => {
             step={step}
             setStep={setStep}
           >
-            <FormikStep
+            {/* <FormikStep
               label="Đăng ký tài khoản"
               validationSchema={object({
                 name: string().required('Bạn cần điền tên hiển thị'),
@@ -248,18 +324,6 @@ const FormRegisterTeacher = () => {
                     >
                       Chọn
                     </Button>
-                    {/* <Box gutterBottom style={{ margin: 'auto' }}>
-                      <Field
-                        color="primary"
-                        component={CheckboxWithLabel}
-                        type="checkbox"
-                        name="isProfessional"
-                        Label={{
-                          label: 'Chọn giáo kiểu giáo viên chuyên nghiệp',
-                          labelPlacement:  'start',
-                        }}
-                      />
-                    </Box> */}
                   </CardActions>
                 </Grid>
                 <Grid
@@ -302,10 +366,262 @@ const FormRegisterTeacher = () => {
                   </CardActions>
                 </Grid>
               </Grid>
-            </FormikStep>
-            <FormikStep label="this is next step">
-              <p>this is next step</p>
-              {isPro && <p>I am a professional teacher!</p>}
+            </FormikStep> */}
+            <FormikStep label="Điền thông tin giáo viên">
+              <Card>
+                <CardContent>
+                  <Grid
+                    container
+                    justify="center"
+                    alignItems="center"
+                    direction="column"
+                  >
+                    <Grid item>
+                      <Typography
+                        variant="h5"
+                        component="h3"
+                        align="center"
+                        className={classes.formControl}
+                      >
+                        Điền thông tin giáo viên
+                      </Typography>
+                    </Grid>
+                    <Grid
+                      item
+                      style={{ margin: 'auto' }}
+                      className={classes.formControl}
+                    >
+                      <Avatar
+                        src={teacherAvatarState}
+                        style={{ width: '4em', height: '4em' }}
+                        alt="teacher-avatar"
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      style={{ margin: 'auto' }}
+                      className={classes.formControl}
+                    >
+                      <p>
+                        Đổi ảnh profile
+                        <br />
+                        Tối đa 2MB
+                      </p>
+                    </Grid>
+                    <Grid item className={classes.formControl}>
+                      <Button
+                        variant="contained"
+                        component="label"
+                        color="primary"
+                        style={{ color: 'white', fontWeight: '500' }}
+                      >
+                        Tải file ảnh
+                        <input
+                          type="file"
+                          style={{ display: 'none' }}
+                          onChange={async (event) => {
+                            const file = event.currentTarget.files[0]
+                            const formData = new FormData()
+                            formData.append('teacherAvatar', file)
+                            setUploadingTeacherAvatar(true)
+                            try {
+                              const config = {
+                                headers: {
+                                  'Content-Type': 'multipart/form-data',
+                                },
+                              }
+
+                              const { data } = await axios.post(
+                                '/api/upload-teacher-avatar',
+                                formData,
+                                config
+                              )
+                              setTeacherAvatarState(data)
+                              setUploadingTeacherAvatar(false)
+                            } catch (error) {
+                              console.error(error)
+                              setUploadingTeacherAvatar(false)
+                            }
+                          }}
+                        />
+                      </Button>
+                      {uploadingTeacherAvatar && (
+                        <LinearProgress color="secondary" />
+                      )}
+                    </Grid>
+                    <Grid item className={classes.formControl}>
+                      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                        <Field
+                          component={DatePicker}
+                          name="dateOfBirth"
+                          label="Ngày tháng năm sinh"
+                        />
+                      </MuiPickersUtilsProvider>
+                    </Grid>
+                    <Grid item className={classes.formControl}>
+                      <div>
+                        <label htmlFor={'abc'} style={{ fontWeight: '400' }}>
+                          Chọn Quốc tịch của bạn:
+                        </label>
+                        <br />
+                        <ReactFlagsSelect
+                          id="abc"
+                          searchable={true}
+                          searchPlaceholder="Hãy chọn Quốc Gia"
+                          defaultCountry="VN"
+                          onSelect={onSelectFlag}
+                        />
+                      </div>
+                    </Grid>
+                    {/* <Grid item className={classes.formControl}>
+                      <Field
+                        name="communicationTool"
+                        multiple
+                        component={Autocomplete}
+                        options={videoCallSoftwares}
+                        getOptionLabel={(option: any) => option.software}
+                        style={{ width: 300 }}
+                        renderInput={(
+                          params: AutocompleteRenderInputParams
+                        ) => (
+                          <MuiTextField
+                            {...params}
+                            error={
+                              touched['communicationTool'] &&
+                              !!errors['communicationTool']
+                            }
+                            helperText={
+                              touched['communicationTool'] &&
+                              errors['communicationTool']
+                            }
+                            label="Các phần mềm video call bạn dùng để dạy:"
+                            variant="outlined"
+                          />
+                        )}
+                      />
+                    </Grid> */}
+                    <Grid item>
+                      <FormControl>
+                        <label htmlFor="communicationTool">
+                          Phần mềm video call bạn dùng để dạy:
+                        </label>
+                        <Field
+                          component={Select}
+                          type="text"
+                          name="communicationTool"
+                          multiple={true}
+                          inputProps={{
+                            name: 'communicationTool',
+                            id: 'communicationTool',
+                          }}
+                        >
+                          <MenuItem value="skype">Skype</MenuItem>
+                          <MenuItem value="google hangouts">
+                            Google Hangouts
+                          </MenuItem>
+                          <MenuItem value="viper">Viper</MenuItem>
+                          <MenuItem value="facetime">Facetime</MenuItem>
+                        </Field>
+                      </FormControl>
+                    </Grid>
+                    <Grid item className={classes.formControl}>
+                      <Field
+                        fullWidth
+                        name="introduction"
+                        type="text"
+                        component={TextField}
+                        label="Thông tin thêm:"
+                        multiline
+                        rows={5}
+                      />
+                    </Grid>
+                    <Grid
+                      item
+                      style={{ margin: 'auto' }}
+                      className={classes.formControl}
+                    >
+                      <p>
+                        Đổi ảnh profile
+                        <br />
+                        Tối đa 2MB
+                      </p>
+                    </Grid>
+                    {/* <Grid item className={classes.formControl}>
+                      <Button
+                        variant="contained"
+                        component="label"
+                        color="primary"
+                        style={{ color: 'white', fontWeight: '500' }}
+                      >
+                        Tải file video giới thiệu
+                        <input
+                          type="file"
+                          style={{ display: 'none' }}
+                          onChange={async (event) => {
+                            const file = event.currentTarget.files[0]
+                            const formData = new FormData()
+                            formData.append('video', file)
+                            setUploadingVideo(true)
+                            try {
+                              const config = {
+                                headers: {
+                                  'Content-Type': 'multipart/form-data',
+                                },
+                              }
+
+                              const { data } = await axios.post(
+                                '/api/uploadVideo',
+                                formData,
+                                config
+                              )
+                              setVideoState(data)
+                              setUploadingVideo(false)
+                            } catch (error) {
+                              console.error(error)
+                              setUploadingVideo(false)
+                            }
+                          }}
+                        />
+                      </Button>
+                      {uploadingVideo && <LinearProgress color="secondary" />}
+                    </Grid> */}
+                    <Grid item>
+                      <Dropzone
+                        onDrop={onDrop}
+                        multiple={false}
+                        maxSize={800000000}
+                      >
+                        {({ getRootProps, getInputProps }) => (
+                          <div
+                            style={{
+                              width: '300px',
+                              height: '240px',
+                              border: '1px solid lightgray',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                            }}
+                            {...getRootProps()}
+                          >
+                            <input {...getInputProps()} />
+                            <AddIcon style={{ fontSize: '3rem' }} />
+                          </div>
+                        )}
+                      </Dropzone>
+
+                      {thumbnail !== '' && (
+                        <div>
+                          <img
+                            src={`http://localhost:5000/${thumbnail}`}
+                            alt="video-thumbnail"
+                          />
+                        </div>
+                      )}
+                    </Grid>
+                  </Grid>
+                  {isPro && <p>I am a professional teacher!</p>}
+                </CardContent>
+              </Card>
             </FormikStep>
           </FormikStepper>
         </CardContent>
