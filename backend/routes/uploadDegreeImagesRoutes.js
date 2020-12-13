@@ -34,7 +34,7 @@ const upload = multer({
   },
 })
 
-router.post('/', upload.array('degreeImages', 10), (req, res) => {
+router.post('/', upload.array('degreeImages', 5), (req, res) => {
   const filesPaths = req.files.map((file) => `/${file.path}`)
   res.send(filesPaths)
   console.log(filesPaths)

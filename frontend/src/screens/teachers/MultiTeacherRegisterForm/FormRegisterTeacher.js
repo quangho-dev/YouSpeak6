@@ -25,7 +25,7 @@ import {
   ErrorMessage,
 } from 'formik'
 import { CheckboxWithLabel, TextField, Select } from 'formik-material-ui'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { mixed, number, object, string } from 'yup'
 import FormikStep from './FormikStep'
 import FormikStepper from './FormikStepper'
@@ -50,6 +50,9 @@ import {
 import MuiTextField from '@material-ui/core/TextField'
 import Dropzone from 'react-dropzone'
 import AddIcon from '@material-ui/icons/Add'
+import Moment from 'react-moment'
+import 'moment-duration-format'
+import moment from 'moment'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -88,6 +91,9 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     marginBottom: '1em',
   },
+  rowContainer: {
+    padding: '0 4em',
+  },
 }))
 
 const FormRegisterTeacher = () => {
@@ -102,6 +108,13 @@ const FormRegisterTeacher = () => {
   const [thumbnail, setThumbnail] = useState('')
   const [duration, setDuration] = useState('')
   const [videoFilePath, setVideoFilePath] = useState('')
+
+  const [uploadPercentage, setUploadPercentage] = useState(0)
+
+  const [degreeImages, setDegreeImages] = useState([])
+  const [uploadingDegreeImages, setUploadingDegreeImages] = useState(false)
+
+  const [selectedImages, setSelectedImages] = useState([])
 
   const classes = useStyles()
 
@@ -127,6 +140,16 @@ const FormRegisterTeacher = () => {
     let formData = new FormData()
     const config = {
       header: { 'content-type': 'multipart/form-data' },
+      onUploadProgress: (progressEvent) => {
+        const { loaded, total } = progressEvent
+        let percent = Math.floor((loaded * 100) / total)
+        console.log(`${loaded}kb of ${total}kb | ${percent}%`)
+
+        if (percent < 100) {
+          //   this.setState({ uploadPercentage: percent })
+          setUploadPercentage(percent)
+        }
+      },
     }
     console.log(files)
     formData.append('video', files[0])
@@ -137,6 +160,12 @@ const FormRegisterTeacher = () => {
           url: response.data.url,
           fileName: response.data.fileName,
         }
+
+        setUploadPercentage(100)
+        setTimeout(() => {
+          setUploadPercentage(0)
+        }, 1000)
+
         setVideoFilePath(response.data.url)
 
         //gerenate thumbnail with this filepath !
@@ -154,6 +183,79 @@ const FormRegisterTeacher = () => {
       }
     })
   }
+
+  // useEffect(() => {
+  //   const timer = setInterval(() => {
+  //     setUploadPercentage((oldUploadPercentage) => {
+  //       if (oldUploadPercentage === 100) {
+  //         return 0
+  //       }
+  //       const diff = Math.random() * 10
+  //       return Math.min(oldUploadPercentage + diff, 100)
+  //     })
+  //   }, 500)
+
+  //   return () => {
+  //     clearInterval(timer)
+  //   }
+  // }, [])
+
+  const handleDegreeImagesUpload = async (event) => {
+    if (event.currentTarget.files) {
+      const filesArray = Array.from(event.currentTarget.files).map((file) =>
+        URL.createObjectURL(file)
+      )
+
+      setSelectedImages((prevImages) => prevImages.concat(filesArray))
+      Array.from(event.currentTarget.files).map(
+        (file) => URL.revokeObjectURL(file) // avoid memory leak
+      )
+
+      const files = event.target.files
+      const formData = new FormData()
+
+      for (let i = 0; i < files.length; i++) {
+        formData.append('degreeImages', files[i])
+      }
+
+      setUploadingDegreeImages(true)
+      try {
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+
+        const { data } = await axios.post(
+          '/api/uploadDegreeImages',
+          formData,
+          config
+        )
+        setDegreeImages(data)
+        setUploadingDegreeImages(false)
+      } catch (error) {
+        console.error(error)
+        setUploadingDegreeImages(false)
+      }
+    }
+  }
+
+  const renderPhotos = (source) => {
+    console.log('source: ', source)
+    return source.map((photo) => {
+      return (
+        <Grid item>
+          <img
+            src={photo}
+            alt=""
+            key={photo}
+            style={{ width: '150px', height: '150px' }}
+          />
+        </Grid>
+      )
+    })
+  }
+
   return (
     <div style={{ backgroundColor: '#888', minHeight: '100vh ' }}>
       <div className={classes.toolbarMargin}></div>
@@ -166,14 +268,15 @@ const FormRegisterTeacher = () => {
               email: '',
               password: '',
               confirmPassword: '',
-              degreeImages: [],
+              degreeImages: degreeImages,
               expImages: [],
               teacherAvatar: teacherAvatarState,
               dateOfBirth: null,
               homeTown: homeTownState,
               communicationTool: [],
               introduction: '',
-              video: videoState,
+              video: videoFilePath,
+              thumbnail: thumbnail,
             }}
             onSubmit={async (values) => {
               console.log('values', { isPro, isCommutor, ...values })
@@ -367,14 +470,17 @@ const FormRegisterTeacher = () => {
                 </Grid>
               </Grid>
             </FormikStep> */}
-            <FormikStep label="Điền thông tin giáo viên">
+            <FormikStep
+              label="Điền thông tin giáo viên"
+              className={classes.rowContainer}
+            >
               <Card>
                 <CardContent>
                   <Grid
                     container
                     justify="center"
-                    alignItems="center"
                     direction="column"
+                    className={classes.rowContainer}
                   >
                     <Grid item>
                       <Typography
@@ -386,68 +492,65 @@ const FormRegisterTeacher = () => {
                         Điền thông tin giáo viên
                       </Typography>
                     </Grid>
-                    <Grid
-                      item
-                      style={{ margin: 'auto' }}
-                      className={classes.formControl}
-                    >
-                      <Avatar
-                        src={teacherAvatarState}
-                        style={{ width: '4em', height: '4em' }}
-                        alt="teacher-avatar"
-                      />
-                    </Grid>
-                    <Grid
-                      item
-                      style={{ margin: 'auto' }}
-                      className={classes.formControl}
-                    >
-                      <p>
-                        Đổi ảnh profile
-                        <br />
-                        Tối đa 2MB
-                      </p>
-                    </Grid>
                     <Grid item className={classes.formControl}>
-                      <Button
-                        variant="contained"
-                        component="label"
-                        color="primary"
-                        style={{ color: 'white', fontWeight: '500' }}
-                      >
-                        Tải file ảnh
-                        <input
-                          type="file"
-                          style={{ display: 'none' }}
-                          onChange={async (event) => {
-                            const file = event.currentTarget.files[0]
-                            const formData = new FormData()
-                            formData.append('teacherAvatar', file)
-                            setUploadingTeacherAvatar(true)
-                            try {
-                              const config = {
-                                headers: {
-                                  'Content-Type': 'multipart/form-data',
-                                },
-                              }
+                      <Grid container direction="column" justify="center">
+                        <Grid item>
+                          <Avatar
+                            src={teacherAvatarState}
+                            style={{ width: '4em', height: '4em' }}
+                            alt="teacher-avatar"
+                          />
+                        </Grid>
+                        <Grid item>
+                          <p>
+                            Đổi ảnh profile
+                            <br />
+                            Tối đa 2MB
+                          </p>
+                        </Grid>
+                        <Grid item className={classes.formControl}>
+                          <Button
+                            variant="contained"
+                            component="label"
+                            color="primary"
+                            style={{ color: 'white', fontWeight: '500' }}
+                          >
+                            Tải file ảnh
+                            <input
+                              type="file"
+                              style={{ display: 'none' }}
+                              onChange={async (event) => {
+                                const file = event.currentTarget.files[0]
+                                const formData = new FormData()
+                                formData.append('teacherAvatar', file)
+                                setUploadingTeacherAvatar(true)
+                                try {
+                                  const config = {
+                                    headers: {
+                                      'Content-Type': 'multipart/form-data',
+                                    },
+                                  }
 
-                              const { data } = await axios.post(
-                                '/api/upload-teacher-avatar',
-                                formData,
-                                config
-                              )
-                              setTeacherAvatarState(data)
-                              setUploadingTeacherAvatar(false)
-                            } catch (error) {
-                              console.error(error)
-                              setUploadingTeacherAvatar(false)
-                            }
-                          }}
-                        />
-                      </Button>
-                      {uploadingTeacherAvatar && (
-                        <LinearProgress color="secondary" />
-                      )}
+                                  const { data } = await axios.post(
+                                    '/api/upload-teacher-avatar',
+                                    formData,
+                                    config
+                                  )
+                                  console.log(data)
+                                  setTeacherAvatarState(data)
+                                  setUploadingTeacherAvatar(false)
+                                } catch (error) {
+                                  console.error(error)
+                                  setUploadingTeacherAvatar(false)
+                                }
+                              }}
+                            />
+                          </Button>
+                          {uploadingTeacherAvatar && (
+                            <LinearProgress color="secondary" />
+                          )}
+                        </Grid>
+                      </Grid>
                     </Grid>
                     <Grid item className={classes.formControl}>
                       <MuiPickersUtilsProvider utils={DateFnsUtils}>
@@ -458,7 +561,11 @@ const FormRegisterTeacher = () => {
                         />
                       </MuiPickersUtilsProvider>
                     </Grid>
-                    <Grid item className={classes.formControl}>
+                    <Grid
+                      item
+                      className={classes.formControl}
+                      style={{ marginTop: '1em' }}
+                    >
                       <div>
                         <label htmlFor={'abc'} style={{ fontWeight: '400' }}>
                           Chọn Quốc tịch của bạn:
@@ -473,34 +580,7 @@ const FormRegisterTeacher = () => {
                         />
                       </div>
                     </Grid>
-                    {/* <Grid item className={classes.formControl}>
-                      <Field
-                        name="communicationTool"
-                        multiple
-                        component={Autocomplete}
-                        options={videoCallSoftwares}
-                        getOptionLabel={(option: any) => option.software}
-                        style={{ width: 300 }}
-                        renderInput={(
-                          params: AutocompleteRenderInputParams
-                        ) => (
-                          <MuiTextField
-                            {...params}
-                            error={
-                              touched['communicationTool'] &&
-                              !!errors['communicationTool']
-                            }
-                            helperText={
-                              touched['communicationTool'] &&
-                              errors['communicationTool']
-                            }
-                            label="Các phần mềm video call bạn dùng để dạy:"
-                            variant="outlined"
-                          />
-                        )}
-                      />
-                    </Grid> */}
-                    <Grid item>
+                    <Grid item className={classes.formControl}>
                       <FormControl>
                         <label htmlFor="communicationTool">
                           Phần mềm video call bạn dùng để dạy:
@@ -526,7 +606,6 @@ const FormRegisterTeacher = () => {
                     </Grid>
                     <Grid item className={classes.formControl}>
                       <Field
-                        fullWidth
                         name="introduction"
                         type="text"
                         component={TextField}
@@ -541,82 +620,106 @@ const FormRegisterTeacher = () => {
                       className={classes.formControl}
                     >
                       <p>
-                        Đổi ảnh profile
+                        Tải video giới thiệu
                         <br />
-                        Tối đa 2MB
+                        Độ dài từ 1 - 3 phút
                       </p>
                     </Grid>
-                    {/* <Grid item className={classes.formControl}>
+                    <Grid item>
+                      <Grid
+                        container
+                        justify="center"
+                        alignItems="center"
+                        spacing={3}
+                        className={classes.formControl}
+                      >
+                        <Grid item>
+                          <Dropzone
+                            onDrop={onDrop}
+                            multiple={false}
+                            maxSize={800000000}
+                          >
+                            {({ getRootProps, getInputProps }) => (
+                              <div
+                                style={{
+                                  width: '300px',
+                                  height: '240px',
+                                  border: '1px solid lightgray',
+                                  display: 'flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                }}
+                                {...getRootProps()}
+                              >
+                                <input {...getInputProps()} />
+                                <AddIcon style={{ fontSize: '3rem' }} />
+                              </div>
+                            )}
+                          </Dropzone>
+                        </Grid>
+                        <Grid item>
+                          {thumbnail !== '' && (
+                            <div>
+                              <img
+                                src={`http://localhost:5000/${thumbnail}`}
+                                alt="video-thumbnail"
+                              />
+                            </div>
+                          )}
+                        </Grid>
+                        <Grid item>
+                          {thumbnail !== '' && (
+                            <Typography variant="body1">
+                              Độ dài:{' '}
+                              <Moment format="hh:mm:ss">{duration}</Moment>
+                            </Typography>
+                          )}
+                        </Grid>
+                      </Grid>
+                      <Grid item className={classes.formControl}>
+                        <div style={{ width: '100%' }}>
+                          {uploadPercentage > 0 && (
+                            <LinearProgress
+                              variant="determinate"
+                              value={uploadPercentage}
+                            />
+                          )}
+                        </div>
+                      </Grid>
+                    </Grid>
+                    <Grid item className={classes.formControl}>
+                      <label htmlFor="degree-upload">
+                        Tải hình ảnh bằng cấp của bạn:
+                      </label>
+                      <br />
                       <Button
                         variant="contained"
                         component="label"
                         color="primary"
                         style={{ color: 'white', fontWeight: '500' }}
                       >
-                        Tải file video giới thiệu
+                        Tải file ảnh
                         <input
+                          id="degree-upload"
                           type="file"
+                          multiple
                           style={{ display: 'none' }}
-                          onChange={async (event) => {
-                            const file = event.currentTarget.files[0]
-                            const formData = new FormData()
-                            formData.append('video', file)
-                            setUploadingVideo(true)
-                            try {
-                              const config = {
-                                headers: {
-                                  'Content-Type': 'multipart/form-data',
-                                },
-                              }
-
-                              const { data } = await axios.post(
-                                '/api/uploadVideo',
-                                formData,
-                                config
-                              )
-                              setVideoState(data)
-                              setUploadingVideo(false)
-                            } catch (error) {
-                              console.error(error)
-                              setUploadingVideo(false)
-                            }
-                          }}
+                          onChange={handleDegreeImagesUpload}
                         />
                       </Button>
-                      {uploadingVideo && <LinearProgress color="secondary" />}
-                    </Grid> */}
-                    <Grid item>
-                      <Dropzone
-                        onDrop={onDrop}
-                        multiple={false}
-                        maxSize={800000000}
-                      >
-                        {({ getRootProps, getInputProps }) => (
-                          <div
-                            style={{
-                              width: '300px',
-                              height: '240px',
-                              border: '1px solid lightgray',
-                              display: 'flex',
-                              alignItems: 'center',
-                              justifyContent: 'center',
-                            }}
-                            {...getRootProps()}
-                          >
-                            <input {...getInputProps()} />
-                            <AddIcon style={{ fontSize: '3rem' }} />
-                          </div>
-                        )}
-                      </Dropzone>
-
-                      {thumbnail !== '' && (
-                        <div>
-                          <img
-                            src={`http://localhost:5000/${thumbnail}`}
-                            alt="video-thumbnail"
-                          />
-                        </div>
+                      {uploadingDegreeImages && (
+                        <LinearProgress color="secondary" />
                       )}
+                    </Grid>
+                    <Grid item>
+                      <Grid
+                        container
+                        justify="center"
+                        alignItems="center"
+                        spacing={3}
+                      >
+                        {renderPhotos(selectedImages)}
+                      </Grid>
                     </Grid>
                   </Grid>
                   {isPro && <p>I am a professional teacher!</p>}
