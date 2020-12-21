@@ -6,15 +6,13 @@ const ProfileTeacherSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'teacher',
     },
-    typeOfTeacher: {
-      type: String,
-      required: true,
-    },
     isPro: {
-      type: String,
+      type: Boolean,
+      default: false,
     },
     isCommutor: {
-      type: String,
+      type: Boolean,
+      default: false,
     },
     degreeImages: {
       type: [{ type: String }],
@@ -48,9 +46,6 @@ const ProfileTeacherSchema = new mongoose.Schema(
     },
     duration: {
       type: String,
-    },
-    expImages: {
-      type: [{ type: String }],
     },
   },
   { timestamps: true }

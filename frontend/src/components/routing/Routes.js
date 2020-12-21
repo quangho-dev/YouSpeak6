@@ -9,6 +9,7 @@ import LoginTeacherScreen from '../../screens/teachers/LoginTeacherScreen'
 import ForTeacherScreen from '../../screens/teachers/ForTeacherScreen'
 import FormRegisterTeacherScreen from '../../screens/teachers/FormRegisterTeacherScreen'
 import FormRegisterTeacher from '../../screens/teachers/MultiTeacherRegisterForm/FormRegisterTeacher'
+import TeacherRegisterForm from '../../screens/teachers/TeacherRegister/TeacherRegisterForm'
 
 const Routes = (props) => {
   return (
@@ -34,7 +35,7 @@ const Routes = (props) => {
         <Route
           exact
           path="/teachers/register"
-          component={FormRegisterTeacher}
+          component={TeacherRegisterForm}
         />
       </Switch>
     </section>

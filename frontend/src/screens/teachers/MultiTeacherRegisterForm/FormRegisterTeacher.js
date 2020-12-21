@@ -15,6 +15,7 @@ import {
   FormControl,
   InputLabel,
   MenuItem,
+  CardMedia,
 } from '@material-ui/core'
 import {
   Field,
@@ -53,6 +54,9 @@ import AddIcon from '@material-ui/icons/Add'
 import Moment from 'react-moment'
 import 'moment-duration-format'
 import moment from 'moment'
+import { useDispatch, useSelector } from 'react-redux'
+import { registerTeacher } from '../../../actions/authTeacher'
+import { createOrUpdateProfileTeacher } from '../../../actions/profileTeacher'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -94,9 +98,27 @@ const useStyles = makeStyles((theme) => ({
   rowContainer: {
     padding: '0 4em',
   },
+  degreeImageCard: {
+    maxWidth: 300,
+  },
+  degreeImage: {
+    width: '100%',
+    height: 'auto',
+  },
+  expImageCard: {
+    maxWidth: 300,
+  },
+  expImage: {
+    width: '100%',
+    height: 'auto',
+  },
 }))
 
 const FormRegisterTeacher = () => {
+  // const [name, setName] = useState('')
+  // const [email, setEmail] = useState('')
+  // const [password, setPassword] = useState('')
+  // const [confirmPassword, setConfirmPassword] = useState('')
   const [isPro, setIsPro] = useState(false)
   const [isCommutor, setIsCommutor] = useState(false)
   const [step, setStep] = useState(0)
@@ -113,10 +135,15 @@ const FormRegisterTeacher = () => {
 
   const [degreeImages, setDegreeImages] = useState([])
   const [uploadingDegreeImages, setUploadingDegreeImages] = useState(false)
+  const [selectedDegreeImages, setSelectedDegreeImages] = useState([])
 
-  const [selectedImages, setSelectedImages] = useState([])
+  const [selectedExpImages, setSelectedExpImages] = useState([])
+  const [expImages, setExpImages] = useState([])
+  const [uploadingExpImages, setUploadingExpImages] = useState(false)
 
   const classes = useStyles()
+
+  const dispatch = useDispatch()
 
   const handleSelectProType = () => {
     setIsPro(true)
@@ -151,7 +178,6 @@ const FormRegisterTeacher = () => {
         }
       },
     }
-    console.log(files)
     formData.append('video', files[0])
 
     axios.post('/api/uploadVideo', formData, config).then((response) => {
@@ -184,30 +210,14 @@ const FormRegisterTeacher = () => {
     })
   }
 
-  // useEffect(() => {
-  //   const timer = setInterval(() => {
-  //     setUploadPercentage((oldUploadPercentage) => {
-  //       if (oldUploadPercentage === 100) {
-  //         return 0
-  //       }
-  //       const diff = Math.random() * 10
-  //       return Math.min(oldUploadPercentage + diff, 100)
-  //     })
-  //   }, 500)
-
-  //   return () => {
-  //     clearInterval(timer)
-  //   }
-  // }, [])
-
   const handleDegreeImagesUpload = async (event) => {
-    if (event.currentTarget.files) {
-      const filesArray = Array.from(event.currentTarget.files).map((file) =>
+    if (event.target.files) {
+      const filesArray = Array.from(event.target.files).map((file) =>
         URL.createObjectURL(file)
       )
 
-      setSelectedImages((prevImages) => prevImages.concat(filesArray))
-      Array.from(event.currentTarget.files).map(
+      setSelectedDegreeImages((prevImages) => prevImages.concat(filesArray))
+      Array.from(event.target.files).map(
         (file) => URL.revokeObjectURL(file) // avoid memory leak
       )
 
@@ -231,7 +241,7 @@ const FormRegisterTeacher = () => {
           formData,
           config
         )
-        setDegreeImages(data)
+        setDegreeImages((prevState) => prevState.concat(data))
         setUploadingDegreeImages(false)
       } catch (error) {
         console.error(error)
@@ -240,20 +250,102 @@ const FormRegisterTeacher = () => {
     }
   }
 
-  const renderPhotos = (source) => {
-    console.log('source: ', source)
-    return source.map((photo) => {
+  const handleExpImagesUpload = async (event) => {
+    if (event.target.files) {
+      const filesArray = Array.from(event.target.files).map((file) =>
+        URL.createObjectURL(file)
+      )
+
+      setSelectedExpImages((prevImages) => prevImages.concat(filesArray))
+      Array.from(event.target.files).map(
+        (file) => URL.revokeObjectURL(file) // avoid memory leak
+      )
+
+      const files = event.target.files
+      const formData = new FormData()
+
+      for (let i = 0; i < files.length; i++) {
+        formData.append('expImages', files[i])
+      }
+
+      setUploadingExpImages(true)
+      try {
+        const config = {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        }
+
+        const { data } = await axios.post(
+          '/api/uploadExpImages',
+          formData,
+          config
+        )
+        setExpImages((prevState) => prevState.concat(data))
+        setUploadingExpImages(false)
+      } catch (error) {
+        console.error(error)
+        setUploadingExpImages(false)
+      }
+    }
+  }
+
+  const renderDegreeImages = (source) => {
+    return source.map((photo, index) => {
       return (
-        <Grid item>
-          <img
-            src={photo}
-            alt=""
-            key={photo}
-            style={{ width: '150px', height: '150px' }}
-          />
+        <Grid item className={classes.expImageCard} key={photo}>
+          <Card>
+            <img src={photo} className={classes.expImage} />
+            <CardActions>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={() => deleteDegreeImages(index)}
+              >
+                Bỏ chọn
+              </Button>
+            </CardActions>
+          </Card>
         </Grid>
       )
     })
+  }
+
+  const renderExpImages = (source) => {
+    return source.map((photo, index) => {
+      return (
+        <Grid item className={classes.expImageCard} key={photo}>
+          <Card>
+            <img src={photo} className={classes.expImage} />
+            <CardActions>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={() => deleteExpImages(index)}
+              >
+                Bỏ chọn
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+      )
+    })
+  }
+
+  const deleteDegreeImages = (e) => {
+    const s = selectedDegreeImages.filter((item, index) => index !== e)
+    const sa = degreeImages.filter((item, index) => index !== e)
+    setSelectedDegreeImages(s)
+    setDegreeImages(sa)
+  }
+
+  const deleteExpImages = (e) => {
+    const s = selectedExpImages.filter((item, index) => index !== e)
+    const sa = expImages.filter((item, index) => index !== e)
+    setSelectedExpImages(s)
+    setExpImages(sa)
   }
 
   return (
@@ -268,8 +360,10 @@ const FormRegisterTeacher = () => {
               email: '',
               password: '',
               confirmPassword: '',
+              isPro: isPro,
+              isCommutor: isCommutor,
               degreeImages: degreeImages,
-              expImages: [],
+              expImages: expImages,
               teacherAvatar: teacherAvatarState,
               dateOfBirth: null,
               homeTown: homeTownState,
@@ -278,14 +372,45 @@ const FormRegisterTeacher = () => {
               video: videoFilePath,
               thumbnail: thumbnail,
             }}
-            onSubmit={async (values) => {
-              console.log('values', { isPro, isCommutor, ...values })
+            onSubmit={async (values, { resetForm }) => {
+              const {
+                name,
+                email,
+                password,
+                isPro,
+                isCommutor,
+                degreeImages,
+                expImages,
+                teacherAvatar,
+                dateOfBirth,
+                homeTown,
+                communicationTool,
+                introduction,
+                video,
+                thumbnail,
+              } = values
+              dispatch(registerTeacher({ name, email, password }))
+              dispatch(
+                createOrUpdateProfileTeacher({
+                  isPro,
+                  isCommutor,
+                  degreeImages,
+                  expImages,
+                  teacherAvatar,
+                  dateOfBirth,
+                  homeTown,
+                  communicationTool,
+                  introduction,
+                  video,
+                  thumbnail,
+                })
+              )
             }}
             isPro={isPro}
             step={step}
             setStep={setStep}
           >
-            {/* <FormikStep
+            <FormikStep
               label="Đăng ký tài khoản"
               validationSchema={object({
                 name: string().required('Bạn cần điền tên hiển thị'),
@@ -304,7 +429,6 @@ const FormRegisterTeacher = () => {
               })}
             >
               <Grid
-                item
                 container
                 alignItems="center"
                 className={classes.paddingContainer}
@@ -331,40 +455,64 @@ const FormRegisterTeacher = () => {
                   </Typography>
                 </Grid>
               </Grid>
-              <Box paddingBottom={2}>
-                <Field
-                  fullWidth
-                  name="name"
-                  component={TextField}
-                  label="Tên hiển thị"
-                />
-              </Box>
-              <Box paddingBottom={2}>
-                <Field
-                  fullWidth
-                  name="email"
-                  component={TextField}
-                  label="Email"
-                />
-              </Box>
-              <Box paddingBottom={2}>
-                <Field
-                  fullWidth
-                  name="password"
-                  type="password"
-                  component={TextField}
-                  label="Mật khẩu"
-                />
-              </Box>
-              <Box paddingBottom={2}>
-                <Field
-                  fullWidth
-                  name="confirmPassword"
-                  type="password"
-                  component={TextField}
-                  label="Xác nhận mật khẩu"
-                />
-              </Box>
+              <Grid
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                className={classes.paddingContainer}
+              >
+                <Grid
+                  item
+                  className={classes.formControl}
+                  style={{ width: '100%' }}
+                >
+                  <Field
+                    fullWidth
+                    name="name"
+                    component={TextField}
+                    label="Tên hiển thị"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  className={classes.formControl}
+                  style={{ width: '100%' }}
+                >
+                  <Field
+                    fullWidth
+                    name="email"
+                    component={TextField}
+                    label="Email"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  className={classes.formControl}
+                  style={{ width: '100%' }}
+                >
+                  <Field
+                    fullWidth
+                    name="password"
+                    type="password"
+                    component={TextField}
+                    label="Mật khẩu"
+                  />
+                </Grid>
+                <Grid
+                  item
+                  className={classes.formControl}
+                  style={{ width: '100%' }}
+                >
+                  <Field
+                    fullWidth
+                    name="confirmPassword"
+                    type="password"
+                    component={TextField}
+                    label="Xác nhận mật khẩu"
+                  />
+                </Grid>
+              </Grid>
             </FormikStep>
             <FormikStep
               label="Chọn kiểu giáo viên"
@@ -469,9 +617,17 @@ const FormRegisterTeacher = () => {
                   </CardActions>
                 </Grid>
               </Grid>
-            </FormikStep> */}
+            </FormikStep>
             <FormikStep
               label="Điền thông tin giáo viên"
+              validationSchema={object({
+                teacherAvatar: string().required('Bạn cần tải hình đại diện'),
+                homeTown: string().required('Bạn cần chọn Quốc Gia'),
+                communicationTool: string().required(
+                  'Bạn cần chọn phần mềm dùng để dạy'
+                ),
+                introduction: string().required(),
+              })}
               className={classes.rowContainer}
             >
               <Card>
@@ -503,7 +659,7 @@ const FormRegisterTeacher = () => {
                         </Grid>
                         <Grid item>
                           <p>
-                            Đổi ảnh profile
+                            Đổi ảnh profile ( * )
                             <br />
                             Tối đa 2MB
                           </p>
@@ -568,7 +724,7 @@ const FormRegisterTeacher = () => {
                     >
                       <div>
                         <label htmlFor={'abc'} style={{ fontWeight: '400' }}>
-                          Chọn Quốc tịch của bạn:
+                          Chọn Quốc tịch của bạn: ( * )
                         </label>
                         <br />
                         <ReactFlagsSelect
@@ -583,7 +739,7 @@ const FormRegisterTeacher = () => {
                     <Grid item className={classes.formControl}>
                       <FormControl>
                         <label htmlFor="communicationTool">
-                          Phần mềm video call bạn dùng để dạy:
+                          Phần mềm video call bạn dùng để dạy: ( * )
                         </label>
                         <Field
                           component={Select}
@@ -609,7 +765,7 @@ const FormRegisterTeacher = () => {
                         name="introduction"
                         type="text"
                         component={TextField}
-                        label="Thông tin thêm:"
+                        label="Thông tin thêm: ( * )"
                         multiline
                         rows={5}
                       />
@@ -620,7 +776,7 @@ const FormRegisterTeacher = () => {
                       className={classes.formControl}
                     >
                       <p>
-                        Tải video giới thiệu
+                        Tải video giới thiệu ( * )
                         <br />
                         Độ dài từ 1 - 3 phút
                       </p>
@@ -687,42 +843,85 @@ const FormRegisterTeacher = () => {
                         </div>
                       </Grid>
                     </Grid>
-                    <Grid item className={classes.formControl}>
-                      <label htmlFor="degree-upload">
-                        Tải hình ảnh bằng cấp của bạn:
-                      </label>
-                      <br />
-                      <Button
-                        variant="contained"
-                        component="label"
-                        color="primary"
-                        style={{ color: 'white', fontWeight: '500' }}
-                      >
-                        Tải file ảnh
-                        <input
-                          id="degree-upload"
-                          type="file"
-                          multiple
-                          style={{ display: 'none' }}
-                          onChange={handleDegreeImagesUpload}
-                        />
-                      </Button>
-                      {uploadingDegreeImages && (
-                        <LinearProgress color="secondary" />
-                      )}
-                    </Grid>
+                    {isPro && (
+                      <>
+                        <Grid item className={classes.formControl}>
+                          <label htmlFor="degree-upload">
+                            Tải hình ảnh bằng cấp của bạn: ( * )
+                          </label>
+                          <br />
+                          <Button
+                            variant="contained"
+                            component="label"
+                            color="primary"
+                            style={{ color: 'white', fontWeight: '500' }}
+                          >
+                            Tải file ảnh
+                            <input
+                              id="degree-upload"
+                              type="file"
+                              multiple
+                              style={{ display: 'none' }}
+                              onChange={handleDegreeImagesUpload}
+                            />
+                          </Button>
+                          {uploadingDegreeImages && (
+                            <LinearProgress color="secondary" />
+                          )}
+                        </Grid>
+
+                        <Grid item>
+                          <Grid
+                            container
+                            justify="center"
+                            alignItems="center"
+                            spacing={3}
+                          >
+                            {renderDegreeImages(selectedDegreeImages)}
+                          </Grid>
+                        </Grid>
+                        <Grid item className={classes.formControl}>
+                          <label htmlFor="exp-upload">
+                            Tải hình kinh nghiệm của bạn: ( * )
+                          </label>
+                          <br />
+                          <Button
+                            variant="contained"
+                            component="label"
+                            color="primary"
+                            style={{ color: 'white', fontWeight: '500' }}
+                          >
+                            Tải file ảnh
+                            <input
+                              id="exp-upload"
+                              type="file"
+                              multiple
+                              style={{ display: 'none' }}
+                              onChange={handleExpImagesUpload}
+                            />
+                          </Button>
+                          {uploadingExpImages && (
+                            <LinearProgress color="secondary" />
+                          )}
+                        </Grid>
+                        <Grid item>
+                          <Grid
+                            container
+                            justify="center"
+                            alignItems="center"
+                            spacing={3}
+                          >
+                            {renderExpImages(selectedExpImages)}
+                          </Grid>
+                        </Grid>
+                      </>
+                    )}
                     <Grid item>
-                      <Grid
-                        container
-                        justify="center"
-                        alignItems="center"
-                        spacing={3}
-                      >
-                        {renderPhotos(selectedImages)}
-                      </Grid>
+                      <Typography variant="body2">
+                        ( * ) Không được để trống
+                      </Typography>
                     </Grid>
                   </Grid>
-                  {isPro && <p>I am a professional teacher!</p>}
                 </CardContent>
               </Card>
             </FormikStep>
