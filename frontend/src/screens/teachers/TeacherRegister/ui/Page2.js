@@ -30,6 +30,7 @@ import {
 } from 'formik'
 import { makeStyles } from '@material-ui/styles'
 import MuiRadioGroup from '../inputs/MuiRadioGroup'
+import ButtonInput from '../inputs/ButtonInput'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -153,6 +154,13 @@ const Page2 = ({ setFieldValue, nextPage }) => {
               <li>Video giới thiệu dài từ 1 - 3 phút</li>
             </ul>
           </CardContent>
+          <CardActions>
+            <div
+              style={{ width: '100%', textAlign: 'center', marginTop: '1em' }}
+            >
+              <ButtonInput value="professional" nextPage={nextPage} />
+            </div>
+          </CardActions>
         </Grid>
         <Grid
           item
@@ -180,11 +188,15 @@ const Page2 = ({ setFieldValue, nextPage }) => {
               <li>Video giới thiệu dài từ 1 - 3 phút</li>
             </ul>
           </CardContent>
+          <CardActions>
+            <div
+              style={{ width: '100%', textAlign: 'center', marginTop: '1em' }}
+            >
+              <ButtonInput value="commutor" nextPage={nextPage} />
+            </div>
+          </CardActions>
         </Grid>
       </Grid>
-      <div style={{ width: '100%', textAlign: 'center', marginTop: '1em' }}>
-        <MuiRadioGroup name="typeOfTeacher" label="Chọn kiểu giáo viên" />
-      </div>
     </>
   )
 }

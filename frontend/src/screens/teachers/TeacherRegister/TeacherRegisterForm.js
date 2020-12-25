@@ -19,6 +19,8 @@ import {
   MenuItem,
   CardMedia,
   Dialog,
+  IconButton,
+  DialogActions,
 } from '@material-ui/core'
 import { makeStyles } from '@material-ui/styles'
 import Page1 from './ui/Page1'
@@ -26,6 +28,10 @@ import Page2 from './ui/Page2'
 import Page3 from './ui/Page3'
 import { mixed, number, object, string } from 'yup'
 import * as Yup from 'yup'
+import { registerTeacher } from '../../../actions/authTeacher'
+import { createOrUpdateProfileTeacher } from '../../../actions/profileTeacher'
+import { useDispatch, useSelector } from 'react-redux'
+import axios from 'axios'
 
 // cac step trong stepper
 const getSteps = () => {
@@ -92,12 +98,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const TeacherRegisterForm = () => {
+const TeacherRegisterForm = ({ history }) => {
   const [page, setPage] = useState(0)
   const [activeStep, setActiveStep] = useState(0)
 
   const steps = getSteps()
   const classes = useStyles()
+
+  const dispatch = useDispatch()
+
+  const authTeacher = useSelector((state) => state.authTeacher)
 
   const isLastPage = () => page === pages.length - 1
 
@@ -123,15 +133,6 @@ const TeacherRegisterForm = () => {
     handleBack()
   }
 
-  const submit = async (values, helpers) => {
-    if (isLastPage()) {
-      // await submit(values, helpers)
-    } else {
-      setPage(page + 1)
-      // helpers.setTouched({})
-    }
-  }
-
   const validation = object({
     name: string().required('Bạn cần điền tên hiển thị'),
     email: string()
@@ -143,7 +144,10 @@ const TeacherRegisterForm = () => {
     confirmPassword: string()
       .oneOf([Yup.ref('password'), null], 'Mật khẩu chưa trùng khớp')
       .required('Bạn cần điền xác nhận mật khẩu'),
-    typeOfTeacher: string().required('Bạn phải chọn kiểu giáo viên'),
+    hometown: string().required('Bạn cần chọn Quốc Tịch'),
+    communicationTool: object().required(
+      'Bạn cần chọn phần mềm video call để dạy'
+    ),
   })
 
   const pages = [
@@ -155,6 +159,65 @@ const TeacherRegisterForm = () => {
     />,
     <Page3 label="Điền thông tin của giáo viên" />,
   ]
+
+  const uploadTeacherAvatarFile = async (file) => {
+    const formData = new FormData()
+    formData.append('teacherAvatar', file)
+    try {
+      const config = {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
+      }
+
+      const { data } = await axios.post(
+        '/api/upload-teacher-avatar',
+        formData,
+        config
+      )
+      dispatch(createOrUpdateProfileTeacher({ teacherAvatar: data }))
+    } catch (error) {
+      console.error(error)
+    }
+  }
+
+  const onSubmitHandler = (values, { setSubmitting }) => {
+    console.log('S-U-B-M-I-T')
+    setTimeout(() => {
+      dispatch(
+        registerTeacher({
+          name: values.name,
+          email: values.email,
+          password: values.password,
+        })
+      )
+      if (authTeacher.isAuthenticated) {
+        console.log(authTeacher.isAuthenticated)
+        dispatch(
+          createOrUpdateProfileTeacher(
+            {
+              typeOfTeacher: values.typeOfTeacher,
+              dateOfBirth: values.dateOfBirth,
+              hometown: values.hometown,
+              communicationTool: values.communicationTool,
+              introduction: values.introduction,
+              video: values.video,
+              thumbnail: values.thumbnail,
+              degreeImages: values.degreeImages,
+              expImages: values.expImages,
+              videoDuration: values.videoDuration,
+            },
+            history,
+            false
+          )
+        )
+
+        uploadTeacherAvatarFile(values.teacherAvatar)
+      }
+
+      setSubmitting(false)
+    }, 400)
+  }
 
   return (
     <Formik
@@ -176,23 +239,25 @@ const TeacherRegisterForm = () => {
         introduction: '',
         video: '',
         thumbnail: '',
-        duration: 0,
         degreeImages: [],
         expImages: [],
       }}
       validationSchema={validation}
-      onSubmit={submit}
+      onSubmit={onSubmitHandler}
     >
       {({
         values,
         errors,
+        touched,
         handleSubmit,
         isSubmitting,
         dirty,
         setFieldValue,
+        setTouched,
+        isValid,
       }) => (
-        <Form autoComplete="off">
-          <Dialog open fullWidth maxWidth="lg">
+        <Dialog open fullWidth maxWidth="lg">
+          <Form autoComplete="off">
             <div className={classes.toolbarMargin} />
             <Stepper activeStep={activeStep} alternativeLabel>
               {steps.map((label) => (
@@ -202,53 +267,58 @@ const TeacherRegisterForm = () => {
               ))}
             </Stepper>
             {pages[page]}
-            <Grid
-              container
-              justify="center"
-              alignItems="center"
-              spacing={3}
-              style={{ marginTop: '1em' }}
-            >
-              {page !== 0 && (
-                <Grid item>
+            <DialogActions>
+              <Grid
+                container
+                justify="center"
+                alignItems="center"
+                spacing={3}
+                style={{ marginTop: '1em' }}
+              >
+                {page !== 0 && (
+                  <Grid item>
+                    <Button
+                      onClick={() => prevPage()}
+                      color="primary"
+                      variant="contained"
+                      disableRipple
+                    >
+                      Trở về
+                    </Button>
+                  </Grid>
+                )}
+                {page === pages.length - 1 ? (
+                  <Grid item>
+                    <Button
+                      type="submit"
+                      variant="contained"
+                      color="primary"
+                      disableRipple
+                      disabled={!isValid || isSubmitting}
+                    >
+                      Gửi đăng ký
+                    </Button>
+                  </Grid>
+                ) : page !== 1 ? (
                   <Button
-                    onClick={() => prevPage()}
-                    color="primary"
                     variant="contained"
+                    color="primary"
+                    onClick={() => {
+                      nextPage()
+                    }}
                     disableRipple
                   >
-                    Trở về
+                    Trang kế tiếp
                   </Button>
-                </Grid>
-              )}
-              {page === pages.length - 1 ? (
-                <Grid item>
-                  <Button
-                    htmlType="submit"
-                    variant="contained"
-                    color="primary"
-                    disableRipple
-                  >
-                    Gửi đăng ký
-                  </Button>
-                </Grid>
-              ) : (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => nextPage()}
-                  disableRipple
-                >
-                  Trang kế tiếp
-                </Button>
-              )}
-            </Grid>
+                ) : null}
+              </Grid>
+            </DialogActions>
             <div>
               <pre>{JSON.stringify(values, null, 2)}</pre>
               <pre>{JSON.stringify(errors, null, 2)}</pre>
             </div>
-          </Dialog>
-        </Form>
+          </Form>
+        </Dialog>
       )}
     </Formik>
   )

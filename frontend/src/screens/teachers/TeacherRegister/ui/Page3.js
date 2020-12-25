@@ -105,20 +105,13 @@ const Page3 = () => {
   const [thumbnail, setThumbnail] = useState('')
   const [videoDuration, setVideoDuration] = useState('')
 
+  const [selectedDegreeImages, setSelectedDegreeImages] = useState([])
+
+  const [selectedExpImages, setSelectedExpImages] = useState([])
+
   const classes = useStyles()
 
-  const { values } = useFormikContext()
-
-  useEffect(() => {
-    if (values.teacherAvatar) {
-      let reader = new FileReader()
-      reader.onloadend = () => {
-        setSelectedTeacherAvatar(reader.result)
-        setLoadingTeacherAvatar(false)
-      }
-      reader.readAsDataURL(values.teacherAvatar)
-    }
-  }, [values.teacherAvatar, setSelectedTeacherAvatar])
+  const { setFieldValue, values } = useFormikContext()
 
   const onDrop = (files) => {
     let formData = new FormData()
@@ -148,14 +141,14 @@ const Page3 = () => {
           setUploadVideoPercentage(0)
         }, 1000)
 
-        setVideoFilePath(response.data.url)
+        setFieldValue('video', response.data.url)
 
         //gerenate thumbnail with this filepath !
 
         axios.post('/api/uploadVideo/thumbnail', variable).then((response) => {
           if (response.data.success) {
             setVideoDuration(response.data.fileDuration)
-            setThumbnail(response.data.url)
+            setFieldValue('thumbnail', response.data.url)
           } else {
             alert('Failed to make the thumbnails')
           }
@@ -163,6 +156,97 @@ const Page3 = () => {
       } else {
         alert('failed to save the video in server')
       }
+    })
+  }
+
+  const handleDegreeImagesUpload = async (event) => {
+    if (event.target.files) {
+      console.log('day la event.target.files:', event.target.files)
+      const filesArray = Array.from(event.target.files).map((file) =>
+        URL.createObjectURL(file)
+      )
+
+      const files = Array.from(event.target.files)
+      setFieldValue('degreeImages', files)
+
+      setSelectedDegreeImages((prevImages) => prevImages.concat(filesArray))
+      Array.from(event.target.files).map(
+        (file) => URL.revokeObjectURL(file) // avoid memory leak
+      )
+    }
+  }
+
+  const handleExpImagesUpload = async (event) => {
+    if (event.target.files) {
+      const filesArray = Array.from(event.target.files).map((file) =>
+        URL.createObjectURL(file)
+      )
+
+      const files = Array.from(event.target.files)
+      setFieldValue('expImages', files)
+
+      setSelectedExpImages((prevImages) => prevImages.concat(filesArray))
+      Array.from(event.target.files).map(
+        (file) => URL.revokeObjectURL(file) // avoid memory leak
+      )
+    }
+  }
+
+  const deleteDegreeImages = (e) => {
+    const s = selectedDegreeImages.filter((item, index) => index !== e)
+    const sa = values.degreeImages.filter((item, index) => index !== e)
+    setSelectedDegreeImages(s)
+    setFieldValue('degreeImages', sa)
+  }
+
+  const deleteExpImages = (e) => {
+    const s = selectedExpImages.filter((item, index) => index !== e)
+    const sa = values.expImages.filter((item, index) => index !== e)
+    setSelectedExpImages(s)
+    setFieldValue('expImages', sa)
+  }
+
+  const renderDegreeImages = (source) => {
+    return source.map((photo, index) => {
+      return (
+        <Grid item className={classes.expImageCard} key={photo}>
+          <Card>
+            <img src={photo} className={classes.expImage} />
+            <CardActions>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={() => deleteDegreeImages(index)}
+              >
+                Bỏ chọn
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+      )
+    })
+  }
+
+  const renderExpImages = (source) => {
+    return source.map((photo, index) => {
+      return (
+        <Grid item className={classes.expImageCard} key={photo}>
+          <Card>
+            <img src={photo} className={classes.expImage} />
+            <CardActions>
+              <Button
+                fullWidth
+                variant="contained"
+                color="primary"
+                onClick={() => deleteExpImages(index)}
+              >
+                Bỏ chọn
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
+      )
     })
   }
 
@@ -204,6 +288,7 @@ const Page3 = () => {
               name="teacherAvatar"
               label="Tải hình ảnh giáo viên"
               setLoadingTeacherAvatar={setLoadingTeacherAvatar}
+              setSelectedTeacherAvatar={setSelectedTeacherAvatar}
             />
             {loadingTeacherAvatar && <LinearProgress color="secondary" />}
           </Grid>
@@ -305,17 +390,17 @@ const Page3 = () => {
             </Dropzone>
           </Grid>
           <Grid item>
-            {thumbnail !== '' && (
+            {values.thumbnail !== '' && (
               <div>
                 <img
-                  src={`http://localhost:5000/${thumbnail}`}
+                  src={`http://localhost:5000/${values.thumbnail}`}
                   alt="video-thumbnail"
                 />
               </div>
             )}
           </Grid>
           <Grid item>
-            {thumbnail !== '' && (
+            {values.thumbnail !== '' && (
               <Typography variant="body1">
                 Độ dài: <Moment format="hh:mm:ss">{videoDuration}</Moment>
               </Typography>
@@ -332,6 +417,69 @@ const Page3 = () => {
             )}
           </div>
         </Grid>
+      </Grid>
+
+      {values.typeOfTeacher === 'professional' && (
+        <>
+          <Grid item className={classes.formControl}>
+            <label htmlFor="degree-upload">
+              Tải hình ảnh bằng cấp của bạn: ( * )
+            </label>
+            <br />
+            <Button
+              variant="contained"
+              component="label"
+              color="primary"
+              style={{ color: 'white', fontWeight: '500' }}
+            >
+              Tải file ảnh
+              <input
+                id="degree-upload"
+                type="file"
+                multiple
+                style={{ display: 'none' }}
+                onChange={handleDegreeImagesUpload}
+              />
+            </Button>
+            {/* {uploadingDegreeImages && <LinearProgress color="secondary" />} */}
+          </Grid>
+
+          <Grid item>
+            <Grid container justify="center" alignItems="center" spacing={3}>
+              {renderDegreeImages(selectedDegreeImages)}
+            </Grid>
+          </Grid>
+          <Grid item className={classes.formControl}>
+            <label htmlFor="exp-upload">
+              Tải hình kinh nghiệm của bạn: ( * )
+            </label>
+            <br />
+            <Button
+              variant="contained"
+              component="label"
+              color="primary"
+              style={{ color: 'white', fontWeight: '500' }}
+            >
+              Tải file ảnh
+              <input
+                id="exp-upload"
+                type="file"
+                multiple
+                style={{ display: 'none' }}
+                onChange={handleExpImagesUpload}
+              />
+            </Button>
+            {/*{uploadingExpImages && <LinearProgress color="secondary" />} */}
+          </Grid>
+          <Grid item>
+            <Grid container justify="center" alignItems="center" spacing={3}>
+              {renderExpImages(selectedExpImages)}
+            </Grid>
+          </Grid>
+        </>
+      )}
+      <Grid item>
+        <Typography variant="body2">( * ) Không được để trống</Typography>
       </Grid>
     </Grid>
   )

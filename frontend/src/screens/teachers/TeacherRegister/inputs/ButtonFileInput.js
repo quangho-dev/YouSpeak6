@@ -1,10 +1,25 @@
 import React, { useEffect } from 'react'
 import { Button } from '@material-ui/core'
-import { useField } from 'formik'
+import { useField, useFormikContext } from 'formik'
 
-const ButtonFileInput = ({ label, name, setLoadingTeacherAvatar }) => {
+const ButtonFileInput = ({
+  label,
+  name,
+  setLoadingTeacherAvatar,
+  setSelectedTeacherAvatar,
+}) => {
   const [field, meta, helpers] = useField(name)
-  const { setValue } = helpers
+  const { setFieldValue, values } = useFormikContext()
+
+  const onChangeHandler = (e) => {
+    let file = e.currentTarget.files[0]
+    setFieldValue('teacherAvatar', file)
+    let reader = new FileReader()
+    reader.onloadend = () => {
+      setSelectedTeacherAvatar(reader.result)
+    }
+    reader.readAsDataURL(file)
+  }
 
   return (
     <>
@@ -18,12 +33,7 @@ const ButtonFileInput = ({ label, name, setLoadingTeacherAvatar }) => {
         <input
           type="file"
           style={{ display: 'none' }}
-          onChange={(event) => {
-            if (event.currentTarget.files) {
-              setValue(event.currentTarget.files[0])
-              setLoadingTeacherAvatar(true)
-            }
-          }}
+          onChange={onChangeHandler}
         />
       </Button>
     </>

@@ -27,33 +27,34 @@ const getCurrentProfileTeacher = async (req, res) => {
 // @desc     Create or update teacher profile
 // @access   Private
 const createOrUpdateProfileTeacher = async (req, res) => {
+  console.log('this is req.user:', req.body)
   const {
-    isPro,
-    isCommutor,
+    typeOfTeacher,
     degreeImages,
     teacherAvatar,
     dateOfBirth,
-    homeTown,
+    hometown,
     communicationTool,
     introduction,
     video,
     expImages,
     thumbnail,
+    videoDuration,
   } = req.body
 
   const profileTeacherFields = {
     teacher: req.teacher.id,
-    isPro,
-    isCommutor,
+    typeOfTeacher,
     degreeImages,
     teacherAvatar,
     dateOfBirth,
-    homeTown,
+    hometown,
     communicationTool,
     introduction,
     video,
     expImages,
     thumbnail,
+    videoDuration,
   }
 
   try {

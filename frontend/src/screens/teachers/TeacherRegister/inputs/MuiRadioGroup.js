@@ -18,12 +18,18 @@ import {
   FormControl,
   FormLabel,
   RadioGroup,
+  FormHelperText,
 } from '@material-ui/core'
 
 const MuiRadioGroup = ({ label, ...props }) => {
-  const [field] = useField(props)
+  const [field, meta] = useField(props)
+
+  const { error, touched } = meta
+
+  const errors = touched && Boolean(error)
+
   return (
-    <FormControl component="fieldset">
+    <FormControl component="fieldset" error={error}>
       <FormLabel component="legend">{label}</FormLabel>
       <RadioGroup aria-label="type-of-teacher" {...field} {...props}>
         <FormControlLabel
@@ -37,6 +43,7 @@ const MuiRadioGroup = ({ label, ...props }) => {
           label="Giáo viên cộng đồng"
         />
       </RadioGroup>
+      <FormHelperText>{error}</FormHelperText>
     </FormControl>
   )
 }

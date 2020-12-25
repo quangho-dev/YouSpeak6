@@ -6,13 +6,9 @@ const ProfileTeacherSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: 'teacher',
     },
-    isPro: {
-      type: Boolean,
-      default: false,
-    },
-    isCommutor: {
-      type: Boolean,
-      default: false,
+    typeOfTeacher: {
+      type: String,
+      required: true,
     },
     degreeImages: {
       type: [{ type: String }],
@@ -27,11 +23,11 @@ const ProfileTeacherSchema = new mongoose.Schema(
     dateOfBirth: {
       type: Date,
     },
-    homeTown: {
+    hometown: {
       type: String,
     },
     communicationTool: {
-      type: [{ type: String }],
+      type: { type: String },
     },
     introduction: {
       type: String,
@@ -44,7 +40,7 @@ const ProfileTeacherSchema = new mongoose.Schema(
     thumbnail: {
       type: String,
     },
-    duration: {
+    videoDuration: {
       type: String,
     },
   },
