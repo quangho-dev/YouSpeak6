@@ -13,8 +13,8 @@ import {
   SET_ALERT,
 } from './types'
 
-// Get current users profile
-export const getCurrentProfile = () => async (dispatch) => {
+// Get current teachers profile
+export const getCurrentProfileTeacher = () => async (dispatch) => {
   try {
     const res = await api.get('/profileTeacher/me')
 

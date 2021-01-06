@@ -82,7 +82,7 @@ const ForTeacherScreen = () => {
             <Grid item>
               <Button
                 component={Link}
-                to="/teachers/register"
+                to="/teachers/register-teacher"
                 variant="contained"
                 color="primary"
                 size="large"

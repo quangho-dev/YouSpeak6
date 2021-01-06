@@ -3,9 +3,9 @@ import { Route, Redirect } from 'react-router-dom'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { useDispatch, useSelector } from 'react-redux'
 
-const PrivateRoute = ({ component: Component, ...rest }) => {
-  const auth = useSelector((state) => state.auth)
-  const { isAuthenticated, loading } = auth
+const TeacherPrivateRoute = ({ component: Component, ...rest }) => {
+  const authTeacher = useSelector((state) => state.authTeacher)
+  const { isAuthenticated, loading } = authTeacher
   return (
     <Route
       {...rest}
@@ -25,11 +25,11 @@ const PrivateRoute = ({ component: Component, ...rest }) => {
         ) : isAuthenticated ? (
           <Component {...props} />
         ) : (
-          <Redirect to="/login" />
+          <Redirect to="/teachers/login" />
         )
       }
     />
   )
 }
 
-export default PrivateRoute
+export default TeacherPrivateRoute

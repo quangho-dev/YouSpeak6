@@ -11,14 +11,14 @@ const ProfileTeacherSchema = new mongoose.Schema(
       required: true,
     },
     degreeImages: {
-      type: [{ type: String }],
+      type: [String],
     },
     teacherAvatar: {
       type: String,
       required: true,
     },
     expImages: {
-      type: [{ type: String }],
+      type: [String],
     },
     dateOfBirth: {
       type: Date,
@@ -27,7 +27,10 @@ const ProfileTeacherSchema = new mongoose.Schema(
       type: String,
     },
     communicationTool: {
-      type: { type: String },
+      skype: { type: Boolean },
+      googleHangouts: { type: Boolean },
+      viper: { type: Boolean },
+      facetime: { type: Boolean },
     },
     introduction: {
       type: String,
@@ -41,7 +44,7 @@ const ProfileTeacherSchema = new mongoose.Schema(
       type: String,
     },
     videoDuration: {
-      type: String,
+      type: Number,
     },
   },
   { timestamps: true }

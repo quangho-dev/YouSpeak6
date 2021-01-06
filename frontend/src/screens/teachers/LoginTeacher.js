@@ -1,17 +1,16 @@
-import React, { Fragment, useEffect } from 'react'
-import { Formik, Form } from 'formik'
-import * as Yup from 'yup'
-import FormikControl from '../components/Formik/FormikControl'
-import Button from '@material-ui/core/Button'
-import { makeStyles } from '@material-ui/core/styles'
-import CircularProgress from '@material-ui/core/CircularProgress'
-import { registerUser } from '../actions/auth'
-import { useDispatch, useSelector } from 'react-redux'
+import React, { useEffect } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import { Link, Redirect } from 'react-router-dom'
+import * as Yup from 'yup'
+import Button from '@material-ui/core/Button'
+import { makeStyles } from '@material-ui/core/styles'
+import { useDispatch, useSelector } from 'react-redux'
+import { loginTeacher } from '../../actions/authTeacher'
+import LockOpenIcon from '@material-ui/icons/LockOpen'
 import Avatar from '@material-ui/core/Avatar'
-import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
+import { TextField } from 'formik-material-ui'
+import { Formik, Form, Field } from 'formik'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -33,54 +32,45 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const RegisterScreen = () => {
+const LoginTeacher = () => {
   const classes = useStyles()
-
-  const dispatch = useDispatch()
-
-  const auth = useSelector((state) => state.auth)
-  const { isAuthenticated, loading } = auth
-
-  if (isAuthenticated) {
-    return <Redirect to="/dashboard" />
-  }
-
   const initialValues = {
-    name: '',
     email: '',
     password: '',
-    confirmPassword: '',
   }
 
+  const dispatch = useDispatch()
+  const authTeacher = useSelector((state) => state.authTeacher)
+  const { isAuthenticated } = authTeacher
+
   const validationSchema = Yup.object({
-    name: Yup.string().required('Không được để trống'),
     email: Yup.string()
       .email('Email không đúng')
       .required('Không được để trống'),
     password: Yup.string().required('Không được để trống'),
-    confirmPassword: Yup.string()
-      .oneOf([Yup.ref('password'), ''], 'Mật khẩu không trùng khớp')
-      .required('Không được để trống'),
   })
 
-  const onSubmit = async (values, { resetForm }) => {
-    const { name, email, password } = values
-    dispatch(registerUser({ name, email, password }))
-    resetForm({ name: '', email: '', password: '' })
+  const onSubmit = async (values) => {
+    const { email, password } = values
+    dispatch(loginTeacher(email, password))
+  }
+
+  if (isAuthenticated) {
+    return <Redirect to="/teachers/dashboard" />
   }
 
   return (
-    <Fragment>
-      <div className={classes.toolbarMargin} />
+    <>
+      <div className={classes.toolbarMargin}></div>
       <Grid container justify="center" alignItems="center" direction="column">
         <Grid item>
           <Avatar className={classes.avatar}>
-            <LockOutlinedIcon />
+            <LockOpenIcon />
           </Avatar>
         </Grid>
         <Grid item>
           <Typography variant="h4" gutterBottom>
-            Đăng ký tài khoản
+            Đăng nhập tài khoản giáo viên
           </Typography>
         </Grid>
         <Grid item>
@@ -92,47 +82,31 @@ const RegisterScreen = () => {
             {(formik) => {
               return (
                 <Form style={{ maxWidth: '25em' }}>
-                  <FormikControl
-                    control="input"
-                    type="text"
-                    label="Tên tài khoản"
-                    name="name"
-                    className={classes.formControl}
-                  />
-                  <FormikControl
-                    control="input"
+                  <Field
+                    component={TextField}
                     type="email"
                     label="Email"
                     name="email"
+                    fullWidth
                     className={classes.formControl}
                   />
-                  <FormikControl
-                    control="input"
+                  <Field
+                    component={TextField}
+                    fullWidth
                     type="password"
-                    label="Mật khẩu"
+                    label="Password"
                     name="password"
-                    className={classes.formControl}
-                  />
-                  <FormikControl
-                    control="input"
-                    type="password"
-                    label="Xác nhận mật khẩu"
-                    name="confirmPassword"
                     className={classes.formControl}
                   />
                   <Button
                     fullWidth
-                    variant="contained"
                     color="primary"
+                    variant="contained"
                     type="submit"
                     disabled={!formik.isValid}
                     style={{ color: 'white' }}
                   >
-                    {loading ? (
-                      <CircularProgress color="secondary" />
-                    ) : (
-                      'Đăng ký'
-                    )}
+                    Đăng nhập
                   </Button>
                   <Grid
                     container
@@ -142,13 +116,13 @@ const RegisterScreen = () => {
                   >
                     <Grid item>
                       <Typography variant="body1">
-                        Bạn đã có tài khoản?
+                        Bạn chưa có tài khoản giáo viên?
                       </Typography>
                     </Grid>
                     <Grid item>
                       <Button
                         component={Link}
-                        to="/login"
+                        to="/teachers/register"
                         variant="text"
                         style={{
                           fontSize: '1rem',
@@ -157,7 +131,7 @@ const RegisterScreen = () => {
                         }}
                         disableRipple
                       >
-                        Đăng nhập
+                        Đăng ký
                       </Button>
                     </Grid>
                   </Grid>
@@ -167,8 +141,8 @@ const RegisterScreen = () => {
           </Formik>
         </Grid>
       </Grid>
-    </Fragment>
+    </>
   )
 }
 
-export default RegisterScreen
+export default LoginTeacher

@@ -1,12 +1,12 @@
-import { SET_ALERT, CLOSE_ALERT } from './types'
+import { v4 as uuidv4 } from 'uuid'
+import { SET_ALERT, REMOVE_ALERT } from './types'
 
-export const setAlert = ({ msg, severity, openAlert }) => (dispatch) => {
+export const setAlert = (msg, severity, timeout = 5000) => (dispatch) => {
+  const id = uuidv4()
   dispatch({
     type: SET_ALERT,
-    payload: { msg, severity, openAlert },
+    payload: { msg, severity, id },
   })
-}
 
-export const closeAlert = (dispatch) => {
-  dispatch({ type: CLOSE_ALERT })
+  setTimeout(() => dispatch({ type: REMOVE_ALERT, payload: id }), timeout)
 }

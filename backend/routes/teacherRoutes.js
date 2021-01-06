@@ -1,12 +1,26 @@
 import express from 'express'
 const router = express.Router()
-import { registerUser, loginUser } from '../controllers/userController.js'
-import { check } from 'express-validator'
 import auth from '../middleware/auth.js'
+import {
+  loginTeacher,
+  registerTeacher,
+} from '../controllers/teacherController.js'
+import { check } from 'express-validator'
 import checkRole from '../middleware/checkRole.js'
 
+router
+  .route('/login-teacher')
+  .post(
+    checkRole(['teacher']),
+    [
+      check('email', 'Please include a valid email').isEmail(),
+      check('password', 'Password is required').exists(),
+    ],
+    loginTeacher
+  )
+
 router.post(
-  '/register-user',
+  '/register-teacher',
   [
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
@@ -16,19 +30,8 @@ router.post(
     ).isLength({ min: 6 }),
   ],
   async (req, res) => {
-    await registerUser(req, 'user', res)
+    await registerTeacher(req, 'teacher', res)
   }
 )
-
-router
-  .route('/login-user')
-  .post(
-    checkRole(['user']),
-    [
-      check('email', 'Please include a valid email').isEmail(),
-      check('password', 'Password is required').exists(),
-    ],
-    loginUser
-  )
 
 export default router

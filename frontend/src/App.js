@@ -8,19 +8,28 @@ import Footer from './components/Footer'
 import Routes from './components/routing/Routes'
 import LandingScreen from './screens/LandingScreen'
 import Message from './components/Message'
+import setAuthToken from './utils/setAuthToken'
+import store from './store'
+import { LOGOUT } from './actions/types'
+import { loadUser } from './actions/auth'
+import Container from '@material-ui/core/Container'
+import AlertMessage from './components/layout/AlertMessage'
 
 // Redux
 import { Provider } from 'react-redux'
-import store from './store'
-import { loadUser } from './actions/auth'
-import { loadTeacher } from './actions/authTeacher'
-import setAuthToken from './utils/setAuthToken'
 
 const App = () => {
   useEffect(() => {
-    setAuthToken(localStorage.token)
+    // check for token in LS
+    if (localStorage.token) {
+      setAuthToken(localStorage.token)
+    }
     store.dispatch(loadUser())
-    store.dispatch(loadTeacher())
+
+    // log user out from all tabs if they log out in one tab
+    window.addEventListener('storage', () => {
+      if (!localStorage.token) store.dispatch({ type: LOGOUT })
+    })
   }, [])
 
   return (
@@ -28,11 +37,10 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <Router>
           <Header />
-          <Message />
-          <Switch>
+          <Container>
             <Route exact path="/" component={LandingScreen} />
             <Route component={Routes} />
-          </Switch>
+          </Container>
           {/* <Footer /> */}
         </Router>
       </ThemeProvider>

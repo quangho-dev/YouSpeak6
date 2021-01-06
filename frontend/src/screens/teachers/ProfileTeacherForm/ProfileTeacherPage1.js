@@ -29,8 +29,8 @@ import {
   useFormik,
 } from 'formik'
 import { makeStyles } from '@material-ui/styles'
-import MuiRadioGroup from '../../ProfileTeacherForm/inputs/MuiRadioGroup'
-import ButtonInput from '../../ProfileTeacherForm/inputs/ButtonInput'
+import MuiRadioGroup from './inputs/MuiRadioGroup'
+import ButtonInput from './inputs/ButtonInput'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -88,20 +88,8 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const Page2 = ({ setFieldValue, nextPage }) => {
+const ProfileTeacherPage1 = ({ setFieldValue, nextPage }) => {
   const classes = useStyles()
-
-  const handleSelectProType = () => {
-    setFieldValue('isPro', true)
-    setFieldValue('isCommutor', false)
-    nextPage()
-  }
-
-  const handleSelectCommutorType = () => {
-    setFieldValue('isCommutor', true)
-    setFieldValue('isPro', false)
-    nextPage()
-  }
 
   return (
     <>
@@ -201,4 +189,4 @@ const Page2 = ({ setFieldValue, nextPage }) => {
   )
 }
 
-export default Page2
+export default ProfileTeacherPage1

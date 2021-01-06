@@ -20,6 +20,8 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import { logout } from '../actions/auth'
 import AlertMessage from './ui/AlertMessage'
+import Auth0LoginButton from './Auth0Inputs/Auth0LoginButton'
+import Auth0SignupButton from './Auth0Inputs/Auth0SignupButton'
 
 function ElevationScroll(props) {
   const { children } = props
@@ -182,13 +184,13 @@ export default function Header(props) {
       <Grid item>
         <Button
           component={Link}
-          variant="text"
           to="/login"
           style={{
             color: 'white',
-            textTransform: 'none',
             marginRight: '1.5em',
+            textTransform: 'none',
           }}
+          variant="text"
         >
           Đăng nhập
         </Button>
@@ -196,13 +198,13 @@ export default function Header(props) {
       <Grid item>
         <Button
           component={Link}
-          variant="text"
-          to="/register"
+          to="/register-user"
           style={{
             color: 'white',
-            textTransform: 'none',
             marginRight: '1.5em',
+            textTransform: 'none',
           }}
+          variant="text"
         >
           Đăng ký
         </Button>
@@ -248,21 +250,27 @@ export default function Header(props) {
           >
             <Button
               component={Link}
-              variant="text"
+              to="/login"
               style={{
                 color: 'white',
                 textTransform: 'none',
+                marginRight: '1.5em',
               }}
+              variant="text"
             >
               Đăng nhập
             </Button>
           </Grid>
           <Grid item>
             <Button
-              variant="text"
               component={Link}
               to="/register"
-              style={{ color: 'white', textTransform: 'none' }}
+              style={{
+                color: 'white',
+                textTransform: 'none',
+                marginRight: '1.5em',
+              }}
+              variant="text"
             >
               Đăng ký
             </Button>
