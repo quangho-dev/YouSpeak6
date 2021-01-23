@@ -1,10 +1,15 @@
 import express from 'express'
 const router = express.Router()
-import { registerUser, loginUser } from '../controllers/userController.js'
+import {
+  registerUser,
+  loginUser,
+  confirmationGet,
+  resendTokenPost,
+} from '../controllers/userController.js'
 import { check } from 'express-validator'
 import auth from '../middleware/auth.js'
-import checkRole from '../middleware/checkRole.js'
 
+// Register user
 router.post(
   '/register-user',
   [
@@ -20,15 +25,20 @@ router.post(
   }
 )
 
-router
-  .route('/login-user')
-  .post(
-    checkRole(['user']),
-    [
-      check('email', 'Please include a valid email').isEmail(),
-      check('password', 'Password is required').exists(),
-    ],
-    loginUser
-  )
+// Login user
+router.post(
+  '/login-user',
+  [
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Password is required').exists(),
+  ],
+  async (req, res) => {
+    await loginUser(req, 'user', res)
+  }
+)
+
+router.get('/confirmation/:token', confirmationGet)
+
+router.post('/resend-confirmation-token', resendTokenPost)
 
 export default router

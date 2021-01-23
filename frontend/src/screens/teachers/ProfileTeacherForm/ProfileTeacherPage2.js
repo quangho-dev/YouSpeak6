@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import {
+  FormGroup,
   Box,
   Button,
   Card,
@@ -38,6 +39,8 @@ import AddIcon from '@material-ui/icons/Add'
 import VideoDropzone from './inputs/VideoDropzone'
 import axios from 'axios'
 import Moment from 'react-moment'
+import MyCheckBox from '../../../components/Formik/MyCheckBox'
+import AlertMessage from '../../../components/layout/AlertMessage'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -163,7 +166,6 @@ const ProfileTeacherPage2 = () => {
 
   const handleDegreeImagesUpload = async (event) => {
     if (event.target.files) {
-      console.log('day la event.target.files:', event.target.files)
       const filesArray = Array.from(event.target.files).map((file) =>
         URL.createObjectURL(file)
       )
@@ -312,6 +314,9 @@ const ProfileTeacherPage2 = () => {
       className={classes.rowContainer}
     >
       <Grid item>
+        <AlertMessage />
+      </Grid>
+      <Grid item>
         <Typography
           variant="h5"
           component="h3"
@@ -352,7 +357,7 @@ const ProfileTeacherPage2 = () => {
       </Grid>
 
       <Grid item className={classes.formControl}>
-        <label htmlfor="date-of-birth">
+        <label htmlFor="date-of-birth">
           Ngày tháng năm sinh (ví dụ 12/11/1990):
         </label>
         <br />
@@ -373,34 +378,32 @@ const ProfileTeacherPage2 = () => {
         <label>Chọn phần mềm video call bạn dùng để dạy: ( * )</label>
         <br />
         <Grid container alignItems="center" className={classes.formControl}>
-          <Field
-            color="primary"
-            component={CheckboxWithLabel}
-            type="checkbox"
-            name="communicationTool.skype"
-            Label={{ label: 'Skype' }}
-          />
-          <Field
-            color="primary"
-            component={CheckboxWithLabel}
-            type="checkbox"
-            name="communicationTool.googleHangouts"
-            Label={{ label: 'Google Hangouts' }}
-          />
-          <Field
-            color="primary"
-            component={CheckboxWithLabel}
-            type="checkbox"
-            name="communicationTool.viper"
-            Label={{ label: 'Viper' }}
-          />
-          <Field
-            color="primary"
-            component={CheckboxWithLabel}
-            type="checkbox"
-            name="communicationTool.facetime"
-            Label={{ label: 'Facetime' }}
-          />
+          <FormGroup>
+            <MyCheckBox
+              color="primary"
+              name="communicationTool"
+              label="Skype"
+              value="Skype"
+            />
+            <MyCheckBox
+              color="primary"
+              name="communicationTool"
+              label="Viper"
+              value="Viper"
+            />
+            <MyCheckBox
+              color="primary"
+              name="communicationTool"
+              label="Google Hangouts"
+              value="Google Hangouts"
+            />
+            <MyCheckBox
+              color="primary"
+              name="communicationTool"
+              label="Facetime"
+              value="Facetime"
+            />
+          </FormGroup>
         </Grid>
       </Grid>
 
@@ -508,11 +511,7 @@ const ProfileTeacherPage2 = () => {
 
           <Grid item>
             <Grid container justify="center" alignItems="center" spacing={3}>
-              {previewDegreeImages
-                ? renderDegreeImages(previewDegreeImages)
-                : values.degreeImages
-                ? renderDegreeImages(values.degreeImages)
-                : null}
+              {renderDegreeImages(values.degreeImages)}
             </Grid>
           </Grid>
           <Grid item className={classes.formControl}>
@@ -539,7 +538,7 @@ const ProfileTeacherPage2 = () => {
           </Grid>
           <Grid item>
             <Grid container justify="center" alignItems="center" spacing={3}>
-              {renderExpImages(previewExpImages)}
+              {renderExpImages(values.expImages)}
             </Grid>
           </Grid>
         </>

@@ -210,6 +210,7 @@ const TeacherRegisterForm = () => {
                 component={TextField}
                 label="Mật khẩu"
                 fullWidth
+                type="password"
               />
             </Grid>
             <Grid
@@ -222,6 +223,7 @@ const TeacherRegisterForm = () => {
                 name="confirmPassword"
                 component={TextField}
                 label="Xác nhận mật khẩu"
+                type="password"
               />
             </Grid>
             <Grid

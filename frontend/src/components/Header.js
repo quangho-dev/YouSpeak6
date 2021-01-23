@@ -22,6 +22,8 @@ import { logout } from '../actions/auth'
 import AlertMessage from './ui/AlertMessage'
 import Auth0LoginButton from './Auth0Inputs/Auth0LoginButton'
 import Auth0SignupButton from './Auth0Inputs/Auth0SignupButton'
+import { getCurrentProfile } from '../actions/profile'
+import { getCurrentProfileTeacher } from '../actions/profileTeacher'
 
 function ElevationScroll(props) {
   const { children } = props
@@ -157,10 +159,13 @@ export default function Header(props) {
   const dispatch = useDispatch()
 
   const auth = useSelector((state) => state.auth)
-  const { isAuthenticated } = auth
+  const { isAuthenticated, user } = auth
 
   const profile = useSelector((state) => state.profile)
   const { profile: profileUser } = profile
+
+  const profileTeacher = useSelector((state) => state.profileTeacher)
+  const { profileTeacher: profileTeacherRedux } = profileTeacher
 
   const [openDrawer, setOpenDrawer] = useState(false)
 
@@ -190,21 +195,19 @@ export default function Header(props) {
             marginRight: '1.5em',
             textTransform: 'none',
           }}
-          variant="text"
         >
           Đăng nhập
         </Button>
       </Grid>
       <Grid item>
         <Button
-          component={Link}
           to="/register-user"
+          component={Link}
           style={{
             color: 'white',
             marginRight: '1.5em',
             textTransform: 'none',
           }}
-          variant="text"
         >
           Đăng ký
         </Button>
@@ -299,30 +302,42 @@ export default function Header(props) {
   // tabs when logged in
   const tabsLoggedIn = (
     <Grid item container alignItems="center">
-      <Grid item>
-        <Button
-          variant="text"
-          // onClick={() => setOpenSignIn(true)}
-          style={{
-            color: '#333',
-            textTransform: 'none',
-            marginRight: '1.5em',
-          }}
-        >
-          Tìm một giáo viên
-        </Button>
-      </Grid>
+      {user && user.role !== 'teacher' && (
+        <Grid item>
+          <Button
+            variant="text"
+            // onClick={() => setOpenSignIn(true)}
+            style={{
+              color: '#333',
+              textTransform: 'none',
+              marginRight: '1.5em',
+            }}
+          >
+            Tìm một giáo viên
+          </Button>
+        </Grid>
+      )}
+
       <Grid item>
         <Button
           aria-controls="simple-menu"
           aria-haspopup="true"
           onMouseOver={onMouseOver}
         >
-          <Avatar
-            style={{ width: '3em', height: '3em', borderRadius: '50%' }}
-            src={profileUser && profileUser.imageAvatar}
-            alt="image avatar"
-          />
+          {profileUser && profileUser.imageAvatar !== null ? (
+            <Avatar
+              style={{ width: '3em', height: '3em', borderRadius: '50%' }}
+              src={profileUser.imageAvatar}
+              alt="image avatar"
+            />
+          ) : profileTeacherRedux &&
+            profileTeacherRedux.teacherAvatar !== null ? (
+            <Avatar
+              style={{ width: '3em', height: '3em', borderRadius: '50%' }}
+              src={profileTeacherRedux.teacherAvatar}
+              alt="image avatar"
+            />
+          ) : null}
         </Button>
         <Menu
           id="simple-menu"
@@ -391,6 +406,7 @@ export default function Header(props) {
                 </Grid>
               </Toolbar>
             </AppBar>
+            {/* abc */}
           </ElevationScroll>
         </>
       ) : (

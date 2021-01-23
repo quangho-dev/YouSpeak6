@@ -1,4 +1,4 @@
-import Teacher from '../models/teacherModel.js'
+import User from '../models/userModel.js'
 import { validationResult } from 'express-validator'
 import config from 'config'
 import bcrypt from 'bcryptjs'
@@ -7,7 +7,7 @@ import jwt from 'jsonwebtoken'
 // @desc    Register a new teacher
 // @route   POST /api/teachers
 // @access  Public
-const registerTeacher = async (req, res) => {
+const registerTeacher = async (req, role, res) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() })
@@ -16,29 +16,30 @@ const registerTeacher = async (req, res) => {
   const { name, email, password } = req.body
 
   try {
-    let teacher = await Teacher.findOne({ email })
+    let user = await User.findOne({ email })
 
-    if (teacher) {
+    if (user) {
       return res
         .status(400)
         .json({ errors: [{ msg: 'Tài khoản giáo viên này đã tồn tại.' }] })
     }
 
-    teacher = new Teacher({
+    user = new User({
       name,
       email,
+      role,
       password,
     })
 
     const salt = await bcrypt.genSalt(10)
 
-    teacher.password = await bcrypt.hash(password, salt)
+    user.password = await bcrypt.hash(password, salt)
 
-    await teacher.save()
+    await user.save()
 
     const payload = {
-      teacher: {
-        id: teacher.id,
+      user: {
+        id: user.id,
       },
     }
 
@@ -60,7 +61,7 @@ const registerTeacher = async (req, res) => {
 // @route    POST api/teachers/login-teacher
 // @desc     Login teacher and get token
 // @access   Public
-const loginTeacher = async (req, res) => {
+const loginTeacher = async (req, role, res) => {
   const errors = validationResult(req)
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() })
@@ -73,6 +74,16 @@ const loginTeacher = async (req, res) => {
 
     if (!user) {
       return res.status(400).json({ errors: [{ msg: 'Invalid Credentials' }] })
+    }
+
+    if (user.role !== role) {
+      return res.status(403).json({
+        errors: [
+          {
+            msg: 'Please make sure you are logging in from the right portal.',
+          },
+        ],
+      })
     }
 
     const isMatch = await bcrypt.compare(password, user.password)

@@ -1,13 +1,12 @@
 import express from 'express'
 const router = express.Router()
-import authTeacher from '../middleware/authTeacher.js'
+import auth from '../middleware/auth.js'
 import {
   getCurrentProfileTeacher,
   createOrUpdateProfileTeacher,
 } from '../controllers/profileTeacherController.js'
-import { check } from 'express-validator'
 
-router.get('/me', authTeacher, getCurrentProfileTeacher)
-router.post('/', authTeacher, createOrUpdateProfileTeacher)
+router.get('/me', auth, getCurrentProfileTeacher)
+router.post('/', auth, createOrUpdateProfileTeacher)
 
 export default router

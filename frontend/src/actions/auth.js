@@ -18,17 +18,10 @@ export const loadUser = () => async (dispatch) => {
   try {
     const res = await api.get('/auth')
 
-    if (res) {
-      dispatch({
-        type: USER_LOADED,
-        payload: res.data,
-      })
-    } else {
-      dispatch({
-        type: TEACHER_LOADED,
-        payload: res.data,
-      })
-    }
+    dispatch({
+      type: USER_LOADED,
+      payload: res.data,
+    })
   } catch (err) {
     dispatch({
       type: AUTH_ERROR,
@@ -40,6 +33,8 @@ export const loadUser = () => async (dispatch) => {
 export const registerUser = (formData) => async (dispatch) => {
   try {
     const res = await api.post('/users/register-user', formData)
+
+    dispatch(setAlert(res.data.msg, 'success'))
 
     dispatch({
       type: REGISTER_SUCCESS,
@@ -62,7 +57,7 @@ export const registerUser = (formData) => async (dispatch) => {
 // Register Teacher
 export const registerTeacher = (formData) => async (dispatch) => {
   try {
-    const res = await api.post('/users/register-teacher', formData)
+    const res = await api.post('/teachers/register-teacher', formData)
 
     dispatch({
       type: REGISTER_SUCCESS,
@@ -87,14 +82,12 @@ export const login = (email, password) => async (dispatch) => {
   const body = { email, password }
 
   try {
-    const res = await axios.post('/api/auth', body)
+    const res = await api.post('/users/login-user', body)
 
     dispatch({
       type: LOGIN_SUCCESS,
       payload: res.data,
     })
-
-    console.log(res)
 
     dispatch(loadUser())
   } catch (err) {

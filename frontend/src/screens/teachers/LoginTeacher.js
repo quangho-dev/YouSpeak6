@@ -40,8 +40,8 @@ const LoginTeacher = () => {
   }
 
   const dispatch = useDispatch()
-  const authTeacher = useSelector((state) => state.authTeacher)
-  const { isAuthenticated } = authTeacher
+  const auth = useSelector((state) => state.auth)
+  const { isAuthenticated } = auth
 
   const validationSchema = Yup.object({
     email: Yup.string()

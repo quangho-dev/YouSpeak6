@@ -133,6 +133,32 @@ const LogInScreen = () => {
                       </Button>
                     </Grid>
                   </Grid>
+
+                  <Grid
+                    container
+                    alignItems="center"
+                    justify="center"
+                    style={{ margin: '0.7em 0' }}
+                  >
+                    <Grid item>
+                      <Typography variant="body1">Quên mật khẩu?</Typography>
+                    </Grid>
+                    <Grid item>
+                      <Button
+                        component={Link}
+                        to="/forgot"
+                        variant="text"
+                        style={{
+                          fontSize: '1rem',
+                          textTransform: 'none',
+                          fontWeight: '600',
+                        }}
+                        disableRipple
+                      >
+                        Đặt lại mật khẩu
+                      </Button>
+                    </Grid>
+                  </Grid>
                 </Form>
               )
             }}

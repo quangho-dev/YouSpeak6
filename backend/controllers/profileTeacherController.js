@@ -1,14 +1,14 @@
 import ProfileTeacher from '../models/profileTeacherModel.js'
-import Teacher from '../models/teacherModel.js'
+import User from '../models/userModel.js'
 
-// @route    GET api/me
+// @route    GET api/profileTeacher/me
 // @desc     Get current teacher profile
 // @access   Private
 const getCurrentProfileTeacher = async (req, res) => {
   try {
     const profileTeacher = await ProfileTeacher.findOne({
-      teacher: req.teacher.id,
-    }).populate('teacher', ['name'])
+      user: req.user.id,
+    }).populate('user', ['name'])
 
     if (!profileTeacher) {
       return res
@@ -27,7 +27,6 @@ const getCurrentProfileTeacher = async (req, res) => {
 // @desc     Create or update teacher profile
 // @access   Private
 const createOrUpdateProfileTeacher = async (req, res) => {
-  console.log('this is req.user:', req.body)
   const {
     typeOfTeacher,
     degreeImages,
@@ -43,7 +42,7 @@ const createOrUpdateProfileTeacher = async (req, res) => {
   } = req.body
 
   const profileTeacherFields = {
-    teacher: req.teacher.id,
+    user: req.user.id,
     typeOfTeacher,
     degreeImages,
     teacherAvatar,
@@ -60,7 +59,7 @@ const createOrUpdateProfileTeacher = async (req, res) => {
   try {
     // Using upsert option (creates new doc if no match is found):
     let profileTeacher = await ProfileTeacher.findOneAndUpdate(
-      { teacher: req.teacher.id },
+      { user: req.user.id },
       { $set: profileTeacherFields },
       { new: true, upsert: true }
     )

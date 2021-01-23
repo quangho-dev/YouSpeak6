@@ -15,6 +15,10 @@ import uploadDegreeImagesRoutes from './routes/uploadDegreeImagesRoutes.js'
 import uploadTeacherAvatarRoutes from './routes/uploadTeacherAvatarRoutes.js'
 import config from 'config'
 import teacherRoutes from './routes/teacherRoutes.js'
+import { passportMiddleware } from './middleware/passport.js'
+import passport from 'passport'
+import forgotPasswordRoute from './routes/forgotPasswordRoute.js'
+import resetPasswordRoute from './routes/resetPasswordRoute.js'
 
 const mongoURI = config.get('mongoURI')
 const PORT = config.get('PORT')
@@ -27,11 +31,17 @@ const app = express()
 app.use(cors())
 app.use(express.json())
 
-if (process.env.NODE_ENV === 'development') {
-  app.use(morgan('dev'))
-}
+app.use(morgan('tiny'))
+
+app.use(passport.initialize())
+
+passportMiddleware(passport)
 
 app.use('/api/users', userRoutes)
+
+app.use('/api/forgot', forgotPasswordRoute)
+
+app.use('/api/reset', resetPasswordRoute)
 
 app.use('/api/teachers', teacherRoutes)
 
@@ -42,7 +52,9 @@ app.use('/api/upload-teacher-avatar', uploadTeacherAvatarRoutes)
 app.use('/api/uploadVideo', uploadVideoRoutes)
 app.use('/api/uploadDegreeImages', uploadDegreeImagesRoutes)
 app.use('/api/uploadExpImages', uploadExpImagesRoutes)
+
 app.use('/api/profile', profileRoutes)
+
 app.use('/api/profileTeacher', profileTeacherRoutes)
 
 const __dirname = path.resolve()

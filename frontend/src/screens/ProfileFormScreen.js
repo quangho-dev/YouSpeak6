@@ -293,18 +293,6 @@ const ProfileFormScreen = ({ history }) => {
                 <Grid item>
                   <Grid container justify="center" alignItems="center">
                     <Button
-                      variant="contained"
-                      color="primary"
-                      type="submit"
-                      disabled={isSubmitting || isValidating}
-                      style={{ color: 'white', fontWeight: 600 }}
-                    >
-                      Lưu lại
-                      <span style={{ marginLeft: '1em' }}>
-                        {loading && <CircularProgress color="secondary" />}
-                      </span>
-                    </Button>
-                    <Button
                       component={Link}
                       variant="contained"
                       color="primary"
@@ -317,6 +305,18 @@ const ProfileFormScreen = ({ history }) => {
                       to="/dashboard"
                     >
                       Quay lại
+                    </Button>
+                    <Button
+                      variant="contained"
+                      color="primary"
+                      type="submit"
+                      disabled={isSubmitting || isValidating}
+                      style={{ color: 'white', fontWeight: 600 }}
+                    >
+                      Lưu lại
+                      <span style={{ marginLeft: '1em' }}>
+                        {loading && <CircularProgress color="secondary" />}
+                      </span>
                     </Button>
                   </Grid>
                 </Grid>

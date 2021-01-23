@@ -1,22 +1,21 @@
 import express from 'express'
 const router = express.Router()
-import auth from '../middleware/auth.js'
 import {
   loginTeacher,
   registerTeacher,
 } from '../controllers/teacherController.js'
 import { check } from 'express-validator'
-import checkRole from '../middleware/checkRole.js'
 
 router
   .route('/login-teacher')
   .post(
-    checkRole(['teacher']),
     [
       check('email', 'Please include a valid email').isEmail(),
       check('password', 'Password is required').exists(),
     ],
-    loginTeacher
+    async (req, res) => {
+      await loginTeacher(req, 'teacher', res)
+    }
   )
 
 router.post(

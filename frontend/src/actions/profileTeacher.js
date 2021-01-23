@@ -44,29 +44,18 @@ export const createOrUpdateProfileTeacher = (
       payload: res.data,
     })
 
-    // dispatch(setAlert(edit ? {'Profile Updated', 'success'} : {'Profile Created', 'success'}))
-
     dispatch(
-      edit
-        ? {
-            type: SET_ALERT,
-            payload: {
-              msg: 'Thông tin giáo viên đã cập nhật',
-              severity: 'success',
-            },
-          }
-        : {
-            type: SET_ALERT,
-            payload: {
-              msg: 'Thông tin giáo viên đã được tạo',
-              severity: 'success',
-            },
-          }
+      setAlert(
+        edit
+          ? 'Thông tin giáo viên đã được cập nhật'
+          : 'Thông tin giáo viên đã được tạo',
+        'success'
+      )
     )
 
-    // if (!edit) {
-    //   history.push('/dashboard')
-    // }
+    if (!edit) {
+      history.push('/teachers/dashboard')
+    }
   } catch (err) {
     const errors = err.response.data.errors
 

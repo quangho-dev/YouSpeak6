@@ -2,6 +2,7 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import Dashboard from '../../screens/Dashboard'
 import PrivateRoute from '../routing/PrivateRoute'
+import TeacherPrivateRoute from '../routing/TeacherPrivateRoute'
 import ProfileFormScreen from '../../screens/ProfileFormScreen'
 import LogInScreen from '../../screens/LogInScreen'
 import RegisterScreen from '../../screens/RegisterScreen'
@@ -11,7 +12,10 @@ import DashboardTeacher from '../../screens/teachers/DashboardTeacher'
 import LoginTeacher from '../../screens/teachers/LoginTeacher'
 import ProfileTeacher from '../../screens/teachers/ProfileTeacherForm/ProfileTeacher'
 import AlertMessage from '../layout/AlertMessage'
+import ForgotPasswordScreen from '../../screens/ForgotPasswordScreen'
 import { useDispatch, useSelector } from 'react-redux'
+import ResetPasswordScreen from '../../screens/ResetPasswordScreen'
+import ConfirmationSuccessScreen from '../../screens/ConfirmationSuccessScreen'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -22,6 +26,13 @@ const Routes = (props) => {
       <Switch>
         <Route exact path="/login" component={LogInScreen} />
         <Route exact path="/register-user" component={RegisterScreen} />
+        <Route exact path="/forgot" component={ForgotPasswordScreen} />
+        <Route exact path="/reset/:token" component={ResetPasswordScreen} />
+        <Route
+          exact
+          path="/users/confirmation/:token"
+          component={ConfirmationSuccessScreen}
+        />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute
           exact
@@ -37,12 +48,12 @@ const Routes = (props) => {
           path="/teachers/register-teacher"
           component={TeacherRegisterForm}
         />
-        <PrivateRoute
+        <TeacherPrivateRoute
           exact
           path="/teachers/create-profile"
           component={ProfileTeacher}
         />
-        <PrivateRoute
+        <TeacherPrivateRoute
           exact
           path="/teachers/dashboard"
           component={DashboardTeacher}

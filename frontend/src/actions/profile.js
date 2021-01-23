@@ -44,24 +44,11 @@ export const createOrUpdateProfile = (
       payload: res.data,
     })
 
-    // dispatch(setAlert(edit ? {'Profile Updated', 'success'} : {'Profile Created', 'success'}))
-
     dispatch(
-      edit
-        ? {
-            type: SET_ALERT,
-            payload: {
-              msg: 'Thông tin người dùng đã cập nhật',
-              severity: 'success',
-            },
-          }
-        : {
-            type: SET_ALERT,
-            payload: {
-              msg: 'Thông tin người dùng đã được tạo',
-              severity: 'success',
-            },
-          }
+      setAlert(
+        edit ? 'Thông tin đã được cập nhật' : 'Thông tin đã được tạo',
+        'success'
+      )
     )
 
     if (!edit) {

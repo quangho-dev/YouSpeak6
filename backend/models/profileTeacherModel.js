@@ -2,9 +2,9 @@ import mongoose from 'mongoose'
 
 const ProfileTeacherSchema = new mongoose.Schema(
   {
-    teacher: {
+    user: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'teacher',
+      ref: 'user',
     },
     typeOfTeacher: {
       type: String,
@@ -26,12 +26,7 @@ const ProfileTeacherSchema = new mongoose.Schema(
     hometown: {
       type: String,
     },
-    communicationTool: {
-      skype: { type: Boolean },
-      googleHangouts: { type: Boolean },
-      viper: { type: Boolean },
-      facetime: { type: Boolean },
-    },
+    communicationTool: [String],
     introduction: {
       type: String,
       required: true,

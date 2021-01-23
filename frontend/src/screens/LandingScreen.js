@@ -80,10 +80,14 @@ const Landing = (props) => {
   const [loading, setLoading] = useState(false)
 
   const auth = useSelector((state) => state.auth)
-  const { isAuthenticated } = auth
+  const { isAuthenticated, user } = auth
 
-  if (isAuthenticated) {
+  if (isAuthenticated && user.role === 'user') {
     return <Redirect to="/dashboard" />
+  }
+
+  if (isAuthenticated && user.role === 'teacher') {
+    return <Redirect to="/teachers/dashboard" />
   }
 
   return (

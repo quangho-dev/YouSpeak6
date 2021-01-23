@@ -11,6 +11,7 @@ const FlagSelector = () => {
       searchable={true}
       placeholder="Hãy chọn Quốc Gia"
       defaultCountry={values.hometown || 'VN'}
+      // selected={values.hometown}
       onSelect={(val) => {
         setFieldValue('hometown', val)
       }}

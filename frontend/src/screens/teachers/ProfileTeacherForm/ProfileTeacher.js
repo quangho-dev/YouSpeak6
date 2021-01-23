@@ -40,6 +40,7 @@ import { Link } from 'react-router-dom'
 import ProfileTeacherPage1 from './ProfileTeacherPage1'
 import ProfileTeacherPage2 from './ProfileTeacherPage2'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import { format } from 'date-fns'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -102,12 +103,7 @@ const ProfileTeacher = ({ history }) => {
   const [typeOfTeacherState, setTypeOfTeacherState] = useState('')
   const [dateOfBirthState, setDateOfBirthState] = useState(null)
   const [hometownState, setHometownState] = useState('VN')
-  const [communicationToolState, setCommunicationToolState] = useState({
-    skype: false,
-    googleHangouts: false,
-    viper: false,
-    facetime: false,
-  })
+  const [communicationToolState, setCommunicationToolState] = useState([])
   const [introductionState, setIntroductionState] = useState('')
   const [videoState, setVideoState] = useState('')
   const [thumbnailState, setThumbnailState] = useState('')
@@ -162,8 +158,8 @@ const ProfileTeacher = ({ history }) => {
   const profileTeacher = useSelector((state) => state.profileTeacher)
   const { loading, profileTeacher: profileTeacherRedux } = profileTeacher
 
-  const authTeacher = useSelector((state) => state.authTeacher)
-  const { teacher } = authTeacher
+  const auth = useSelector((state) => state.auth)
+  const { user } = auth
 
   const validationSchema = yup.object().shape({
     dateOfBirth: yup.date().nullable(),
@@ -187,26 +183,31 @@ const ProfileTeacher = ({ history }) => {
     }
   }, [profileTeacherRedux, loading, dispatch])
 
+  // const displayedCommunicationTool = Object.keys(
+  //   profileTeacherRedux.communicationTool
+  // ).map((tool) => {
+  //   tool, profileTeacherRedux.communicationTool[tool]
+  // })
+
+  // console.log(
+  //   'day la communicationTool:',
+  //   profileTeacherRedux.communicationTool
+  // )
+
   return (
     <Formik
       enableReinitialize
       initialValues={{
-        teacherAvatar: '' || teacherAvatarState,
-        dateOfBirth: null || dateOfBirthState,
-        typeOfTeacher: '' || typeOfTeacherState,
-        hometown: '' || hometownState,
-        communicationTool:
-          {
-            skype: false,
-            googleHangouts: false,
-            viper: false,
-            facetime: false,
-          } || communicationToolState,
-        video: '' || videoState,
-        thumbnail: '' || thumbnailState,
-        degreeImages: [] || degreeImagesState,
-        expImages: [] || expImagesState,
-        introduction: '' || introductionState,
+        teacherAvatar: teacherAvatarState,
+        dateOfBirth: dateOfBirthState,
+        typeOfTeacher: typeOfTeacherState,
+        hometown: hometownState,
+        communicationTool: communicationToolState,
+        video: videoState,
+        thumbnail: thumbnailState,
+        degreeImages: degreeImagesState,
+        expImages: expImagesState,
+        introduction: introductionState,
       }}
       validationSchema={validationSchema}
       onSubmit={(values, { setSubmitting }) => {

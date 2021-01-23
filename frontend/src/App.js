@@ -37,12 +37,10 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <Router>
           <Header />
-          <Container>
-            <Route exact path="/" component={LandingScreen} />
-            <Route component={Routes} />
-          </Container>
-          {/* <Footer /> */}
+          <Route exact path="/" component={LandingScreen} />
+          <Route component={Routes} />
         </Router>
+        {/* <Footer /> */}
       </ThemeProvider>
     </Provider>
   )

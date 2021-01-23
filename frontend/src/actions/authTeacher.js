@@ -1,36 +1,21 @@
 import api from '../utils/api'
 import { setAlert } from './alert'
 import {
-  REGISTER_TEACHER_SUCCESS,
-  REGISTER_TEACHER_FAIL,
+  REGISTER_SUCCESS,
+  REGISTER_FAIL,
   TEACHER_LOADED,
-  AUTH_TEACHER_ERROR,
-  LOGIN_TEACHER_SUCCESS,
-  LOGIN_TEACHER_FAIL,
-  LOGOUT_TEACHER,
+  AUTH_ERROR,
+  LOGIN_SUCCESS,
+  LOGIN_FAIL,
+  LOGOUT,
   SET_ALERT,
 } from './types'
-
-// Load Teacher
-export const loadTeacher = () => async (dispatch) => {
-  try {
-    const res = await api.get('/auth-teacher')
-
-    dispatch({
-      type: TEACHER_LOADED,
-      payload: res.data,
-    })
-  } catch (err) {
-    dispatch({
-      type: AUTH_TEACHER_ERROR,
-    })
-  }
-}
+import { loadUser } from './auth'
 
 // Register Teacher
 export const registerTeacher = (formData) => async (dispatch) => {
   try {
-    const res = await api.post('/teachers', formData)
+    const res = await api.post('/teachers/register-teacher', formData)
 
     if (res) {
       dispatch({
@@ -43,10 +28,10 @@ export const registerTeacher = (formData) => async (dispatch) => {
     }
 
     dispatch({
-      type: REGISTER_TEACHER_SUCCESS,
+      type: REGISTER_SUCCESS,
       payload: res.data,
     })
-    dispatch(loadTeacher())
+    dispatch(loadUser())
   } catch (err) {
     const errors = err.response.data.errors
 
@@ -55,7 +40,7 @@ export const registerTeacher = (formData) => async (dispatch) => {
     }
 
     dispatch({
-      type: REGISTER_TEACHER_FAIL,
+      type: REGISTER_FAIL,
     })
   }
 }
@@ -65,14 +50,14 @@ export const loginTeacher = (email, password) => async (dispatch) => {
   const body = { email, password }
 
   try {
-    const res = await api.post('/auth-teacher', body)
+    const res = await api.post('/teachers/login-teacher', body)
 
     dispatch({
-      type: LOGIN_TEACHER_SUCCESS,
+      type: LOGIN_SUCCESS,
       payload: res.data,
     })
 
-    dispatch(loadTeacher())
+    dispatch(loadUser())
   } catch (err) {
     const errors = err.response.data.errors
 
@@ -81,10 +66,10 @@ export const loginTeacher = (email, password) => async (dispatch) => {
     }
 
     dispatch({
-      type: LOGIN_TEACHER_FAIL,
+      type: LOGIN_FAIL,
     })
   }
 }
 
 // Logout
-export const logoutTeacher = () => ({ type: LOGOUT_TEACHER })
+export const logoutTeacher = () => ({ type: LOGOUT })
