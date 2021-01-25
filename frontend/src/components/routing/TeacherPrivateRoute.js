@@ -4,8 +4,8 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import { useDispatch, useSelector } from 'react-redux'
 
 const TeacherPrivateRoute = ({ component: Component, ...rest }) => {
-  const authTeacher = useSelector((state) => state.authTeacher)
-  const { isAuthenticated, loading } = authTeacher
+  const auth = useSelector((state) => state.auth)
+  const { isAuthenticated, loading, user } = auth
   return (
     <Route
       {...rest}

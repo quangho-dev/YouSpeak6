@@ -95,7 +95,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const TeacherRegisterForm = () => {
+const TeacherRegisterForm = (props) => {
   const classes = useStyles()
 
   const dispatch = useDispatch()
@@ -103,12 +103,8 @@ const TeacherRegisterForm = () => {
   const auth = useSelector((state) => state.auth)
   const { isAuthenticated, loading } = auth
 
-  if (isAuthenticated) {
-    return <Redirect to="/teachers/dashboard" />
-  }
-
   const validation = object({
-    name: string().required('Bạn cần điền tên hiển thị'),
+    name: string().required('Bạ n cần điền tên hiển thị'),
     email: string()
       .email('Định dạng của email không đúng')
       .required('Bạn cần điền email'),
@@ -268,10 +264,34 @@ const TeacherRegisterForm = () => {
               </Button>
             </Grid>
           </Grid>
-          <div>
-            <pre>{JSON.stringify(values, null, 2)}</pre>
-            <pre>{JSON.stringify(errors, null, 2)}</pre>
-          </div>
+
+          <Grid
+            container
+            alignItems="center"
+            justify="center"
+            style={{ margin: '0.7em 0' }}
+          >
+            <Grid item>
+              <Typography variant="body1">
+                Bạn đã đăng ký tài khoản nhưng chưa kích hoạt tài khoản?
+              </Typography>
+            </Grid>
+            <Grid item>
+              <Button
+                component={Link}
+                to="/teachers/request-resend-confirmation-token"
+                variant="text"
+                style={{
+                  fontSize: '1rem',
+                  textTransform: 'none',
+                  fontWeight: '600',
+                }}
+                disableRipple
+              >
+                Yêu cầu gửi lại link kích hoạt tài khoản.
+              </Button>
+            </Grid>
+          </Grid>
         </Form>
       )}
     </Formik>

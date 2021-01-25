@@ -11,7 +11,6 @@ import {
   SET_ALERT,
   TEACHER_LOADED,
 } from './types'
-import axios from 'axios'
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -34,12 +33,13 @@ export const registerUser = (formData) => async (dispatch) => {
   try {
     const res = await api.post('/users/register-user', formData)
 
-    dispatch(setAlert(res.data.msg, 'success'))
+    dispatch(setAlert(res.data.msg, 'success', 10000))
 
     dispatch({
       type: REGISTER_SUCCESS,
       payload: res.data,
     })
+
     dispatch(loadUser())
   } catch (err) {
     const errors = err.response.data.errors
@@ -63,6 +63,9 @@ export const registerTeacher = (formData) => async (dispatch) => {
       type: REGISTER_SUCCESS,
       payload: res.data,
     })
+
+    dispatch(setAlert(res.data.msg, 'success', 10000))
+
     dispatch(loadUser())
   } catch (err) {
     const errors = err.response.data.errors
@@ -105,3 +108,17 @@ export const login = (email, password) => async (dispatch) => {
 
 // Logout
 export const logout = () => ({ type: LOGOUT })
+
+export const resendConfirmationToken = (email) => async (dispatch) => {
+  try {
+    const res = await api.post('/users/resend-confirmation-token', { email })
+
+    dispatch(setAlert(res.data.msg, 'success'))
+  } catch (err) {
+    const errors = err.response.data.errors
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'error')))
+    }
+  }
+}

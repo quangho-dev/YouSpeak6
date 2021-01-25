@@ -34,10 +34,6 @@ const registerUser = async (req, role, res) => {
       password,
     })
 
-    const salt = await bcrypt.genSalt(10)
-
-    user.password = await bcrypt.hash(password, salt)
-
     await user.save(function (err) {
       if (err) {
         return res.status(500).send({ msg: err.message })
@@ -50,7 +46,7 @@ const registerUser = async (req, role, res) => {
 
       token.save(function (err) {
         if (err) {
-          return res.status(500).send({ msg: err.message })
+          return res.status(500).send({ errors: [{ msg: err.message }] })
         }
 
         const transporter = nodemailer.createTransport({
@@ -65,12 +61,12 @@ const registerUser = async (req, role, res) => {
           from: 'no-reply@youspeak.com',
           to: user.email,
           subject: 'Xác nhận tài khoản',
-          html: `<p>Xin chào,</p><p>Bạn vui lòng click vào <a href='http://localhost:3000/users/confirmation/${token.token}'>đường dẫn này</a> để kích hoạt tài khoản.</p>`,
+          html: `<p>Xin chào,</p><p>Bạn vui lòng click vào <a href='http://localhost:5000/api/users/confirmation/${token.token}'>đường dẫn này</a> để kích hoạt tài khoản.</p>`,
         }
 
         transporter.sendMail(mailOptions, function (err) {
           if (err) {
-            return res.status(500).send({ msg: err.message })
+            return res.status(500).send({ errors: [{ msg: err.message }] })
           }
         })
       })
@@ -97,7 +93,7 @@ const registerUser = async (req, role, res) => {
     )
   } catch (err) {
     console.error(err.message)
-    res.status(500).send('Server error')
+    res.status(500).send({ errors: [{ msg: 'Server error' }] })
   }
 }
 
@@ -168,7 +164,11 @@ const loginUser = async (req, role, res) => {
   }
 }
 
+// @route    GET api/users/confirmation/:token
+// @desc     Verify account
+// @access   Public
 const confirmationGet = async (req, res, next) => {
+  console.log('req.params.token:', req.params.token)
   Token.findOne({ token: req.params.token }, function (err, token) {
     if (!token)
       return res.status(400).send({
@@ -212,6 +212,9 @@ const confirmationGet = async (req, res, next) => {
   })
 }
 
+// @route    POST api/users/resend-confirmation-token
+// @desc     Resend confirmation token
+// @access   Public
 const resendTokenPost = async (req, res, next) => {
   User.findOne({ email: req.body.email }, function (err, user) {
     if (!user) {
@@ -249,16 +252,14 @@ const resendTokenPost = async (req, res, next) => {
       from: 'no-reply@youspeak.com',
       to: user.email,
       subject: 'Kích hoạt tài khoản.',
-      html: `<p>Xin chào,</p><p>Hãy kích hoạt tài khoản của bạn bằng cách nhấp chuột vào <a href='http://localhost:3000/users/confirmation/${token.token}'>đường link này.</a></p>`,
+      html: `<p>Xin chào,</p><p>Hãy kích hoạt tài khoản của bạn bằng cách nhấp chuột vào <a href='http://localhost:5000/api/users/confirmation/${token.token}'>đường link này.</a></p>`,
     }
     transporter.sendMail(mailOptions, function (err) {
       if (err) {
         return res.status(500).send({ errors: [{ msg: err.message }] })
       }
 
-      res
-        .status(200)
-        .send({ msg: 'Một email kích hoạt đã được đến ' + user.email + '.' })
+      res.status(200).redirect('http://localhost:3000/users/login')
     })
   })
 }

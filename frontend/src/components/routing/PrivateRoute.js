@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
   const auth = useSelector((state) => state.auth)
-  const { isAuthenticated, loading } = auth
+  const { isAuthenticated, loading, user } = auth
   return (
     <Route
       {...rest}

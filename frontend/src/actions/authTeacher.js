@@ -14,17 +14,17 @@ import { loadUser } from './auth'
 
 // Register Teacher
 export const registerTeacher = (formData) => async (dispatch) => {
+  const { name, email, password } = formData
+
   try {
-    const res = await api.post('/teachers/register-teacher', formData)
+    const res = await api.post('/teachers/register-teacher', {
+      name,
+      email,
+      password,
+    })
 
     if (res) {
-      dispatch({
-        type: SET_ALERT,
-        payload: {
-          msg: 'Đăng ký thành công!',
-          severity: 'success',
-        },
-      })
+      dispatch(setAlert(res.data.msg, 'success'))
     }
 
     dispatch({
@@ -73,3 +73,18 @@ export const loginTeacher = (email, password) => async (dispatch) => {
 
 // Logout
 export const logoutTeacher = () => ({ type: LOGOUT })
+
+// resend confirmation token
+export const resendConfirmationToken = (email) => async (dispatch) => {
+  try {
+    const res = await api.post('/teachers/resend-confirmation-token', { email })
+
+    dispatch(setAlert(res.data.msg, 'success'))
+  } catch (err) {
+    const errors = err.response.data.errors
+
+    if (errors) {
+      errors.forEach((error) => dispatch(setAlert(error.msg, 'error')))
+    }
+  }
+}

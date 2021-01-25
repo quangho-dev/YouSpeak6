@@ -16,6 +16,9 @@ import ForgotPasswordScreen from '../../screens/ForgotPasswordScreen'
 import { useDispatch, useSelector } from 'react-redux'
 import ResetPasswordScreen from '../../screens/ResetPasswordScreen'
 import ConfirmationSuccessScreen from '../../screens/ConfirmationSuccessScreen'
+import TeacherConfirmationSuccessScreen from '../../screens/TeacherConfirmationSuccessScreen'
+import RequestResendConfirmationTokenScreen from '../../screens/RequestResendConfirmationTokenScreen'
+import RequestTeacherResendConfirmationTokenScreen from '../../screens/teachers/RequestTeacherResendConfirmationTokenScreen'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -30,8 +33,13 @@ const Routes = (props) => {
         <Route exact path="/reset/:token" component={ResetPasswordScreen} />
         <Route
           exact
-          path="/users/confirmation/:token"
+          path="/api/users/confirmation/:token"
           component={ConfirmationSuccessScreen}
+        />
+        <Route
+          exact
+          path="/users/request-resend-confirmation-token"
+          component={RequestResendConfirmationTokenScreen}
         />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute
@@ -47,6 +55,16 @@ const Routes = (props) => {
           exact
           path="/teachers/register-teacher"
           component={TeacherRegisterForm}
+        />
+        <Route
+          exact
+          path="/teachers/confirmation/:token"
+          component={TeacherConfirmationSuccessScreen}
+        />
+        <Route
+          exact
+          path="/teachers/request-resend-confirmation-token"
+          component={RequestTeacherResendConfirmationTokenScreen}
         />
         <TeacherPrivateRoute
           exact

@@ -3,6 +3,8 @@ const router = express.Router()
 import {
   loginTeacher,
   registerTeacher,
+  confirmationGet,
+  resendTokenPost,
 } from '../controllers/teacherController.js'
 import { check } from 'express-validator'
 
@@ -32,5 +34,9 @@ router.post(
     await registerTeacher(req, 'teacher', res)
   }
 )
+
+router.get('/confirmation/:token', confirmationGet)
+
+router.post('/resend-confirmation-token', resendTokenPost)
 
 export default router
