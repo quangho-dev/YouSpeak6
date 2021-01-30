@@ -9,11 +9,10 @@ import Routes from './components/routing/Routes'
 import LandingScreen from './screens/LandingScreen'
 import Message from './components/Message'
 import setAuthToken from './utils/setAuthToken'
-import store from './store'
+import { store, persistor } from './store'
 import { LOGOUT } from './actions/types'
 import { loadUser } from './actions/auth'
-import Container from '@material-ui/core/Container'
-import AlertMessage from './components/layout/AlertMessage'
+import { PersistGate } from 'redux-persist/integration/react'
 
 // Redux
 import { Provider } from 'react-redux'
@@ -34,14 +33,16 @@ const App = () => {
 
   return (
     <Provider store={store}>
-      <ThemeProvider theme={theme}>
-        <Router>
-          <Header />
-          <Route exact path="/" component={LandingScreen} />
-          <Route component={Routes} />
-        </Router>
-        {/* <Footer /> */}
-      </ThemeProvider>
+      <PersistGate persistor={persistor}>
+        <ThemeProvider theme={theme}>
+          <Router>
+            <Header />
+            <Route exact path="/" component={LandingScreen} />
+            <Route component={Routes} />
+          </Router>
+          {/* <Footer /> */}
+        </ThemeProvider>
+      </PersistGate>
     </Provider>
   )
 }

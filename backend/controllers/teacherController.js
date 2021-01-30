@@ -1,11 +1,13 @@
 import User from '../models/userModel.js'
 import Token from '../models/tokenModel.js'
+import ProfileTeacher from '../models/profileTeacherModel.js'
 import { validationResult } from 'express-validator'
 import config from 'config'
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 import crypto from 'crypto'
+import Lesson from '../models/lessonModel.js'
 
 // @desc    Register a new teacher
 // @route   POST /api/teachers/register-teacher
@@ -270,4 +272,147 @@ const resendTokenPost = async (req, res, next) => {
   })
 }
 
-export { registerTeacher, loginTeacher, confirmationGet, resendTokenPost }
+// @route    GET api/teachers/english
+// @desc     Get all teachers
+// @access   Private
+const getTeachers = async (req, res) => {
+  try {
+    const teachers = await ProfileTeacher.find().populate('user', ['name'])
+    res.json(teachers)
+  } catch (err) {
+    console.error(err.message)
+
+    res.status(500).send('Server Error')
+  }
+}
+
+// @route    GET api/teachers/lessons/add-lesson
+// @desc     Create or update teacher's lessons
+// @access   Private/teachers
+const createOrUpdateLesson = async (req, res) => {
+  const { lessonName, content, periods, documents } = req.body
+
+  const lessonFields = {
+    user: req.user.id,
+    lessonName,
+    content,
+    periods,
+    documents,
+  }
+
+  try {
+    let lesson = await Lesson.findOneAndUpdate(
+      {
+        user: req.user.id,
+      },
+      { $set: lessonFields },
+      {
+        new: true,
+        upsert: true,
+        setDefaultsOnInsert: true,
+        usefindAndModify: false,
+      }
+    )
+    return res.json(lesson)
+  } catch (err) {
+    console.error(err.message)
+    return res.status(500).send('Server Error')
+  }
+}
+
+// @route    GET api/teachers/lessons/me
+// @desc     Get all lessons
+// @access   Private/teachers
+const getLessons = async (req, res) => {
+  try {
+    const lessons = await Lesson.find().populate('user', ['name'])
+    res.json(lessons)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server Error')
+  }
+}
+
+// @route    GET api/teachers/lessons/:id
+// @desc     Get lesson by ID
+// @access   Private/teachers
+const getLessonById = async (req, res) => {
+  try {
+    const lesson = await Lesson.findById(req.params.id)
+
+    if (!lesson) {
+      return res.status(404).json({ msg: 'Không tìm thấy bài học này.' })
+    }
+
+    res.json(lesson)
+  } catch (err) {
+    console.error(err.message)
+
+    res.status(500).send('Server Error')
+  }
+}
+
+// @route    DELETE api/posts/:id
+// @desc     Delete a lesson by ID
+// @access   Private/teachers
+const deleteLessonByID = async (req, res) => {
+  try {
+    const lesson = await Lesson.findById(req.params.id)
+
+    if (!lesson) {
+      return res.status(404).json({ msg: 'Không tìm thấy bài học' })
+    }
+
+    // Check user
+    if (lesson.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' })
+    }
+
+    await lesson.remove()
+
+    res.json({ msg: 'Bài học đã bị xóa.' })
+  } catch (err) {
+    console.error(err.message)
+
+    res.status(500).send('Server Error')
+  }
+}
+
+// @route    POST api/teachers/lessons
+// @desc     Create a lesson
+// @access   Private/teachers
+const createALesson = async (req, res) => {
+  try {
+    const user = await User.findById(req.user.id).select('-password')
+
+    const { lessonName, content, periods, documents } = req.body
+
+    const newLesson = new Lesson({
+      user: req.user.id,
+      lessonName,
+      content,
+      periods,
+      documents,
+    })
+
+    const lesson = await newLesson.save()
+
+    res.json(lesson)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server Error')
+  }
+}
+
+export {
+  registerTeacher,
+  loginTeacher,
+  confirmationGet,
+  resendTokenPost,
+  getTeachers,
+  createOrUpdateLesson,
+  getLessons,
+  getLessonById,
+  deleteLessonByID,
+  createALesson,
+}

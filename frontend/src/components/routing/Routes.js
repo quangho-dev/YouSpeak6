@@ -19,6 +19,9 @@ import ConfirmationSuccessScreen from '../../screens/ConfirmationSuccessScreen'
 import TeacherConfirmationSuccessScreen from '../../screens/TeacherConfirmationSuccessScreen'
 import RequestResendConfirmationTokenScreen from '../../screens/RequestResendConfirmationTokenScreen'
 import RequestTeacherResendConfirmationTokenScreen from '../../screens/teachers/RequestTeacherResendConfirmationTokenScreen'
+import TeachersListScreen from '../../screens/TeachersList/TeachersListScreen'
+import NotFound from '../layout/NotFound'
+import Lessons from '../lessons/Lessons'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -47,6 +50,7 @@ const Routes = (props) => {
           path="/create-profile"
           component={ProfileFormScreen}
         />
+        <Route exact path="/teachers/english" component={TeachersListScreen} />
 
         {/* Teacher routes */}
         <Route exact path="/for-teacher" component={ForTeacherScreen} />
@@ -76,6 +80,14 @@ const Routes = (props) => {
           path="/teachers/dashboard"
           component={DashboardTeacher}
         />
+
+        <TeacherPrivateRoute
+          exact
+          path="/teachers/lessons"
+          component={Lessons}
+        />
+
+        <Route component={NotFound} />
       </Switch>
     </section>
   )

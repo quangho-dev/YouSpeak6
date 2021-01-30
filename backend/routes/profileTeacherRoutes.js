@@ -1,12 +1,12 @@
 import express from 'express'
 const router = express.Router()
-import auth from '../middleware/auth.js'
+import { userAuth } from '../utils/authPassport.js'
 import {
   getCurrentProfileTeacher,
   createOrUpdateProfileTeacher,
 } from '../controllers/profileTeacherController.js'
 
-router.get('/me', auth, getCurrentProfileTeacher)
-router.post('/', auth, createOrUpdateProfileTeacher)
+router.get('/me', userAuth, getCurrentProfileTeacher)
+router.post('/', userAuth, createOrUpdateProfileTeacher)
 
 export default router

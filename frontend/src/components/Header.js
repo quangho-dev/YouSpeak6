@@ -305,8 +305,9 @@ export default function Header(props) {
       {user && user.role !== 'teacher' && (
         <Grid item>
           <Button
+            component={Link}
+            to="/teachers/english"
             variant="text"
-            // onClick={() => setOpenSignIn(true)}
             style={{
               color: '#333',
               textTransform: 'none',

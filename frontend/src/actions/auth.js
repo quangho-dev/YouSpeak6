@@ -109,6 +109,7 @@ export const login = (email, password) => async (dispatch) => {
 // Logout
 export const logout = () => ({ type: LOGOUT })
 
+// resend confirmation token
 export const resendConfirmationToken = (email) => async (dispatch) => {
   try {
     const res = await api.post('/users/resend-confirmation-token', { email })

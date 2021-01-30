@@ -11,6 +11,9 @@ import { getCurrentProfileTeacher } from '../../actions/profileTeacher'
 import ReactPlayer from 'react-player'
 import { format } from 'date-fns'
 import { Card } from '@material-ui/core'
+import ShowMoreText from 'react-show-more-text'
+import EditIcon from '@material-ui/icons/Edit'
+import MenuBookIcon from '@material-ui/icons/MenuBook'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -40,12 +43,14 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     height: 'auto',
   },
+  subHeader: {
+    fontSize: '17px',
+    fontWeight: '500',
+  },
 }))
 
 const DashboardTeacher = () => {
   const [videoFilePath, setVideoFilePath] = useState(null)
-
-  console.log('day la videofilepath:', videoFilePath)
 
   const classes = useStyles()
 
@@ -72,6 +77,8 @@ const DashboardTeacher = () => {
       )
     })
   }
+
+  const executeOnClick = (isExpanded) => {}
 
   return (
     <div style={{ backgroundColor: '#f7f7f7' }}>
@@ -104,34 +111,43 @@ const DashboardTeacher = () => {
           </Grid>
         )}
 
-        {user && (
-          <Grid item style={{ marginBottom: '1em' }}>
-            <Grid container alignItems="center">
-              <Grid item>
-                <Typography variant="body1">{user.name}</Typography>
-              </Grid>
-              <Grid item style={{ marginLeft: '0.5em' }}>
-                <Button
-                  component={Link}
-                  variant="contained"
-                  color="primary"
-                  to="/teachers/create-profile"
-                  style={{ color: 'white' }}
-                >
-                  Chỉnh sửa profile
-                </Button>
-              </Grid>
-            </Grid>
+        <Grid item style={{ marginBottom: '1em' }}>
+          <Grid item style={{ marginLeft: '0.5em' }}>
+            <Button
+              component={Link}
+              variant="contained"
+              color="primary"
+              to="/teachers/create-profile"
+              style={{ color: 'white' }}
+            >
+              <EditIcon fontSize="small" />
+              &nbsp;Chỉnh sửa profile
+            </Button>
           </Grid>
-        )}
+        </Grid>
+
+        <Grid item style={{ marginBottom: '1em' }}>
+          <Grid item style={{ marginLeft: '0.5em' }}>
+            <Button
+              component={Link}
+              variant="contained"
+              color="primary"
+              to="/teachers/lessons"
+              style={{ color: 'white' }}
+            >
+              <MenuBookIcon fontSize="small" />
+              &nbsp;Chỉnh sửa các bài học
+            </Button>
+          </Grid>
+        </Grid>
 
         {profileTeacherRedux && profileTeacherRedux.typeOfTeacher !== null && (
           <Grid item style={{ marginBottom: '1em' }}>
             <Typography variant="body1">
-              {`Kiểu giáo viên: `}
+              <span className={classes.subHeader}>Kiểu giáo viên:</span>
               {profileTeacherRedux.typeOfTeacher === 'commutor'
-                ? 'Giáo viên cộng đồng'
-                : 'Giáo viên chuyên nghiệp'}
+                ? ' Giáo viên cộng đồng'
+                : ' Giáo viên chuyên nghiệp'}
             </Typography>
           </Grid>
         )}
@@ -139,38 +155,67 @@ const DashboardTeacher = () => {
         {profileTeacherRedux && profileTeacherRedux.dateOfBirth !== null && (
           <Grid item style={{ marginBottom: '1em' }}>
             <Typography variant="body1">
-              {`Ngày tháng năm sinh:`}{' '}
+              <span className={classes.subHeader}>Ngày tháng năm sinh: </span>
               {format(new Date(profileTeacherRedux.dateOfBirth), 'dd/MM/yyyy')}
             </Typography>
           </Grid>
         )}
+
         {profileTeacherRedux && profileTeacherRedux.hometown !== null && (
           <Grid item style={{ marginBottom: '1em' }}>
             <Typography variant="body1">
-              {`Quốc Tịch: ${profileTeacherRedux.hometown}`}
+              <span className={classes.subHeader}>Quốc Tịch: </span>{' '}
+              {profileTeacherRedux.hometown}
             </Typography>
           </Grid>
         )}
+
         {profileTeacherRedux && profileTeacherRedux.communicationTool !== null && (
           <Grid item style={{ marginBottom: '1em' }}>
             <Typography variant="body1">
-              {`Phần mềm video call dùng để dạy:`}{' '}
+              <span className={classes.subHeader}>
+                Phần mềm video call dùng để dạy:{' '}
+              </span>
               {profileTeacherRedux.communicationTool.join(', ')}
             </Typography>
           </Grid>
         )}
 
         {profileTeacherRedux && profileTeacherRedux.introduction !== null && (
-          <Grid item>
-            <Typography variant="body1">{`Giới thiệu về giáo viên: ${profileTeacherRedux.introduction}`}</Typography>
+          <Grid item style={{ marginBottom: '1em' }}>
+            <Typography variant="body1" className={classes.subHeader}>
+              Giới thiệu về giáo viên:
+            </Typography>
+            <Typography variant="body1">
+              <ShowMoreText
+                lines={3}
+                more="Xem thêm"
+                less="Thu lại"
+                className="content-css"
+                anchorClass="my-anchor-css-class"
+                onClick={executeOnClick}
+                expanded={false}
+                width={700}
+              >
+                {profileTeacherRedux.introduction}
+              </ShowMoreText>
+            </Typography>
           </Grid>
         )}
 
         {profileTeacherRedux &&
           profileTeacherRedux.video !== null &&
           profileTeacherRedux.thumbnail !== null && (
-            <Grid item className={classes.formControl}>
-              <Typography variant="body1" style={{ margin: '0.5em 0' }}>
+            <Grid
+              item
+              className={classes.formControl}
+              style={{ marginBottom: '1em' }}
+            >
+              <Typography
+                variant="body1"
+                style={{ margin: '0.5em 0' }}
+                className={classes.subHeader}
+              >
                 Video giới thiệu về giáo viên:
               </Typography>
               <ReactPlayer
@@ -185,27 +230,35 @@ const DashboardTeacher = () => {
         {profileTeacherRedux &&
           Boolean(profileTeacherRedux.degreeImages) &&
           profileTeacherRedux.typeOfTeacher !== 'commutor' && (
-            <>
-              <Typography variant="body1" style={{ margin: '0.5em 0' }}>
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Typography
+                variant="body1"
+                className={classes.subHeader}
+                style={{ margin: '0.5em 0' }}
+              >
                 Hình ảnh bằng cấp của giáo viên:
               </Typography>
               <Grid container justify="center" alignItems="center" spacing={3}>
                 {renderImages(profileTeacherRedux.degreeImages)}
               </Grid>
-            </>
+            </Grid>
           )}
 
         {profileTeacherRedux &&
           profileTeacherRedux.expImages !== '' &&
           profileTeacherRedux.typeOfTeacher !== 'commutor' && (
-            <>
-              <Typography variant="body1" style={{ margin: '0.5em 0' }}>
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Typography
+                variant="body1"
+                className={classes.subHeader}
+                style={{ margin: '0.5em 0' }}
+              >
                 Hình ảnh kinh nghiệm của giáo viên:
               </Typography>
               <Grid container justify="center" alignItems="center" spacing={3}>
                 {renderImages(profileTeacherRedux.expImages)}
               </Grid>
-            </>
+            </Grid>
           )}
       </Grid>
     </div>

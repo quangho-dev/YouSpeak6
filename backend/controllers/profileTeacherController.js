@@ -23,7 +23,7 @@ const getCurrentProfileTeacher = async (req, res) => {
   }
 }
 
-// @route    POST api/profile
+// @route    POST api/profileTeacher
 // @desc     Create or update teacher profile
 // @access   Private
 const createOrUpdateProfileTeacher = async (req, res) => {
