@@ -7,6 +7,7 @@ import teachersList from './teachersList'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import lesson from './lesson'
+import { firebaseReducer } from 'react-redux-firebase'
 
 const persistConfig = {
   key: 'root',
@@ -21,6 +22,7 @@ const rootReducer = combineReducers({
   profileTeacher,
   teachersList,
   lesson,
+  firebase: firebaseReducer,
 })
 
 export default persistReducer(persistConfig, rootReducer)
