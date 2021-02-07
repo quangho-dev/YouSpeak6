@@ -1,33 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import {
-  Box,
   Button,
-  Card,
-  CardContent,
-  CircularProgress,
   Grid,
   Step,
   StepLabel,
   Stepper,
   Typography,
-  CardActions,
-  LinearProgress,
-  Avatar,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  CardMedia,
   Dialog,
-  IconButton,
   DialogActions,
 } from '@material-ui/core'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form } from 'formik'
 import 'date-fns'
-import DateFnsUtils from '@date-io/date-fns'
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers'
 import {
   getCurrentProfileTeacher,
   createOrUpdateProfileTeacher,
@@ -35,12 +18,10 @@ import {
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/styles'
-import axios from 'axios'
 import { Link } from 'react-router-dom'
 import ProfileTeacherPage1 from './ProfileTeacherPage1'
 import ProfileTeacherPage2 from './ProfileTeacherPage2'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
-import { format } from 'date-fns'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -124,8 +105,6 @@ const ProfileTeacher = ({ history }) => {
 
   const dispatch = useDispatch()
 
-  const isLastPage = () => page === pages.length - 1
-
   // buoc ke tiep cua stepper
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -153,13 +132,8 @@ const ProfileTeacher = ({ history }) => {
     <ProfileTeacherPage2 nextPage={nextPage} prevPage={prevPage} />,
   ]
 
-  const [uploading, setUploading] = useState(false)
-
   const profileTeacher = useSelector((state) => state.profileTeacher)
   const { loading, profileTeacher: profileTeacherRedux } = profileTeacher
-
-  const auth = useSelector((state) => state.auth)
-  const { user } = auth
 
   const validationSchema = yup.object().shape({
     dateOfBirth: yup.date().nullable(),
@@ -181,18 +155,7 @@ const ProfileTeacher = ({ history }) => {
       setDegreeImagesState(profileTeacherRedux.degreeImages)
       setExpImagesState(profileTeacherRedux.expImages)
     }
-  }, [profileTeacherRedux, loading, dispatch])
-
-  // const displayedCommunicationTool = Object.keys(
-  //   profileTeacherRedux.communicationTool
-  // ).map((tool) => {
-  //   tool, profileTeacherRedux.communicationTool[tool]
-  // })
-
-  // console.log(
-  //   'day la communicationTool:',
-  //   profileTeacherRedux.communicationTool
-  // )
+  }, [profileTeacherRedux, loading, dispatch, profileTeacher])
 
   return (
     <Formik
@@ -276,7 +239,6 @@ const ProfileTeacher = ({ history }) => {
                   variant="body2"
                   component={Link}
                   to="/teachers/dashboard"
-                  variant="text"
                   style={{
                     fontWeight: '600',
                     marginLeft: '0.5em',

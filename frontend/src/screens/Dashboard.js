@@ -1,19 +1,14 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { makeStyles } from '@material-ui/styles'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
-import EditProfileDialog from './EditProfileDialog'
-import { Route } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import Chip from '@material-ui/core/Chip'
 import { Link } from 'react-router-dom'
 import { getCurrentProfile } from '../actions/profile'
 import Rating from '../components/ui/Rating'
-import ReactPlayer from 'react-player'
 
 const Dashboard = () => {
   const useStyles = makeStyles((theme) => ({
@@ -43,7 +38,7 @@ const Dashboard = () => {
 
   useEffect(() => {
     dispatch(getCurrentProfile())
-  }, [getCurrentProfile, dispatch])
+  }, [dispatch])
 
   return (
     <div style={{ backgroundColor: '#f7f7f7' }}>
@@ -140,11 +135,6 @@ const Dashboard = () => {
                 </Typography>
               </Grid>
             </Grid>
-          </Grid>
-        )}
-        {profileUser && (
-          <Grid item style={{ minHeight: '4em' }}>
-            <ReactPlayer url="https://www.youtube.com/watch?v=vWD7k6TrJ-g&list=RDvWD7k6TrJ-g&start_radio=1" />
           </Grid>
         )}
       </Grid>

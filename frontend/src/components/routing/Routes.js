@@ -13,7 +13,7 @@ import LoginTeacher from '../../screens/teachers/LoginTeacher'
 import ProfileTeacher from '../../screens/teachers/ProfileTeacherForm/ProfileTeacher'
 import AlertMessage from '../layout/AlertMessage'
 import ForgotPasswordScreen from '../../screens/ForgotPasswordScreen'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import ResetPasswordScreen from '../../screens/ResetPasswordScreen'
 import ConfirmationSuccessScreen from '../../screens/ConfirmationSuccessScreen'
 import TeacherConfirmationSuccessScreen from '../../screens/TeacherConfirmationSuccessScreen'
@@ -22,6 +22,8 @@ import RequestTeacherResendConfirmationTokenScreen from '../../screens/teachers/
 import TeachersListScreen from '../../screens/TeachersList/TeachersListScreen'
 import NotFound from '../layout/NotFound'
 import Lessons from '../lessons/Lessons'
+import AddALesson from '../lessons/AddALesson/AddALesson'
+import EditLessonDocuments from '../lessons/AddALesson/EditLessonDocuments'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -86,7 +88,16 @@ const Routes = (props) => {
           path="/teachers/lessons"
           component={Lessons}
         />
-
+        <TeacherPrivateRoute
+          exact
+          path="/teachers/add-a-lesson"
+          component={AddALesson}
+        />
+        <TeacherPrivateRoute
+          exact
+          path="/teachers/lessons/edit-documents"
+          component={EditLessonDocuments}
+        />
         <Route component={NotFound} />
       </Switch>
     </section>

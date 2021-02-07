@@ -1,19 +1,8 @@
 import React, { useState } from 'react'
-import {
-  Typography,
-  FormControl,
-  InputLabel,
-  Input,
-  FormHelperText,
-  Button,
-  TextField,
-  Grid,
-} from '@material-ui/core'
+import { Typography, Button, TextField, Grid } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import { sendForgotPassword } from '../actions/resetPassword'
-import { setAlert } from '../actions/alert'
-import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
   rowContainer: {

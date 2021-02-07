@@ -1,6 +1,5 @@
 import path from 'path'
 import express from 'express'
-import cors from 'cors'
 import morgan from 'morgan'
 import mongoose from 'mongoose'
 import consola from 'consola'
@@ -19,6 +18,7 @@ import { passportMiddleware } from './middleware/passport.js'
 import passport from 'passport'
 import forgotPasswordRoute from './routes/forgotPasswordRoute.js'
 import resetPasswordRoute from './routes/resetPasswordRoute.js'
+import uploadLessonDocumentsRoute from './routes/uploadLessonDocumentsRoute.js'
 
 const mongoURI = config.get('mongoURI')
 const PORT = config.get('PORT')
@@ -28,7 +28,6 @@ const { success, error } = consola
 
 const app = express()
 
-app.use(cors())
 app.use(express.json())
 
 app.use(morgan('tiny'))
@@ -52,6 +51,7 @@ app.use('/api/upload-teacher-avatar', uploadTeacherAvatarRoutes)
 app.use('/api/uploadVideo', uploadVideoRoutes)
 app.use('/api/uploadDegreeImages', uploadDegreeImagesRoutes)
 app.use('/api/uploadExpImages', uploadExpImagesRoutes)
+app.use('/api/upload-lesson-documents', uploadLessonDocumentsRoute)
 
 app.use('/api/profile', profileRoutes)
 
@@ -60,6 +60,21 @@ app.use('/api/profileTeacher', profileTeacherRoutes)
 const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
+app.use((req, res, next) => {
+  const error = new Error('Not Found')
+  error.status = 404
+  next(error)
+})
+
+app.use((error, req, res, next) => {
+  res.status(error.status || 500)
+  res.json({
+    error: {
+      message: error.message,
+    },
+  })
+})
+
 const startApp = async () => {
   try {
     // Connection With DB
@@ -67,6 +82,7 @@ const startApp = async () => {
       useFindAndModify: true,
       useUnifiedTopology: true,
       useNewUrlParser: true,
+      useCreateIndex: true,
     })
 
     success({

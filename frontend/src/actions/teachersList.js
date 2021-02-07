@@ -1,6 +1,5 @@
 import api from '../utils/api'
 import { FETCH_TEACHERS_SUCCESS, FETCH_TEACHERS_FAIL } from './types'
-import { setAlert } from './alert'
 
 // fetch all teachers
 export const getTeachers = () => async (dispatch) => {

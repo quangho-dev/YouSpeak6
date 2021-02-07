@@ -4,17 +4,9 @@ import profile from './profile'
 import alert from './alert'
 import profileTeacher from './profileTeacher'
 import teachersList from './teachersList'
-import { persistReducer } from 'redux-persist'
-import storage from 'redux-persist/lib/storage'
 import lesson from './lesson'
 
-const persistConfig = {
-  key: 'root',
-  storage,
-  whitelist: ['auth'],
-}
-
-const rootReducer = combineReducers({
+export default combineReducers({
   auth,
   profile,
   alert,
@@ -22,5 +14,3 @@ const rootReducer = combineReducers({
   teachersList,
   lesson,
 })
-
-export default persistReducer(persistConfig, rootReducer)

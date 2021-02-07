@@ -3,9 +3,6 @@ import {
   PROFILE_TEACHER_ERROR,
   CLEAR_PROFILE_TEACHER,
   UPDATE_PROFILE_TEACHER,
-  GET_PROFILES,
-  GET_REPOS,
-  NO_REPOS,
 } from '../actions/types'
 
 const initialState = {

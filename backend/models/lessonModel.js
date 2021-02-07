@@ -16,18 +16,22 @@ const LessonSchema = new mongoose.Schema({
   periods: [
     {
       thirtyMinutes: {
+        isChosen: Boolean,
         price: Number,
       },
-      fortyFiveMinutes: { price: Number },
+    },
+    { fortyFiveMinutes: { isChosen: Boolean, price: Number } },
+    {
       oneHour: {
+        isChosen: Boolean,
         price: Number,
       },
     },
   ],
   documents: [
     {
-      fileName: String,
-      filePath: String,
+      documentName: String,
+      fileDocument: String,
     },
   ],
 })

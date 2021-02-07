@@ -64,9 +64,6 @@ const ProfileFormScreen = ({ history }) => {
   const profile = useSelector((state) => state.profile)
   const { loading, profile: profileUser } = profile
 
-  const auth = useSelector((state) => state.auth)
-  const { user } = auth
-
   const validationSchema = yup.object().shape({
     dateOfBirth: yup.date().nullable(),
   })

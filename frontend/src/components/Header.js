@@ -1,16 +1,14 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { Fragment, useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
-import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
 import MenuIcon from '@material-ui/icons/Menu'
 import logo from '../assets/eagleLogo.png'
-
 import useScrollTrigger from '@material-ui/core/useScrollTrigger'
-import { Link, Route } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useTheme } from '@material-ui/core/styles'
 import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
@@ -19,11 +17,6 @@ import Avatar from '@material-ui/core/Avatar'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import { logout } from '../actions/auth'
-import AlertMessage from './ui/AlertMessage'
-import Auth0LoginButton from './Auth0Inputs/Auth0LoginButton'
-import Auth0SignupButton from './Auth0Inputs/Auth0SignupButton'
-import { getCurrentProfile } from '../actions/profile'
-import { getCurrentProfileTeacher } from '../actions/profileTeacher'
 
 function ElevationScroll(props) {
   const { children } = props
@@ -87,16 +80,6 @@ const useStyles = makeStyles((theme) => ({
   },
   drawer: {
     backgroundColor: theme.palette.common.green,
-  },
-  drawerItem: {
-    ...theme.typography.tab,
-    color: 'white',
-    opacity: 0.7,
-  },
-  drawerItemSelected: {
-    '& .MuiListItemText-root': {
-      opacity: 1,
-    },
   },
   drawerAvatar: {
     backgroundColor: 'white',
@@ -396,18 +379,19 @@ export default function Header(props) {
                       disableRipple
                       className={classes.logoContainer}
                     >
-                      <img
-                        alt="company logo"
-                        className={classes.logo}
-                        src={logo}
-                      />
+                      {logo && (
+                        <img
+                          alt="company logo"
+                          className={classes.logo}
+                          src={logo}
+                        />
+                      )}
                     </Button>
                   </Grid>
                   <Grid item>{matches ? drawer : tabsLoggedIn}</Grid>
                 </Grid>
               </Toolbar>
             </AppBar>
-            {/* abc */}
           </ElevationScroll>
         </>
       ) : (

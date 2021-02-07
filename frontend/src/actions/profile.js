@@ -3,14 +3,9 @@ import { setAlert } from './alert'
 
 import {
   GET_PROFILE,
-  GET_PROFILES,
   PROFILE_ERROR,
-  UPDATE_PROFILE,
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
-  GET_REPOS,
-  NO_REPOS,
-  SET_ALERT,
 } from './types'
 
 // Get current users profile
@@ -55,12 +50,6 @@ export const createOrUpdateProfile = (
       history.push('/dashboard')
     }
   } catch (err) {
-    const errors = err.response.data.errors
-
-    // if (errors) {
-    //   errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')))
-    // }
-
     dispatch({
       type: PROFILE_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },

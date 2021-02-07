@@ -1,35 +1,12 @@
-import React, { useState } from 'react'
+import React from 'react'
 import {
-  Box,
-  Button,
   Card,
   CardContent,
-  CircularProgress,
   Grid,
-  Step,
-  StepLabel,
-  Stepper,
   Typography,
   CardActions,
-  LinearProgress,
-  Avatar,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  CardMedia,
-  Dialog,
 } from '@material-ui/core'
-import {
-  Field,
-  Form,
-  Formik,
-  FormikConfig,
-  FormikValues,
-  ErrorMessage,
-  useFormik,
-} from 'formik'
 import { makeStyles } from '@material-ui/styles'
-import MuiRadioGroup from './inputs/MuiRadioGroup'
 import ButtonInput from './inputs/ButtonInput'
 
 const useStyles = makeStyles((theme) => ({

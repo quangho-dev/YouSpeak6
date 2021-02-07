@@ -1,17 +1,10 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Button } from '@material-ui/core'
-import { useField, useFormikContext } from 'formik'
+import { useFormikContext } from 'formik'
 import axios from 'axios'
 
-const ButtonFileInput = ({
-  label,
-  name,
-  setUploadingTeacherAvatar,
-  setPreviewTeacherAvatar,
-  props,
-}) => {
-  const [field, meta, helpers] = useField(name)
-  const { setFieldValue, values } = useFormikContext()
+const ButtonFileInput = ({ label, setUploadingTeacherAvatar }) => {
+  const { setFieldValue } = useFormikContext()
 
   const onChangeHandler = async (e) => {
     if (e.currentTarget.files[0]) {
@@ -39,12 +32,6 @@ const ButtonFileInput = ({
         console.error(error)
         setUploadingTeacherAvatar(false)
       }
-
-      let reader = new FileReader()
-      reader.onloadend = () => {
-        setPreviewTeacherAvatar(reader.result)
-      }
-      reader.readAsDataURL(file)
     }
   }
 

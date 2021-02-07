@@ -1,17 +1,8 @@
-import React, { useState } from 'react'
-import { Redirect } from 'react-router-dom'
-import {
-  Typography,
-  FormControl,
-  InputLabel,
-  Input,
-  FormHelperText,
-  Button,
-  Grid,
-} from '@material-ui/core'
+import React from 'react'
+import { Typography, Button, Grid } from '@material-ui/core'
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/core/styles'
-import { Formik, Form, Field, ErrorMessage } from 'formik'
+import { Formik, Form, Field } from 'formik'
 import { TextField } from 'formik-material-ui'
 import * as Yup from 'yup'
 import { resetPassword } from '../actions/resetPassword'
@@ -26,8 +17,6 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const ResetPasswordScreen = (props) => {
-  const [resetState, setResetState] = useState(false)
-
   const dispatch = useDispatch()
 
   const token = props.match.params.token
@@ -47,7 +36,7 @@ const ResetPasswordScreen = (props) => {
   })
 
   const onSubmit = async (values, { setSubmitting }) => {
-    const { password, confirmPassword } = values
+    const { password } = values
     setTimeout(() => {
       const data = {
         password,

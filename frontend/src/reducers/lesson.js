@@ -1,9 +1,4 @@
-import {
-  GET_LESSONS,
-  CREATE_LESSON,
-  UPDATE_LESSON,
-  LESSON_ERROR,
-} from '../actions/types'
+import { GET_LESSONS, CREATE_LESSON, LESSON_ERROR } from '../actions/types'
 
 const initialState = {
   lessons: [],

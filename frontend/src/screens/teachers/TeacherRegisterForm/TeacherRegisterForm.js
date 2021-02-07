@@ -1,42 +1,13 @@
 import React from 'react'
-import {
-  Box,
-  Button,
-  Card,
-  CardContent,
-  CircularProgress,
-  Grid,
-  Step,
-  StepLabel,
-  Stepper,
-  Typography,
-  CardActions,
-  LinearProgress,
-  Avatar,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  CardMedia,
-  Dialog,
-  IconButton,
-  DialogActions,
-} from '@material-ui/core'
-import {
-  Field,
-  Formik,
-  FormikConfig,
-  FormikValues,
-  ErrorMessage,
-  Form,
-} from 'formik'
-import { CheckboxWithLabel, TextField, Select } from 'formik-material-ui'
-import { mixed, number, object, string } from 'yup'
+import { Button, CircularProgress, Grid, Typography } from '@material-ui/core'
+import { Field, Formik, Form } from 'formik'
+import { TextField } from 'formik-material-ui'
+import { object, string } from 'yup'
 import * as Yup from 'yup'
 import { registerTeacher } from '../../../actions/auth'
 import { useDispatch, useSelector } from 'react-redux'
-import axios from 'axios'
 import { makeStyles } from '@material-ui/styles'
-import { Link, Redirect } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
 const useStyles = makeStyles((theme) => ({
@@ -101,7 +72,7 @@ const TeacherRegisterForm = (props) => {
   const dispatch = useDispatch()
 
   const auth = useSelector((state) => state.auth)
-  const { isAuthenticated, loading } = auth
+  const { loading } = auth
 
   const validation = object({
     name: string().required('Bạ n cần điền tên hiển thị'),
@@ -128,7 +99,7 @@ const TeacherRegisterForm = (props) => {
       validationSchema={validation}
       onSubmit={onSubmitHandler}
     >
-      {({ values, errors, isSubmitting, isValid }) => (
+      {({ isSubmitting, isValid }) => (
         <Form>
           <div className={classes.toolbarMargin} />
           <Grid
@@ -147,7 +118,6 @@ const TeacherRegisterForm = (props) => {
                 variant="body2"
                 component={Link}
                 to="/for-teacher"
-                variant="text"
                 style={{
                   fontWeight: '600',
                   marginLeft: '0.5em',
