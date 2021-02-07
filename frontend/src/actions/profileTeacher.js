@@ -3,14 +3,9 @@ import { setAlert } from './alert'
 
 import {
   GET_PROFILE_TEACHER,
-  GET_PROFILES,
   PROFILE_TEACHER_ERROR,
-  UPDATE_PROFILE,
   CLEAR_PROFILE_TEACHER,
   ACCOUNT_DELETED,
-  GET_REPOS,
-  NO_REPOS,
-  SET_ALERT,
 } from './types'
 
 // Get current teachers profile
@@ -57,12 +52,6 @@ export const createOrUpdateProfileTeacher = (
       history.push('/teachers/dashboard')
     }
   } catch (err) {
-    const errors = err.response.data.errors
-
-    // if (errors) {
-    //   errors.forEach((error) => dispatch(setAlert(error.msg, 'danger')))
-    // }
-
     dispatch({
       type: PROFILE_TEACHER_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },

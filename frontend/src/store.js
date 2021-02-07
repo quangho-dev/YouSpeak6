@@ -3,6 +3,7 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import rootReducer from './reducers'
 import setAuthToken from './utils/setAuthToken'
+<<<<<<< HEAD
 import { persistStore } from 'redux-persist'
 import firebase from 'firebase/app'
 import 'firebase/auth'
@@ -10,6 +11,8 @@ import {
   ReactReduxFirebaseProvider,
   firebaseReducer,
 } from 'react-redux-firebase'
+=======
+>>>>>>> applyFireBaseAuth
 
 const initialState = {}
 
@@ -20,8 +23,6 @@ const store = createStore(
   initialState,
   composeWithDevTools(applyMiddleware(...middleware))
 )
-
-const persistor = persistStore(store)
 
 // set up a store subscription listener
 // to store the users token in localStorage
@@ -41,4 +42,4 @@ store.subscribe(() => {
   }
 })
 
-export { store, persistor }
+export default store

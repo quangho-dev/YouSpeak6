@@ -3,12 +3,9 @@ import { setAlert } from './alert'
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
-  TEACHER_LOADED,
-  AUTH_ERROR,
   LOGIN_SUCCESS,
   LOGIN_FAIL,
   LOGOUT,
-  SET_ALERT,
 } from './types'
 import { loadUser } from './auth'
 

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import {
   Grid,
   Card,
@@ -32,7 +32,6 @@ const TeacherInfo = ({ teacher }) => {
     teacherAvatar,
     rating,
     lesson,
-    name,
     typeOfTeacher,
     hourlyRateFrom,
     trial,

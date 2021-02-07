@@ -1,42 +1,22 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import {
   FormGroup,
-  Box,
   Button,
   Card,
-  CardContent,
-  CircularProgress,
   Grid,
-  Step,
-  StepLabel,
-  Stepper,
   Typography,
   CardActions,
   LinearProgress,
   Avatar,
-  FormControl,
-  InputLabel,
-  MenuItem,
-  CardMedia,
 } from '@material-ui/core'
-import {
-  Field,
-  Form,
-  Formik,
-  FormikConfig,
-  FormikValues,
-  ErrorMessage,
-  useField,
-  useFormikContext,
-} from 'formik'
+import { Field, useFormikContext } from 'formik'
 import { makeStyles } from '@material-ui/styles'
 import ButtonFileInput from './inputs/ButtonFileInput'
 import MuiDatePicker from './inputs/MuiDatePicker'
 import FlagSelector from './inputs/FlagSelector'
-import { CheckboxWithLabel, TextField } from 'formik-material-ui'
+import { TextField } from 'formik-material-ui'
 import Dropzone from 'react-dropzone'
 import AddIcon from '@material-ui/icons/Add'
-import VideoDropzone from './inputs/VideoDropzone'
 import axios from 'axios'
 import Moment from 'react-moment'
 import MyCheckBox from '../../../components/Formik/MyCheckBox'
@@ -100,7 +80,6 @@ const useStyles = makeStyles((theme) => ({
 
 const ProfileTeacherPage2 = () => {
   const [videoDurationState, setVideoDurationState] = useState(0)
-  const [previewTeacherAvatar, setPreviewTeacherAvatar] = useState(null)
   const [uploadingTeacherAvatar, setUploadingTeacherAvatar] = useState(false)
 
   const [uploadVideoPercentage, setUploadVideoPercentage] = useState(0)
@@ -267,7 +246,11 @@ const ProfileTeacherPage2 = () => {
       return (
         <Grid item className={classes.expImageCard} key={photo}>
           <Card>
-            <img src={photo} className={classes.expImage} />
+            <img
+              src={photo}
+              className={classes.expImage}
+              alt="teacher-avatar"
+            />
             <CardActions>
               <Button
                 fullWidth
@@ -289,7 +272,7 @@ const ProfileTeacherPage2 = () => {
       return (
         <Grid item className={classes.expImageCard} key={photo}>
           <Card>
-            <img src={photo} className={classes.expImage} />
+            <img src={photo} className={classes.expImage} alt="experience" />
             <CardActions>
               <Button
                 fullWidth
@@ -332,7 +315,7 @@ const ProfileTeacherPage2 = () => {
         <Grid container direction="column" justify="center">
           <Grid item>
             <Avatar
-              src={previewTeacherAvatar || values.teacherAvatar}
+              src={values.teacherAvatar}
               style={{ width: '4em', height: '4em' }}
               alt="teacher-avatar"
             />
@@ -349,7 +332,6 @@ const ProfileTeacherPage2 = () => {
               name="teacherAvatar"
               label="Tải hình ảnh giáo viên"
               setUploadingTeacherAvatar={setUploadingTeacherAvatar}
-              setPreviewTeacherAvatar={setPreviewTeacherAvatar}
             />
             {uploadingTeacherAvatar && <LinearProgress color="secondary" />}
           </Grid>

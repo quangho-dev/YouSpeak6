@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { makeStyles, useTheme } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Button, Typography } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTeachers } from '../../actions/teachersList'
@@ -16,9 +16,6 @@ const TeachersListScreen = () => {
 
   const dispatch = useDispatch()
 
-  const auth = useSelector((state) => state.auth)
-  const { user } = auth
-
   const teachersList = useSelector((state) => state.teachersList)
 
   const { teachersList: teachers } = teachersList
@@ -27,7 +24,7 @@ const TeachersListScreen = () => {
 
   useEffect(() => {
     dispatch(getTeachers())
-  }, [getTeachers, dispatch])
+  }, [dispatch])
 
   const handleShowMoreTeachers = () => {
     setVisible((prevValue) => prevValue + 2)

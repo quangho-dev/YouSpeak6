@@ -52,7 +52,6 @@ const ForTeacherScreen = () => {
               variant="body2"
               component={Link}
               to="/"
-              variant="text"
               style={{
                 fontWeight: '600',
                 marginLeft: '0.5em',

@@ -1,9 +1,4 @@
-import {
-  GET_LESSONS,
-  LESSON_ERROR,
-  UPDATE_LESSON,
-  CREATE_LESSON,
-} from './types'
+import { GET_LESSONS, LESSON_ERROR, CREATE_LESSON } from './types'
 import api from '../utils/api'
 import { setAlert } from './alert'
 
