@@ -14,7 +14,6 @@ import {
   IconButton,
 } from '@material-ui/core'
 import MyButton from '../../ui/MyButton'
-import { Link } from 'react-router-dom'
 import PublishIcon from '@material-ui/icons/Publish'
 import { useFormikContext } from 'formik'
 import { makeStyles } from '@material-ui/styles'
@@ -165,16 +164,13 @@ const EditLessonDocuments = ({ onClose, open }) => {
             <List>
               {values.documents &&
                 values.documents.map((document, indexDoc) => (
-                  <ListItem key={document.documentName}>
+                  <ListItem key={indexDoc}>
                     <ListItemAvatar>
                       <Avatar>
                         <FolderIcon />
                       </Avatar>
                     </ListItemAvatar>
-                    <ListItemText
-                      primary={document.documentName}
-                      secondary={document.fileDocument.name}
-                    />
+                    <ListItemText primary={document.documentName} />
                     <ListItemSecondaryAction>
                       <IconButton
                         edge="end"

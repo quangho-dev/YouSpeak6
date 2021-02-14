@@ -23,7 +23,8 @@ import TeachersListScreen from '../../screens/TeachersList/TeachersListScreen'
 import NotFound from '../layout/NotFound'
 import Lessons from '../lessons/Lessons'
 import AddALesson from '../lessons/AddALesson/AddALesson'
-import EditLessonDocuments from '../lessons/AddALesson/EditLessonDocuments'
+import EditALesson from '../lessons/EditALesson/EditALesson'
+import ReuploadLessonDocuments from '../lessons/EditALesson/ReuploadLessonDocuments'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -95,8 +96,13 @@ const Routes = (props) => {
         />
         <TeacherPrivateRoute
           exact
-          path="/teachers/lessons/edit-documents"
-          component={EditLessonDocuments}
+          path="/teachers/lessons/edit/:id"
+          component={EditALesson}
+        />
+        <TeacherPrivateRoute
+          exact
+          path="/teachers/lessons/re-upload-documents/:id"
+          component={ReuploadLessonDocuments}
         />
         <Route component={NotFound} />
       </Switch>

@@ -1,12 +1,18 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Grid, TextField, Checkbox, FormControlLabel } from '@material-ui/core'
 import { useFormikContext } from 'formik'
 
-const LessonPeriodForm = ({ field, label, value, fieldPrice, valuePrice }) => {
-  const { setFieldValue, values } = useFormikContext()
+const LessonPeriodForm = ({
+  fieldCheckbox,
+  labelCheckbox,
+  valueCheckbox,
+  fieldPrice,
+  valuePrice,
+}) => {
+  const { setFieldValue } = useFormikContext()
 
   const handleChange = (e) => {
-    setFieldValue(field, !value)
+    setFieldValue(fieldCheckbox, !valueCheckbox)
   }
 
   const handleChangePrice = (e) => {
@@ -18,17 +24,23 @@ const LessonPeriodForm = ({ field, label, value, fieldPrice, valuePrice }) => {
       <Grid container direction="column" alignItems="center">
         <Grid item>
           <FormControlLabel
-            control={<Checkbox checked={value} onChange={handleChange} />}
-            label={label}
+            control={
+              <Checkbox checked={valueCheckbox} onChange={handleChange} />
+            }
+            label={labelCheckbox}
           />
         </Grid>
         <Grid item>
           <TextField
+            error={valueCheckbox && valuePrice <= 0}
             variant="outlined"
             type="number"
             label="Giá tiền (VNĐ):"
             value={valuePrice}
             onChange={handleChangePrice}
+            helperText={
+              valueCheckbox && valuePrice <= 0 ? 'Vui lòng điền giá tiền.' : ''
+            }
           />
         </Grid>
       </Grid>

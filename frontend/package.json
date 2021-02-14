@@ -19,6 +19,8 @@
     "formik-material-ui-lab": "0.0.8",
     "formik-material-ui-pickers": "0.0.12",
     "history": "^5.0.0",
+    "js-file-download": "^0.4.12",
+    "material-ui-confirm": "^2.1.1",
     "moment": "^2.29.1",
     "moment-duration-format": "^2.3.2",
     "react": "^16.13.1",

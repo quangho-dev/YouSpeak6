@@ -10,6 +10,7 @@ import setAuthToken from './utils/setAuthToken'
 import store from './store'
 import { LOGOUT } from './actions/types'
 import { loadUser } from './actions/auth'
+import { ConfirmProvider } from 'material-ui-confirm'
 
 // Redux
 import { Provider } from 'react-redux'
@@ -31,12 +32,14 @@ const App = () => {
   return (
     <Provider store={store}>
       <ThemeProvider theme={theme}>
-        <Router>
-          <Header />
-          <Route exact path="/" component={LandingScreen} />
-          <Route component={Routes} />
-        </Router>
-        {/* <Footer /> */}
+        <ConfirmProvider>
+          <Router>
+            <Header />
+            <Route exact path="/" component={LandingScreen} />
+            <Route component={Routes} />
+          </Router>
+          {/* <Footer /> */}
+        </ConfirmProvider>
       </ThemeProvider>
     </Provider>
   )

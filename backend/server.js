@@ -79,7 +79,7 @@ const startApp = async () => {
   try {
     // Connection With DB
     await connect(mongoURI, {
-      useFindAndModify: true,
+      useFindAndModify: false,
       useUnifiedTopology: true,
       useNewUrlParser: true,
       useCreateIndex: true,

@@ -6,7 +6,7 @@ import {
   confirmationGet,
   resendTokenPost,
   getTeachers,
-  createOrUpdateLesson,
+  createOrUpdateALesson,
   getLessons,
   getLessonById,
   deleteLessonByID,
@@ -49,7 +49,12 @@ router.post('/resend-confirmation-token', resendTokenPost)
 
 router.get('/english', userAuth, getTeachers)
 
-router.post('/lessons/create-or-update-lesson', userAuth, createOrUpdateLesson)
+router.post(
+  '/lessons/create-or-update-a-lesson/:id',
+  userAuth,
+  checkObjectId('id'),
+  createOrUpdateALesson
+)
 
 router.get('/lessons/me', userAuth, getLessons)
 

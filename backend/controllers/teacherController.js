@@ -8,6 +8,7 @@ import jwt from 'jsonwebtoken'
 import nodemailer from 'nodemailer'
 import crypto from 'crypto'
 import Lesson from '../models/lessonModel.js'
+import { resolveTxt } from 'dns'
 
 // @desc    Register a new teacher
 // @route   POST /api/teachers/register-teacher
@@ -286,11 +287,11 @@ const getTeachers = async (req, res) => {
   }
 }
 
-// @route    GET api/teachers/lessons/add-lesson
+// @route    POST api/teachers/lessons/create-or-update-a-lesson/:id
 // @desc     Create or update teacher's lessons
 // @access   Private/teachers
-const createOrUpdateLesson = async (req, res) => {
-  const { lessonName, content, periods, documents } = req.body
+const createOrUpdateALesson = async (req, res) => {
+  const { lessonName, content, periods, documents, ...rest } = req.body
 
   const lessonFields = {
     user: req.user.id,
@@ -298,19 +299,19 @@ const createOrUpdateLesson = async (req, res) => {
     content,
     periods,
     documents,
+    ...rest,
   }
 
   try {
     let lesson = await Lesson.findOneAndUpdate(
       {
-        user: req.user.id,
+        _id: req.params.id,
       },
       { $set: lessonFields },
       {
         new: true,
         upsert: true,
         setDefaultsOnInsert: true,
-        usefindAndModify: false,
       }
     )
     return res.json(lesson)
@@ -352,7 +353,7 @@ const getLessonById = async (req, res) => {
   }
 }
 
-// @route    DELETE api/posts/:id
+// @route    DELETE api/teachers/lessons/:id
 // @desc     Delete a lesson by ID
 // @access   Private/teachers
 const deleteLessonByID = async (req, res) => {
@@ -370,7 +371,7 @@ const deleteLessonByID = async (req, res) => {
 
     await lesson.remove()
 
-    res.json({ msg: 'Bài học đã bị xóa.' })
+    res.json({ msg: 'Đã xóa bài học.' })
   } catch (err) {
     console.error(err.message)
 
@@ -410,7 +411,7 @@ export {
   confirmationGet,
   resendTokenPost,
   getTeachers,
-  createOrUpdateLesson,
+  createOrUpdateALesson,
   getLessons,
   getLessonById,
   deleteLessonByID,

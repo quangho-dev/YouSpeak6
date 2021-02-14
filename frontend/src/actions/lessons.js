@@ -1,4 +1,11 @@
-import { GET_LESSONS, LESSON_ERROR, CREATE_LESSON } from './types'
+import {
+  GET_LESSONS,
+  LESSON_ERROR,
+  CREATE_LESSON,
+  UPDATE_LESSON,
+  GET_LESSON,
+  REMOVE_LESSON,
+} from './types'
 import api from '../utils/api'
 import { setAlert } from './alert'
 
@@ -32,6 +39,61 @@ export const createALesson = (formData) => async (dispatch) => {
     })
 
     dispatch(setAlert('Bài học đã được tạo', 'success'))
+  } catch (err) {
+    dispatch({
+      type: LESSON_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
+  }
+}
+
+export const getLessonById = (lessonId) => async (dispatch) => {
+  try {
+    const res = await api.get(`/teachers/lessons/${lessonId}`)
+
+    dispatch({
+      type: GET_LESSON,
+      payload: res.data,
+    })
+  } catch (err) {
+    dispatch({
+      type: LESSON_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
+  }
+}
+
+export const createOrUpdateALesson = (lessonId, formData) => async (
+  dispatch
+) => {
+  try {
+    const res = await api.post(
+      `/teachers/lessons/create-or-update-a-lesson/${lessonId}`,
+      formData
+    )
+
+    dispatch({
+      type: UPDATE_LESSON,
+      payload: res.data,
+    })
+
+    dispatch(setAlert('Cập nhật thông tin bài học thành công!', 'success'))
+  } catch (err) {
+    dispatch({
+      type: LESSON_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
+  }
+}
+
+export const deleteLesson = (lessonId) => async (dispatch) => {
+  try {
+    await api.delete(`/teachers/lessons/${lessonId}`)
+
+    dispatch({
+      type: REMOVE_LESSON,
+      payload: lessonId,
+    })
   } catch (err) {
     dispatch({
       type: LESSON_ERROR,

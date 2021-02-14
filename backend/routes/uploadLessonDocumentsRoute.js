@@ -23,7 +23,6 @@ function checkFileType(file, cb) {
   if (extname && mimetype) {
     return cb(null, true)
   } else {
-    // cb('Chỉ tải file có đuôi .pdf hoặc .epub')
     const error = new Error('Chỉ tải file có đuôi .pdf hoặc .epub')
     error.status = 400
     cb(error)

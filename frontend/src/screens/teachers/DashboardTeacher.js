@@ -187,7 +187,7 @@ const DashboardTeacher = () => {
           <Typography variant="body1" className={classes.subHeader}>
             Giới thiệu về giáo viên:
           </Typography>
-          <Typography variant="body1">
+          <Typography component={'span'} variant="body1">
             <ShowMoreText
               lines={3}
               more="Xem thêm"

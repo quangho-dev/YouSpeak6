@@ -16,15 +16,34 @@ const LessonSchema = new mongoose.Schema({
   periods: [
     {
       thirtyMinutes: {
-        isChosen: Boolean,
-        price: Number,
+        isChosen: {
+          type: Boolean,
+          default: false,
+        },
+        price: {
+          type: Number,
+          default: 0,
+        },
       },
-    },
-    { fortyFiveMinutes: { isChosen: Boolean, price: Number } },
-    {
+      fortyFiveMinutes: {
+        isChosen: {
+          type: Boolean,
+          default: false,
+        },
+        price: {
+          type: Number,
+          default: 0,
+        },
+      },
       oneHour: {
-        isChosen: Boolean,
-        price: Number,
+        isChosen: {
+          type: Boolean,
+          default: false,
+        },
+        price: {
+          type: Number,
+          default: 0,
+        },
       },
     },
   ],

@@ -92,6 +92,7 @@ const RegisterScreen = () => {
             {(formik) => {
               return (
                 <Form style={{ maxWidth: '25em' }}>
+                  {console.log('register screen:', formik.values)}
                   <FormikControl
                     control="input"
                     type="text"
