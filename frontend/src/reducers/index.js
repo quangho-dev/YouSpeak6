@@ -5,6 +5,7 @@ import alert from './alert'
 import profileTeacher from './profileTeacher'
 import teachersList from './teachersList'
 import lesson from './lesson'
+import { firebaseReducer } from 'react-redux-firebase'
 
 export default combineReducers({
   auth,
@@ -13,4 +14,5 @@ export default combineReducers({
   profileTeacher,
   teachersList,
   lesson,
+  firebase: firebaseReducer,
 })

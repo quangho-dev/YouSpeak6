@@ -3,6 +3,16 @@ import { composeWithDevTools } from 'redux-devtools-extension'
 import thunk from 'redux-thunk'
 import rootReducer from './reducers'
 import setAuthToken from './utils/setAuthToken'
+<<<<<<< HEAD
+=======
+import { persistStore } from 'redux-persist'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import {
+  ReactReduxFirebaseProvider,
+  firebaseReducer,
+} from 'react-redux-firebase'
+>>>>>>> 19dec1a83e77e736dab7f1011246a4959f7c24cd
 
 const initialState = {}
 
