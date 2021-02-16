@@ -122,6 +122,8 @@ const ReuploadLessonDocuments = (props) => {
           }
 
           dispatch(createOrUpdateALesson(lessonId, dataToSend))
+
+          props.history.push(`/teachers/lessons/edit/${lessonId}`)
         })
         .catch(function (error) {
           console.log(error)
