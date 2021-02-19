@@ -14,6 +14,7 @@ import { Card } from '@material-ui/core'
 import ShowMoreText from 'react-show-more-text'
 import EditIcon from '@material-ui/icons/Edit'
 import MenuBookIcon from '@material-ui/icons/MenuBook'
+import DateRangeIcon from '@material-ui/icons/DateRange'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -76,7 +77,7 @@ const DashboardTeacher = () => {
     })
   }
 
-  const executeOnClick = (isExpanded) => {}
+  const executeOnClick = () => {}
 
   return (
     <Grid
@@ -138,6 +139,21 @@ const DashboardTeacher = () => {
           >
             <MenuBookIcon fontSize="small" />
             &nbsp;Chỉnh sửa các bài học
+          </Button>
+        </Grid>
+      </Grid>
+
+      <Grid item style={{ marginBottom: '1em' }}>
+        <Grid item style={{ marginLeft: '0.5em' }}>
+          <Button
+            component={Link}
+            variant="contained"
+            color="primary"
+            to="/booking-calendar-teacher"
+            style={{ color: 'white' }}
+          >
+            <DateRangeIcon fontSize="small" />
+            &nbsp;Đặt thời gian bạn có thể dạy.
           </Button>
         </Grid>
       </Grid>

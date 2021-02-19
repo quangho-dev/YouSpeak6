@@ -1,14 +1,25 @@
 import mongoose from 'mongoose'
 
-const BookingCalendarSchema = new mongoose.Schema({
+const BookingCalendarTeacherSchema = new mongoose.Schema({
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'user',
   },
-  availableTime: [Date],
-  bookedTime: [Date],
+  availableTime: [
+    {
+      startTimeInterval: {
+        type: Date,
+      },
+      endTimeInterval: {
+        type: Date,
+      },
+    },
+  ],
 })
 
-const BookingCalendar = mongoose.model('bookingCalendar', BookingCalendarSchema)
+const BookingCalendarTeacher = mongoose.model(
+  'bookingCalendarTeacher',
+  BookingCalendarTeacherSchema
+)
 
-export default BookingCalendar
+export default BookingCalendarTeacher

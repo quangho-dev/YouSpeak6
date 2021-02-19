@@ -19,6 +19,7 @@ import passport from 'passport'
 import forgotPasswordRoute from './routes/forgotPasswordRoute.js'
 import resetPasswordRoute from './routes/resetPasswordRoute.js'
 import uploadLessonDocumentsRoute from './routes/uploadLessonDocumentsRoute.js'
+import bookingCalendarTeacherRoutes from './routes/bookingCalendarTeacherRoutes.js'
 
 const mongoURI = config.get('mongoURI')
 const PORT = config.get('PORT')
@@ -52,6 +53,7 @@ app.use('/api/uploadVideo', uploadVideoRoutes)
 app.use('/api/uploadDegreeImages', uploadDegreeImagesRoutes)
 app.use('/api/uploadExpImages', uploadExpImagesRoutes)
 app.use('/api/upload-lesson-documents', uploadLessonDocumentsRoute)
+app.use('/api/booking-calendar-teacher', bookingCalendarTeacherRoutes)
 
 app.use('/api/profile', profileRoutes)
 

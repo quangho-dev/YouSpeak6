@@ -25,6 +25,7 @@ import Lessons from '../lessons/Lessons'
 import AddALesson from '../lessons/AddALesson/AddALesson'
 import EditALesson from '../lessons/EditALesson/EditALesson'
 import ReuploadLessonDocuments from '../lessons/EditALesson/ReuploadLessonDocuments'
+import SetAvailableTime from '../teachers/BookingCalendar/SetAvailableTime'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -103,6 +104,11 @@ const Routes = (props) => {
           exact
           path="/teachers/lessons/re-upload-documents/:id"
           component={ReuploadLessonDocuments}
+        />
+        <TeacherPrivateRoute
+          exact
+          path="/booking-calendar-teacher"
+          component={SetAvailableTime}
         />
         <Route component={NotFound} />
       </Switch>
