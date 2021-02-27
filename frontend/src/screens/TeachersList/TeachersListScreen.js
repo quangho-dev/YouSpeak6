@@ -4,6 +4,7 @@ import { Grid, Button, Typography } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTeachers } from '../../actions/teachersList'
 import TeacherInfo from './TeacherInfo'
+import Spinner from '../../components/ui/Spinner'
 
 const useStyles = makeStyles((theme) => ({
   rowContainer: {
@@ -12,13 +13,13 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const TeachersListScreen = () => {
-  const [visible, setVisible] = useState(2)
+  const [visible, setVisible] = useState(10)
 
   const dispatch = useDispatch()
 
   const teachersList = useSelector((state) => state.teachersList)
 
-  const { teachersList: teachers } = teachersList
+  const { teachersList: teachers, loading } = teachersList
 
   const classes = useStyles()
 
@@ -27,7 +28,11 @@ const TeachersListScreen = () => {
   }, [dispatch])
 
   const handleShowMoreTeachers = () => {
-    setVisible((prevValue) => prevValue + 2)
+    setVisible((prevValue) => prevValue + 10)
+  }
+
+  if (loading) {
+    return <Spinner />
   }
 
   return (
@@ -35,7 +40,8 @@ const TeachersListScreen = () => {
       container
       direction="column"
       alignItems="center"
-      className={classes.rowContainer}
+      style={{ backgroundColor: '#F0F2F5', padding: '2em 3em' }}
+      spacing={1}
     >
       <Grid item>
         <Typography variant="h5">

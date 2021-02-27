@@ -7,12 +7,14 @@ const BookingCalendarTeacherSchema = new mongoose.Schema({
   },
   availableTime: [
     {
-      startTimeInterval: {
+      start: {
         type: Date,
       },
-      endTimeInterval: {
+      end: {
         type: Date,
       },
+      id: String,
+      title: String,
     },
   ],
 })

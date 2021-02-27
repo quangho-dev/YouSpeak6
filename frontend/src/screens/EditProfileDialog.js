@@ -39,11 +39,6 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: '2.25em',
     },
   },
-  // closeButton: {
-  //   position: 'absolute',
-  //   right: '1em',
-  //   top: '1em',
-  // },
   formControl: {
     marginBottom: '1.5em',
   },

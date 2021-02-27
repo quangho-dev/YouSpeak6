@@ -5,6 +5,8 @@ import {
   GET_LESSON,
   REMOVE_LESSON,
   UPDATE_LESSON,
+  GET_LESSONS_OF_A_TEACHER_SUCCESS,
+  GET_LESSONS_OF_A_TEACHER_ERROR,
 } from '../actions/types'
 
 const initialState = {
@@ -19,6 +21,7 @@ const lessonReducer = (state = initialState, action) => {
 
   switch (type) {
     case GET_LESSONS:
+    case GET_LESSONS_OF_A_TEACHER_SUCCESS:
       return {
         ...state,
         lessons: payload,
@@ -44,6 +47,7 @@ const lessonReducer = (state = initialState, action) => {
         loading: false,
       }
     case LESSON_ERROR:
+    case GET_LESSONS_OF_A_TEACHER_ERROR:
       return {
         ...state,
         error: payload,

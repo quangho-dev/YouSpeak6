@@ -326,7 +326,9 @@ const createOrUpdateALesson = async (req, res) => {
 // @access   Private/teachers
 const getLessons = async (req, res) => {
   try {
-    const lessons = await Lesson.find().populate('user', ['name'])
+    const lessons = await Lesson.find({ user: req.user.id }).populate('user', [
+      'name',
+    ])
     res.json(lessons)
   } catch (err) {
     console.error(err.message)
@@ -405,6 +407,26 @@ const createALesson = async (req, res) => {
   }
 }
 
+// @route    GET api/teachers/:teacherId/lessons
+// @desc     Get all lessons of a teacher by id
+// @access   Private/teachers
+const getLessonsOfTeacherById = async (req, res) => {
+  try {
+    const lessons = await Lesson.find({ user: req.params.teacherId })
+
+    if (!lessons) {
+      return res
+        .status(400)
+        .json({ msg: 'Không tìm thấy bài học của giáo viên này.' })
+    }
+
+    res.json(lessons)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server Error')
+  }
+}
+
 export {
   registerTeacher,
   loginTeacher,
@@ -416,4 +438,5 @@ export {
   getLessonById,
   deleteLessonByID,
   createALesson,
+  getLessonsOfTeacherById,
 }

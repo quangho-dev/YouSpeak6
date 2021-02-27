@@ -1,9 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Grid,
   Typography,
-  TextField,
-  FormGroup,
   Card,
   CardContent,
   IconButton,
@@ -12,8 +10,6 @@ import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 import MyButton from '../../ui/MyButton'
-import AppoPicker from './AppoPicker'
-import IntervalCheckbox from './IntervalCheckbox'
 import { Formik, Field, Form } from 'formik'
 import DatePicker from './DatePicker'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
@@ -25,10 +21,17 @@ import {
   setHours,
   setMinutes,
   setSeconds,
+  getHours,
+  getMinutes,
 } from 'date-fns'
 import { vi } from 'date-fns/locale'
-import { setAvailableTime } from '../../../actions/bookingCalendar'
-import { useDispatch } from 'react-redux'
+import {
+  setAvailableTime,
+  getCurrentAvailableTime,
+} from '../../../actions/bookingCalendar'
+import { useDispatch, useSelector } from 'react-redux'
+import { CheckboxWithLabel } from 'formik-material-ui'
+import Spinner from '../../ui/Spinner'
 
 const useStyles = makeStyles((theme) => ({
   paddingContainer: {
@@ -37,9 +40,15 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const SetAvailableTime = () => {
+  const [formValues, setFormValues] = useState(null)
+
   const classes = useStyles()
 
   const dispatch = useDispatch()
+
+  const bookingCalendar = useSelector((state) => state.bookingCalendar)
+
+  const { loading, availableTime } = bookingCalendar
 
   const handleSubmit = async (values) => {
     const { selectedDate, availableTime } = values
@@ -83,10 +92,10 @@ const SetAvailableTime = () => {
       {
         isSelected: false,
         startInterval: { h: 1, m: 0 },
-        intervalLabel: '1h00 - 1h30',
+        intervalLabel: '1h - 1h30',
       },
       {
-        isSeleced: false,
+        isSelected: false,
         startInterval: { h: 1, m: 30 },
         intervalLabel: '1h30 - 2h',
       },
@@ -112,13 +121,13 @@ const SetAvailableTime = () => {
       },
       {
         isSelected: false,
-        startInterval: { h: 4, m: 40 },
+        startInterval: { h: 4, m: 0 },
         intervalLabel: '4h - 4h30',
       },
       {
         isSelected: false,
         startInterval: { h: 4, m: 30 },
-        intervalLabel: '4h30 - 5h00',
+        intervalLabel: '4h30 - 5h',
       },
       {
         isSelected: false,
@@ -148,7 +157,7 @@ const SetAvailableTime = () => {
       {
         isSelected: false,
         startInterval: { h: 7, m: 30 },
-        intervalLabel: '7h30 - 8h00',
+        intervalLabel: '7h30 - 8h',
       },
       {
         isSelected: false,
@@ -235,74 +244,139 @@ const SetAvailableTime = () => {
         startInterval: { h: 16, m: 0 },
         intervalLabel: '16h - 16h30',
       },
-      // {
-      //   isSelected: false,
-      //   startInterval: { h: 18, m: 30 },
-      //   intervalLabel: '18h30 - 19h00',
-      // },
-      // {
-      //   isSelected: false,
-      //   startInterval: { h: 19, m: 0 },
-      //   intervalLabel: '19h00 - 19h30',
-      // },
-      // {
-      //   isSelected: false,
-      //   startInterval: { h: 19, m: 30 },
-      //   intervalLabel: '19h30 - 20h00',
-      // },
-      // {
-      //   isSelected: false,
-      //   startInterval: { h: 20, m: 0 },
-      //   intervalLabel: '20h00 - 20h30',
-      // },
-      // {
-      //   isSelected: false,
-      //   startInterval: { h: 20, m: 0 },
-      //   intervalLabel: '20h00 - 20h30',
-      // },
-      // {
-      //   isSelected: false,
-      //   startInterval: { h: 20, m: 30 },
-      //   intervalLabel: '20h30 - 21h00',
-      // },
-      // {
-      //   isSelected: false,
-      //   startInterval: { h: 21, m: 0 },
-      //   intervalLabel: '21h00 - 21h30',
-      // },
-      // {
-      //   isSelected: false,
-      //   startInterval: { h: 21, m: 30 },
-      //   intervalLabel: '21h30 - 22h00',
-      // },
-      // {
-      //   isSelected: false,
-      //   startInterval: { h: 22, m: 0 },
-      //   intervalLabel: '22h00 - 22h30',
-      // },
-      // {
-      //   isSelected: false,
-      //   startInterval: { h: 22, m: 30 },
-      //   intervalLabel: '23h00 - 23h30',
-      // },
-      // {
-      //   isSelected: false,
-      //   startInterval: { h: 23, m: 30 },
-      //   intervalLabel: '23h30 - 24h00',
-      // },
+      {
+        isSelected: false,
+        startInterval: { h: 16, m: 30 },
+        intervalLabel: '16h30 - 17h',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 17, m: 0 },
+        intervalLabel: '17h - 17h30',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 17, m: 30 },
+        intervalLabel: '17h30 - 18h',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 18, m: 0 },
+        intervalLabel: '18h - 18h30',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 18, m: 30 },
+        intervalLabel: '18h30 - 19h',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 19, m: 0 },
+        intervalLabel: '19h - 19h30',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 19, m: 30 },
+        intervalLabel: '19h30 - 20h',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 20, m: 0 },
+        intervalLabel: '20h - 20h30',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 20, m: 30 },
+        intervalLabel: '20h30 - 21h',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 21, m: 0 },
+        intervalLabel: '21h - 21h30',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 21, m: 30 },
+        intervalLabel: '21h30 - 22h',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 22, m: 0 },
+        intervalLabel: '22h - 22h30',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 22, m: 30 },
+        intervalLabel: '22h30 - 23h',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 23, m: 0 },
+        intervalLabel: '23h - 23h30',
+      },
+      {
+        isSelected: false,
+        startInterval: { h: 23, m: 30 },
+        intervalLabel: '23h30 - 24h',
+      },
     ],
   }
 
+  if (!loading && availableTime !== []) {
+    const startTimeIntervalArray = availableTime.map((item) => {
+      return {
+        startInterval: item.startTimeInterval,
+      }
+    })
+
+    const test = startTimeIntervalArray.map((item) => {
+      return {
+        startInterval: {
+          h: getHours(new Date(item.startInterval)),
+          m: getMinutes(new Date(item.startInterval)),
+        },
+      }
+    })
+
+    const cloneValues = [...initialValues.availableTime]
+
+    const newCloneValues = cloneValues.map((item) => {
+      return {
+        startInterval: item.startInterval,
+      }
+    })
+
+    test.forEach(function (item) {
+      console.log(item, 'is at position', newCloneValues.indexOf(item))
+    })
+    // for (var i = 0, len = cloneValues.availableTime.length; i < len; i++) {
+    //   if (cloneValues.availableTime[i].startInterval === )
+    // }
+
+    console.log('new array', test)
+  }
+
+  useEffect(() => {
+    dispatch(getCurrentAvailableTime())
+  }, [dispatch])
+
+  if (loading) {
+    return <Spinner />
+  }
+
   return (
-    <Formik initialValues={initialValues} onSubmit={handleSubmit}>
+    <Formik
+      enableReinitialize
+      initialValues={formValues || initialValues}
+      onSubmit={handleSubmit}
+    >
       {({ values, errors, setFieldValue }) => (
         <Form>
           <Grid
             container
             direction="column"
             alignItems="center"
-            className={classes.paddingContainer}
-            style={{ backgroundColor: '#e6e6e6' }}
+            style={{ backgroundColor: '#e6e6e6', padding: '2em 3em' }}
           >
             <Grid item>
               <Typography variant="h4" style={{ textTransform: 'uppercase' }}>
@@ -367,7 +441,7 @@ const SetAvailableTime = () => {
                         justify="space-between"
                         alignItems="center"
                         style={{
-                          padding: '0.5em 1em 1.5em',
+                          padding: '0.5em 1em 0.5em',
                           backgroundColor: '#f4de39',
                         }}
                       >
@@ -399,36 +473,49 @@ const SetAvailableTime = () => {
                           </IconButton>
                         </Grid>
                       </Grid>
-                      <Grid item>
-                        <FormGroup row style={{ maxWidth: '50em' }}>
-                          {values.availableTime.map((interval, index) => (
-                            <IntervalCheckbox
-                              key={index}
-                              interval={interval}
-                              fieldName={`availableTime[${index}].isSelected`}
+                      <Grid
+                        item
+                        container
+                        justify="flex-start"
+                        alignItems="center"
+                        style={{ maxWidth: '50em' }}
+                        spacing={1}
+                      >
+                        {values.availableTime.map((interval, index) => (
+                          <Grid item key={index} style={{ marginTop: '1em' }}>
+                            <Field
+                              type="checkbox"
+                              name={`availableTime[${index}].isSelected`}
+                              component={CheckboxWithLabel}
+                              Label={{
+                                label: interval.intervalLabel,
+                                labelPlacement: 'top',
+                              }}
                             />
-                          ))}
-                        </FormGroup>
+                          </Grid>
+                        ))}
                       </Grid>
                     </Grid>
                   </CardContent>
                 </Card>
               </Grid>
             </Grid>
-            <Grid container justify="center" alignItems="center" spacing={2}>
+            <Grid
+              container
+              justify="center"
+              alignItems="center"
+              spacing={2}
+              style={{ marginTop: '1em' }}
+            >
               <Grid item>
                 <MyButton component={Link} to="/teachers/dashboard">
-                  Tro ve
+                  Trở về
                 </MyButton>
               </Grid>
 
               <Grid item>
-                <MyButton type="submit">Xac nhan</MyButton>
+                <MyButton type="submit">Xác nhận</MyButton>
               </Grid>
-            </Grid>
-
-            <Grid item>
-              <AppoPicker />
             </Grid>
             <Grid item>
               <pre>{JSON.stringify(values, null, 2)}</pre>

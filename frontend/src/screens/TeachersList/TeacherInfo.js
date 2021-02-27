@@ -13,6 +13,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import ShowMoreText from 'react-show-more-text'
 import ReactPlayer from 'react-player'
 import formatMoney from '../../utils/formatMoney'
+import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
   marginBottom: {
@@ -70,14 +71,18 @@ const TeacherInfo = ({ teacher }) => {
               </Grid>
 
               <Grid item className={classes.marginBottom}>
-                <Button
-                  variant="contained"
-                  disableRipple
-                  color="primary"
-                  style={{ color: 'white', textTransform: 'none' }}
-                >
-                  Đặt lịch học
-                </Button>
+                {user && (
+                  <Button
+                    component={Link}
+                    to={`/book-learning-time/${user._id}`}
+                    variant="contained"
+                    disableRipple
+                    color="primary"
+                    style={{ color: 'white', textTransform: 'none' }}
+                  >
+                    Đặt lịch học
+                  </Button>
+                )}
               </Grid>
             </Grid>
 
@@ -115,7 +120,7 @@ const TeacherInfo = ({ teacher }) => {
                   anchorClass="my-anchor-css-class"
                   onClick={executeOnClick}
                   expanded={false}
-                  width={280}
+                  maxWidth={180}
                 >
                   {introduction}
                 </ShowMoreText>
@@ -164,13 +169,14 @@ const TeacherInfo = ({ teacher }) => {
           </Grid>
 
           <Grid item xs={5}>
-            <ReactPlayer
-              style={{}}
-              url={`/${video}`}
-              controls
-              playing
-              light={`/${thumbnail}`}
-            />
+            {video && (
+              <ReactPlayer
+                url={`/${video}`}
+                controls
+                playing
+                light={`/${thumbnail}`}
+              />
+            )}
           </Grid>
         </Grid>
       </CardContent>

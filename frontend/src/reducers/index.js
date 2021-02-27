@@ -5,6 +5,8 @@ import alert from './alert'
 import profileTeacher from './profileTeacher'
 import teachersList from './teachersList'
 import lesson from './lesson'
+import bookingCalendar from './bookingCalendar'
+import bookingCalendarStudent from './bookingCalendarStudent'
 
 export default combineReducers({
   auth,
@@ -13,4 +15,6 @@ export default combineReducers({
   profileTeacher,
   teachersList,
   lesson,
+  bookingCalendar,
+  bookingCalendarStudent,
 })

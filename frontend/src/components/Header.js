@@ -311,7 +311,7 @@ export default function Header(props) {
           {profileUser && profileUser.imageAvatar !== null ? (
             <Avatar
               style={{ width: '3em', height: '3em', borderRadius: '50%' }}
-              src={profileUser.imageAvatar}
+              src={null || profileUser.imageAvatar}
               alt="image avatar"
             />
           ) : profileTeacherRedux &&

@@ -1,5 +1,4 @@
 import mongoose from 'mongoose'
-import { stringify } from 'uuid'
 
 const LessonSchema = new mongoose.Schema({
   user: {

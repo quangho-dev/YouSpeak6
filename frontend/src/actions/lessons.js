@@ -5,6 +5,8 @@ import {
   UPDATE_LESSON,
   GET_LESSON,
   REMOVE_LESSON,
+  GET_LESSONS_OF_A_TEACHER_SUCCESS,
+  GET_LESSONS_OF_A_TEACHER_ERROR,
 } from './types'
 import api from '../utils/api'
 import { setAlert } from './alert'
@@ -97,6 +99,23 @@ export const deleteLesson = (lessonId) => async (dispatch) => {
   } catch (err) {
     dispatch({
       type: LESSON_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
+  }
+}
+
+// Get all lessons of a teacher by teacher's id
+export const getLessonsOfTeacherById = (teacherId) => async (dispatch) => {
+  try {
+    const res = await api.get(`/teachers/${teacherId}/lessons`)
+
+    dispatch({
+      type: GET_LESSONS_OF_A_TEACHER_SUCCESS,
+      payload: res.data,
+    })
+  } catch (err) {
+    dispatch({
+      type: GET_LESSONS_OF_A_TEACHER_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     })
   }

@@ -20,6 +20,7 @@ import forgotPasswordRoute from './routes/forgotPasswordRoute.js'
 import resetPasswordRoute from './routes/resetPasswordRoute.js'
 import uploadLessonDocumentsRoute from './routes/uploadLessonDocumentsRoute.js'
 import bookingCalendarTeacherRoutes from './routes/bookingCalendarTeacherRoutes.js'
+import bookingCalendarStudentRoutes from './routes/bookingCalendarStudentRoutes.js'
 
 const mongoURI = config.get('mongoURI')
 const PORT = config.get('PORT')
@@ -58,6 +59,8 @@ app.use('/api/booking-calendar-teacher', bookingCalendarTeacherRoutes)
 app.use('/api/profile', profileRoutes)
 
 app.use('/api/profileTeacher', profileTeacherRoutes)
+
+app.use('/api/booking-calendar-student', bookingCalendarStudentRoutes)
 
 const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))

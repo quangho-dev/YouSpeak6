@@ -25,7 +25,9 @@ import Lessons from '../lessons/Lessons'
 import AddALesson from '../lessons/AddALesson/AddALesson'
 import EditALesson from '../lessons/EditALesson/EditALesson'
 import ReuploadLessonDocuments from '../lessons/EditALesson/ReuploadLessonDocuments'
-import SetAvailableTime from '../teachers/BookingCalendar/SetAvailableTime'
+import BookLearningTime from '../students/BookLearningTime/BookLearningTime'
+import Test from '../Test'
+import SchedulingCalendar from '../teachers/BookingCalendar/SchedulingCalendar'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -54,7 +56,17 @@ const Routes = (props) => {
           path="/create-profile"
           component={ProfileFormScreen}
         />
-        <Route exact path="/teachers/english" component={TeachersListScreen} />
+        <PrivateRoute
+          exact
+          path="/book-learning-time/:teacherCalendarId"
+          component={BookLearningTime}
+        />
+
+        <PrivateRoute
+          exact
+          path="/teachers/english"
+          component={TeachersListScreen}
+        />
 
         {/* Teacher routes */}
         <Route exact path="/for-teacher" component={ForTeacherScreen} />
@@ -108,8 +120,10 @@ const Routes = (props) => {
         <TeacherPrivateRoute
           exact
           path="/booking-calendar-teacher"
-          component={SetAvailableTime}
+          component={SchedulingCalendar}
         />
+
+        <Route path="/test" component={Test} />
         <Route component={NotFound} />
       </Switch>
     </section>

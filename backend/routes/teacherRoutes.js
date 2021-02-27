@@ -11,6 +11,7 @@ import {
   getLessonById,
   deleteLessonByID,
   createALesson,
+  getLessonsOfTeacherById,
 } from '../controllers/teacherController.js'
 import { check } from 'express-validator'
 import { userAuth } from '../utils/authPassport.js'
@@ -63,5 +64,12 @@ router.get('/lessons/:id', userAuth, checkObjectId('id'), getLessonById)
 router.delete('/lessons/:id', userAuth, checkObjectId('id'), deleteLessonByID)
 
 router.post('/lessons', userAuth, createALesson)
+
+router.get(
+  '/:teacherId/lessons',
+  userAuth,
+  checkObjectId('teacherId'),
+  getLessonsOfTeacherById
+)
 
 export default router

@@ -11,9 +11,12 @@ import store from './store'
 import { LOGOUT } from './actions/types'
 import { loadUser } from './actions/auth'
 import { ConfirmProvider } from 'material-ui-confirm'
-
+import moment from 'moment'
+import 'moment/locale/vi'
 // Redux
 import { Provider } from 'react-redux'
+
+moment.locale('vi')
 
 const App = () => {
   useEffect(() => {
