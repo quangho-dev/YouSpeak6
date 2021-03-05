@@ -6,7 +6,6 @@ import {
   GET_CURRENT_AVAILABLE_TIME,
   GET_CURRENT_AVAILABLE_TIME_ERROR,
   GET_AVAILABLE_TIME_OF_TEACHER_SUCCESS,
-  GET_CURRENT_AVAILABLE_OF_TEACHER_ERROR,
 } from './types'
 
 // Set available time for teaching
@@ -60,7 +59,7 @@ export const getAvailableTimeOfATeacher = (teacherCalendarId) => async (
     })
   } catch (err) {
     dispatch({
-      type: SET_AVAILABLE_TIME_ERROR,
+      type: GET_CURRENT_AVAILABLE_TIME_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     })
   }

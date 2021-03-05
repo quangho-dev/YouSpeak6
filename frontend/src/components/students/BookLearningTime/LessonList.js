@@ -13,7 +13,7 @@ import formatMoney from '../../../utils/formatMoney'
 import { useFormikContext } from 'formik'
 
 const LessonList = ({ lessons, nextPage }) => {
-  const { setFieldValue, values } = useFormikContext()
+  const { setFieldValue } = useFormikContext()
 
   const handleClick = (lessonId) => {
     setFieldValue('lesson', lessonId)

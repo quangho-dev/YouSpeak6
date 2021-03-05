@@ -71,4 +71,30 @@ const createOrUpdateProfileTeacher = async (req, res) => {
   }
 }
 
-export { getCurrentProfileTeacher, createOrUpdateProfileTeacher }
+// @route    GET api/profileTeacher/:teacherId
+// @desc     Get teacher by id
+// @access   Private
+const getProfileTeacherById = async (req, res) => {
+  try {
+    const profileTeacher = await ProfileTeacher.findOne({
+      user: req.params.teacherId,
+    }).populate('user', ['name', 'email'])
+
+    if (!profileTeacher) {
+      return res
+        .status(400)
+        .json({ msg: 'There is no profile for this teacher' })
+    }
+
+    res.json(profileTeacher)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server Error')
+  }
+}
+
+export {
+  getCurrentProfileTeacher,
+  createOrUpdateProfileTeacher,
+  getProfileTeacherById,
+}

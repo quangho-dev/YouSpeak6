@@ -3,6 +3,8 @@ import {
   PROFILE_TEACHER_ERROR,
   CLEAR_PROFILE_TEACHER,
   UPDATE_PROFILE_TEACHER,
+  GET_PROFILE_TEACHER_BY_ID_SUCCESS,
+  GET_PROFILE_TEACHER_BY_ID_ERROR,
 } from '../actions/types'
 
 const initialState = {
@@ -17,12 +19,14 @@ export default function (state = initialState, action) {
   switch (type) {
     case GET_PROFILE_TEACHER:
     case UPDATE_PROFILE_TEACHER:
+    case GET_PROFILE_TEACHER_BY_ID_SUCCESS:
       return {
         ...state,
         profileTeacher: payload,
         loading: false,
       }
     case PROFILE_TEACHER_ERROR:
+    case GET_PROFILE_TEACHER_BY_ID_ERROR:
       return {
         ...state,
         error: payload,

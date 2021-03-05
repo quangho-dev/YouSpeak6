@@ -2,6 +2,7 @@ import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { ThemeProvider } from '@material-ui/styles'
 import theme from './components/Theme'
+import GlobalStyle from './globalStyles'
 import Header from './components/Header'
 // import Footer from './components/Footer'
 import Routes from './components/routing/Routes'
@@ -37,6 +38,7 @@ const App = () => {
       <ThemeProvider theme={theme}>
         <ConfirmProvider>
           <Router>
+            <GlobalStyle />
             <Header />
             <Route exact path="/" component={LandingScreen} />
             <Route component={Routes} />

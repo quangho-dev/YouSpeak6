@@ -5,6 +5,8 @@ import {
   GET_PROFILE_TEACHER,
   PROFILE_TEACHER_ERROR,
   CLEAR_PROFILE_TEACHER,
+  GET_PROFILE_TEACHER_BY_ID_SUCCESS,
+  GET_PROFILE_TEACHER_BY_ID_ERROR,
   ACCOUNT_DELETED,
 } from './types'
 
@@ -75,5 +77,19 @@ export const deleteAccount = () => async (dispatch) => {
         payload: { msg: err.response.statusText, status: err.response.status },
       })
     }
+  }
+}
+
+// Get profile teacher by Id
+export const getProfileTeacherById = (teacherId) => async (dispatch) => {
+  try {
+    const res = await api.get(`/profileTeacher/${teacherId}`)
+
+    dispatch({ type: GET_PROFILE_TEACHER_BY_ID_SUCCESS, payload: res.data })
+  } catch (err) {
+    dispatch({
+      type: GET_PROFILE_TEACHER_BY_ID_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
   }
 }

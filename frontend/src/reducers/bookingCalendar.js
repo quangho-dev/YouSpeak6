@@ -5,6 +5,8 @@ import {
   GET_CURRENT_AVAILABLE_TIME_ERROR,
   GET_AVAILABLE_TIME_OF_TEACHER_SUCCESS,
   GET_CURRENT_AVAILABLE_OF_TEACHER_ERROR,
+  CANCEL_BOOKED_LESSON_SUCCESS,
+  CANCEL_BOOKED_LESSON_ERROR,
 } from '../actions/types'
 
 const initialState = {
@@ -40,6 +42,18 @@ export default function (state = initialState, action) {
         ...state,
         loading: false,
         currentTeacher: null,
+        error: payload,
+      }
+    case CANCEL_BOOKED_LESSON_SUCCESS:
+      return {
+        ...state,
+        loading: false,
+        availableTime: payload.addedAvailableTime,
+      }
+    case CANCEL_BOOKED_LESSON_ERROR:
+      return {
+        ...state,
+        loading: false,
         error: payload,
       }
     default:

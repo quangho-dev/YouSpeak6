@@ -1,7 +1,7 @@
-import { createMuiTheme } from '@material-ui/core/styles';
+import { createMuiTheme } from '@material-ui/core/styles'
 
-const speakGreen = '#4AB428';
-const speakOrange = '#FFC300';
+const speakGreen = '#4AB428'
+const speakOrange = '#FFC300'
 
 export default createMuiTheme({
   palette: {
@@ -71,10 +71,13 @@ export default createMuiTheme({
         },
       },
     },
+    backgroundTheme: {
+      backgroundColor: '#F0F2F5',
+    },
   },
   // // mixins: {
   // //   toolbar: {
   // //     height: 30,
   // //   },
   // },
-});
+})

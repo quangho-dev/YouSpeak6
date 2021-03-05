@@ -8,6 +8,7 @@ import { useFormikContext } from 'formik'
 import { getLessonById } from '../../../actions/lessons'
 import { connect } from 'react-redux'
 import { milliseconds } from 'date-fns'
+import Spinner from '../../ui/Spinner'
 
 const useStyles = makeStyles((theme) => ({
   pricingButton: {
@@ -17,7 +18,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ChooseDuration = ({ getLessonById, lessons: { lesson }, nextPage }) => {
+const ChooseDuration = ({
+  getLessonById,
+  lessons: { lesson, loading },
+  nextPage,
+}) => {
   const { setFieldValue, values } = useFormikContext()
 
   const handleClickThirtyMinutes = (price) => {
@@ -61,93 +66,101 @@ const ChooseDuration = ({ getLessonById, lessons: { lesson }, nextPage }) => {
         justify="space-between"
         style={{ maxWidth: '35em', marginBottom: '1.5em' }}
       >
-        <Grid item>
-          <Grid container direction="column" alignItems="center">
-            {lesson &&
-              lesson.periods[0] &&
-              lesson.periods[0].thirtyMinutes.price !== 0 && (
-                <>
-                  <Grid item>
-                    <Typography variant="h6">30 phút</Typography>
-                  </Grid>
-                  <Grid item style={{ marginBottom: '1.5em' }}>
-                    <ExpandMoreIcon fontSize="large" />
-                  </Grid>
-                  <Grid item>
-                    <MyButton
-                      className={classes.pricingButton}
-                      onClick={() =>
-                        handleClickThirtyMinutes(
-                          lesson.periods[0].thirtyMinutes.price
-                        )
-                      }
-                    >
-                      {formatMoney(lesson.periods[0].thirtyMinutes.price)}
-                      &nbsp;VNĐ
-                    </MyButton>
-                  </Grid>
-                </>
-              )}
-          </Grid>
-        </Grid>
+        {loading ? (
+          <Spinner />
+        ) : (
+          <>
+            <Grid item>
+              <Grid container direction="column" alignItems="center">
+                {lesson &&
+                  lesson.periods[0] &&
+                  lesson.periods[0].thirtyMinutes.price !== 0 && (
+                    <>
+                      <Grid item>
+                        <Typography variant="h6">30 phút</Typography>
+                      </Grid>
+                      <Grid item style={{ marginBottom: '1.5em' }}>
+                        <ExpandMoreIcon fontSize="large" />
+                      </Grid>
+                      <Grid item>
+                        <MyButton
+                          className={classes.pricingButton}
+                          onClick={() =>
+                            handleClickThirtyMinutes(
+                              lesson.periods[0].thirtyMinutes.price
+                            )
+                          }
+                        >
+                          {formatMoney(lesson.periods[0].thirtyMinutes.price)}
+                          &nbsp;VNĐ
+                        </MyButton>
+                      </Grid>
+                    </>
+                  )}
+              </Grid>
+            </Grid>
 
-        <Grid item>
-          <Grid container direction="column" alignItems="center">
-            {lesson &&
-              lesson.periods[0] &&
-              lesson.periods[0].fortyFiveMinutes.price !== 0 && (
-                <>
-                  <Grid item>
-                    <Typography variant="h6">45 phút</Typography>
-                  </Grid>
-                  <Grid item style={{ marginBottom: '1.5em' }}>
-                    <ExpandMoreIcon fontSize="large" />
-                  </Grid>
-                  <Grid item>
-                    <MyButton
-                      className={classes.pricingButton}
-                      onClick={() =>
-                        handleClickFortyFiveMinutes(
-                          lesson.periods[0].fortyFiveMinutes.price
-                        )
-                      }
-                    >
-                      {formatMoney(lesson.periods[0].fortyFiveMinutes.price)}
-                      &nbsp;VNĐ
-                    </MyButton>
-                  </Grid>
-                </>
-              )}
-          </Grid>
-        </Grid>
+            <Grid item>
+              <Grid container direction="column" alignItems="center">
+                {lesson &&
+                  lesson.periods[0] &&
+                  lesson.periods[0].fortyFiveMinutes.price !== 0 && (
+                    <>
+                      <Grid item>
+                        <Typography variant="h6">45 phút</Typography>
+                      </Grid>
+                      <Grid item style={{ marginBottom: '1.5em' }}>
+                        <ExpandMoreIcon fontSize="large" />
+                      </Grid>
+                      <Grid item>
+                        <MyButton
+                          className={classes.pricingButton}
+                          onClick={() =>
+                            handleClickFortyFiveMinutes(
+                              lesson.periods[0].fortyFiveMinutes.price
+                            )
+                          }
+                        >
+                          {formatMoney(
+                            lesson.periods[0].fortyFiveMinutes.price
+                          )}
+                          &nbsp;VNĐ
+                        </MyButton>
+                      </Grid>
+                    </>
+                  )}
+              </Grid>
+            </Grid>
 
-        <Grid item>
-          <Grid container direction="column" alignItems="center">
-            {lesson &&
-              lesson.periods[0] &&
-              lesson.periods[0].oneHour.price !== 0 && (
-                <>
-                  <Grid item>
-                    <Typography variant="h6">60 phút</Typography>
-                  </Grid>
-                  <Grid item style={{ marginBottom: '1.5em' }}>
-                    <ExpandMoreIcon fontSize="large" />
-                  </Grid>
-                  <Grid item>
-                    <MyButton
-                      className={classes.pricingButton}
-                      onClick={() =>
-                        handleClickOneHour(lesson.periods[0].oneHour.price)
-                      }
-                    >
-                      {formatMoney(lesson.periods[0].oneHour.price)}
-                      &nbsp;VNĐ
-                    </MyButton>
-                  </Grid>
-                </>
-              )}
-          </Grid>
-        </Grid>
+            <Grid item>
+              <Grid container direction="column" alignItems="center">
+                {lesson &&
+                  lesson.periods[0] &&
+                  lesson.periods[0].oneHour.price !== 0 && (
+                    <>
+                      <Grid item>
+                        <Typography variant="h6">60 phút</Typography>
+                      </Grid>
+                      <Grid item style={{ marginBottom: '1.5em' }}>
+                        <ExpandMoreIcon fontSize="large" />
+                      </Grid>
+                      <Grid item>
+                        <MyButton
+                          className={classes.pricingButton}
+                          onClick={() =>
+                            handleClickOneHour(lesson.periods[0].oneHour.price)
+                          }
+                        >
+                          {formatMoney(lesson.periods[0].oneHour.price)}
+                          &nbsp;VNĐ
+                        </MyButton>
+                      </Grid>
+                    </>
+                  )}
+              </Grid>
+            </Grid>
+          </>
+        )}
       </Grid>
     </Grid>
   )

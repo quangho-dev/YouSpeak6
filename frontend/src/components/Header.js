@@ -282,9 +282,26 @@ export default function Header(props) {
       </IconButton>
     </Fragment>
   )
-  // tabs when logged in
+  // tabs of student after have logged in
   const tabsLoggedIn = (
     <Grid item container alignItems="center">
+      {user && user.role !== 'teacher' && (
+        <Grid item>
+          <Button
+            component={Link}
+            to="/dashboard"
+            variant="text"
+            style={{
+              color: '#333',
+              textTransform: 'none',
+              marginRight: '1.5em',
+            }}
+          >
+            Trở về trang chính
+          </Button>
+        </Grid>
+      )}
+
       {user && user.role !== 'teacher' && (
         <Grid item>
           <Button
@@ -298,6 +315,41 @@ export default function Header(props) {
             }}
           >
             Tìm một giáo viên
+          </Button>
+        </Grid>
+      )}
+
+      {user && user.role !== 'teacher' && (
+        <Grid item>
+          <Button
+            component={Link}
+            to="/students/lessons-manager"
+            variant="text"
+            style={{
+              color: '#333',
+              textTransform: 'none',
+              marginRight: '1.5em',
+            }}
+          >
+            Quản lý bài học
+          </Button>
+        </Grid>
+      )}
+
+      {/* tabs of teachers after have logged in */}
+      {user && (
+        <Grid item>
+          <Button
+            component={Link}
+            to="/teachers/booked-lessons-manager"
+            variant="text"
+            style={{
+              color: '#333',
+              textTransform: 'none',
+              marginRight: '1.5em',
+            }}
+          >
+            Quản lý bài học
           </Button>
         </Grid>
       )}

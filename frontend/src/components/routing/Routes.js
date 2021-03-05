@@ -28,6 +28,10 @@ import ReuploadLessonDocuments from '../lessons/EditALesson/ReuploadLessonDocume
 import BookLearningTime from '../students/BookLearningTime/BookLearningTime'
 import Test from '../Test'
 import SchedulingCalendar from '../teachers/BookingCalendar/SchedulingCalendar'
+import LessonsManager from '../students/LessonsManager/LessonsManager'
+import BookedLesson from '../students/bookedLesson/BookedLesson'
+import BookedLessonsManager from '../teachers/bookedLessonsManager/BookedLessonsManager'
+import BookedLessonInfo from '../teachers/bookedLessonInfo/BookedLessonInfo'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -66,6 +70,18 @@ const Routes = (props) => {
           exact
           path="/teachers/english"
           component={TeachersListScreen}
+        />
+
+        <PrivateRoute
+          exact
+          path="/students/lessons-manager"
+          component={LessonsManager}
+        />
+
+        <PrivateRoute
+          exact
+          path="/students/bookedLesson/:bookedLessonId"
+          component={BookedLesson}
         />
 
         {/* Teacher routes */}
@@ -122,7 +138,16 @@ const Routes = (props) => {
           path="/booking-calendar-teacher"
           component={SchedulingCalendar}
         />
-
+        <TeacherPrivateRoute
+          exact
+          path="/teachers/booked-lessons-manager"
+          component={BookedLessonsManager}
+        />
+        <TeacherPrivateRoute
+          exact
+          path="/teachers/bookedLesson/:bookedLessonId"
+          component={BookedLessonInfo}
+        />
         <Route path="/test" component={Test} />
         <Route component={NotFound} />
       </Switch>

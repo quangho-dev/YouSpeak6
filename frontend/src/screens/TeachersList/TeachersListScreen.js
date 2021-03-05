@@ -1,16 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
 import { Grid, Button, Typography } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { getTeachers } from '../../actions/teachersList'
 import TeacherInfo from './TeacherInfo'
 import Spinner from '../../components/ui/Spinner'
-
-const useStyles = makeStyles((theme) => ({
-  rowContainer: {
-    padding: '0 6em',
-  },
-}))
 
 const TeachersListScreen = () => {
   const [visible, setVisible] = useState(10)
@@ -20,8 +13,6 @@ const TeachersListScreen = () => {
   const teachersList = useSelector((state) => state.teachersList)
 
   const { teachersList: teachers, loading } = teachersList
-
-  const classes = useStyles()
 
   useEffect(() => {
     dispatch(getTeachers())

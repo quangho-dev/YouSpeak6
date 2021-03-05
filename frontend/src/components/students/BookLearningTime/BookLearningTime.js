@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Grid,
-  Typography,
-  Stepper,
-  Step,
-  StepLabel,
-  Dialog,
-  DialogActions,
-} from '@material-ui/core'
+import { Grid, Stepper, Step, StepLabel, Dialog } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { getAvailableTimeOfATeacher } from '../../../actions/bookingCalendar'
 import { getLessonsOfTeacherById } from '../../../actions/lessons'
@@ -91,7 +83,6 @@ const BookLearningTime = (props) => {
       nextPage={nextPage}
       prevPage={prevPage}
       lessonListState={lessonListState}
-      nextPage={nextPage}
     />,
     <ChooseTime prevPage={prevPage} calendarEvents={calendarEvents} />,
   ]
@@ -115,7 +106,7 @@ const BookLearningTime = (props) => {
       initialValues={initialValues}
       onSubmit={async (values) => {
         dispatch(bookTime(values))
-        props.history.push('/teachers/english')
+        // props.history.push('/teachers/english')
       }}
     >
       {({ isValid, isSubmitting, values, errors }) => (
@@ -130,10 +121,17 @@ const BookLearningTime = (props) => {
               spacing={1}
             >
               <Grid item style={{ alignSelf: 'flex-start' }}>
-                <MyButton component={Link} to="/teachers/english">
-                  <ArrowBackIcon />
-                  &nbsp;Trở về
-                </MyButton>
+                {page === 0 ? (
+                  <MyButton component={Link} to="/teachers/english">
+                    <ArrowBackIcon />
+                    &nbsp;Trở về danh sách giáo viên
+                  </MyButton>
+                ) : (
+                  <MyButton onClick={() => prevPage()}>
+                    <ArrowBackIcon />
+                    &nbsp;Trở về bước trước
+                  </MyButton>
+                )}
               </Grid>
 
               <Grid item style={{ width: '100%' }}>
@@ -155,21 +153,6 @@ const BookLearningTime = (props) => {
 
               {pages[page]}
 
-              <DialogActions>
-                <Grid
-                  container
-                  justify="center"
-                  alignItems="center"
-                  spacing={3}
-                  style={{ marginTop: '1em' }}
-                >
-                  <Grid item>
-                    {page !== 0 && (
-                      <MyButton onClick={() => prevPage()}>Trở về</MyButton>
-                    )}
-                  </Grid>
-                </Grid>
-              </DialogActions>
               <Grid item>
                 <pre>{JSON.stringify(values, 0, 2)}</pre>
                 <pre>{JSON.stringify(errors, 0, 2)}</pre>
