@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Typography, Button } from '@material-ui/core'
 import BookedLessonInfo from './BookedLessonInfo'
@@ -41,12 +41,15 @@ const BookedLesson = ({
 
   useEffect(() => {
     getBookedLessonById(match.params.bookedLessonId)
-    getProfileTeacherById(bookedLesson.teacher)
+    if (bookedLesson && bookedLesson._id) {
+      getProfileTeacherById(bookedLesson.teacher)
+    }
   }, [
     match.params.bookedLessonId,
     bookedLesson.teacher,
     getBookedLessonById,
     getProfileTeacherById,
+    bookedLesson,
   ])
 
   return (
@@ -74,10 +77,10 @@ const BookedLesson = ({
         style={{ marginTop: '1em' }}
       >
         <Grid item>
-          {loading || !bookedLesson ? (
+          {loading || !bookedLesson || !bookedLesson._id ? (
             <Spinner />
           ) : (
-            <BookedLessonInfo bookedLesson={bookedLesson} />
+            <BookedLessonInfo bookedLessonProps={bookedLesson} />
           )}
         </Grid>
 

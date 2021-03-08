@@ -1,18 +1,16 @@
 import React from 'react'
 import { Route, Redirect } from 'react-router-dom'
-import { CircularProgress, Grid, Typography } from '@material-ui/core'
-import { connect } from 'react-redux'
+import { CircularProgress } from '@material-ui/core'
+import { useSelector } from 'react-redux'
 
-const TeacherPrivateRoute = ({
-  component: Component,
-  auth: { isAuthenticated, user, loading },
-  ...rest
-}) => {
+const TeacherPrivateRoute = ({ component: Component, ...rest }) => {
+  const auth = useSelector((state) => state.auth)
+  const { isAuthenticated, loading } = auth
   return (
     <Route
       {...rest}
       render={(props) =>
-        loading || !user ? (
+        loading ? (
           <div
             style={{
               position: 'absolute',
@@ -24,14 +22,6 @@ const TeacherPrivateRoute = ({
           >
             <CircularProgress style={{ width: '60px' }} />
           </div>
-        ) : user.role !== 'teacher' ? (
-          <Grid container justify="center">
-            <Grid item>
-              <Typography variant="h4">
-                Xin lỗi, bạn không có quyền truy cập vào trang này.
-              </Typography>
-            </Grid>
-          </Grid>
         ) : isAuthenticated ? (
           <Component {...props} />
         ) : (
@@ -42,8 +32,4 @@ const TeacherPrivateRoute = ({
   )
 }
 
-const mapStateToProps = (state) => ({
-  auth: state.auth,
-})
-
-export default connect(mapStateToProps)(TeacherPrivateRoute)
+export default TeacherPrivateRoute

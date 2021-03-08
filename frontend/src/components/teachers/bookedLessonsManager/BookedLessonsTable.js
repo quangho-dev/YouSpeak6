@@ -10,12 +10,32 @@ import {
 } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import MyButton from '../../ui/MyButton'
-import Spinner from '../../ui/Spinner'
 import FindInPageIcon from '@material-ui/icons/FindInPage'
 import convertMillisecondsToMinutes from '../../../utils/convertMillisecondsToMinutes'
 import moment from 'moment'
+import { useConfirm } from 'material-ui-confirm'
+import { connect } from 'react-redux'
+import { confirmBookedLesson } from '../../../actions/bookingCalendar'
+import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 
-const BookedLessonsTable = ({ bookedLessons, loading }) => {
+const BookedLessonsTable = ({
+  bookedLessons,
+  loading,
+  confirmBookedLesson,
+}) => {
+  const confirm = useConfirm()
+
+  const handleConfirmBookedLesson = (bookedLessonId) => {
+    confirm({
+      description: 'Nhấn đồng ý sẽ xác nhận bài học.',
+      title: 'Bạn có muốn xác nhận bài học không?',
+    })
+      .then(() => {
+        confirmBookedLesson(bookedLessonId)
+      })
+      .catch(() => {})
+  }
+
   return (
     <TableContainer component={Paper}>
       <Table>
@@ -31,9 +51,7 @@ const BookedLessonsTable = ({ bookedLessons, loading }) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {loading ? (
-            <Spinner />
-          ) : (
+          {bookedLessons &&
             bookedLessons.map((lesson, index) => (
               <TableRow
                 key={lesson._id}
@@ -59,9 +77,20 @@ const BookedLessonsTable = ({ bookedLessons, loading }) => {
                 <TableCell>
                   {lesson.isConfirmed && !lesson.isFinished
                     ? 'Đã xác nhận'
+                    : lesson.isCanceled
+                    ? 'Đã hủy'
                     : lesson.isFinished && lesson.isConfirmed
                     ? 'Đã hoàn thành'
                     : 'Đang chờ xác nhận'}
+                </TableCell>
+                <TableCell>
+                  <MyButton
+                    onClick={() => handleConfirmBookedLesson(lesson._id)}
+                    disabled={lesson.isConfirmed === true}
+                  >
+                    <CheckCircleIcon />
+                    &nbsp;Xác nhận
+                  </MyButton>
                 </TableCell>
                 <TableCell>
                   <MyButton
@@ -73,12 +102,17 @@ const BookedLessonsTable = ({ bookedLessons, loading }) => {
                   </MyButton>
                 </TableCell>
               </TableRow>
-            ))
-          )}
+            ))}
         </TableBody>
       </Table>
     </TableContainer>
   )
 }
 
-export default BookedLessonsTable
+const mapStateToProps = (state) => ({
+  bookingCalendarStudent: state.bookingCalendarStudent,
+})
+
+export default connect(mapStateToProps, { confirmBookedLesson })(
+  BookedLessonsTable
+)

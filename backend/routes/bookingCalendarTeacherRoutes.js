@@ -5,6 +5,8 @@ import {
   setAvailableTime,
   getAvailableTime,
   getAvailableTimeOfATeacher,
+  confirmBookedLesson,
+  cancelBookedLesson,
 } from '../controllers/bookingCalendarTeacherController.js'
 import checkObjectId from '../middleware/checkObjectId.js'
 
@@ -17,6 +19,20 @@ router.get(
   checkObjectId('teacherCalendarId'),
   userAuth,
   getAvailableTimeOfATeacher
+)
+
+router.put(
+  '/:bookedLessonId',
+  checkObjectId('bookedLessonId'),
+  userAuth,
+  confirmBookedLesson
+)
+
+router.delete(
+  '/:bookedLessonId',
+  checkObjectId('bookedLessonId'),
+  userAuth,
+  cancelBookedLesson
 )
 
 export default router

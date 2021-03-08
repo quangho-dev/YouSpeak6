@@ -30,6 +30,10 @@ const BookingCalendarStudentSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+  isCanceled: {
+    type: Boolean,
+    default: false,
+  },
 })
 
 const BookingCalendarStudent = mongoose.model(

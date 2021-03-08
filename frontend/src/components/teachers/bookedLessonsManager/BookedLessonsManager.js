@@ -6,13 +6,12 @@ import Spinner from '../../ui/Spinner'
 import BookedLessonsTable from './BookedLessonsTable'
 
 const BookedLessonsManager = ({
-  bookingCalendarStudent: { bookedLessons, loading, bookedTime },
+  bookingCalendarStudent: { bookedLessons, loading },
   getBookedLessons,
 }) => {
   useEffect(() => {
     getBookedLessons()
   }, [getBookedLessons])
-
   return (
     <Grid
       container
@@ -31,7 +30,11 @@ const BookedLessonsManager = ({
       </Grid>
 
       <Grid item>
-        <BookedLessonsTable bookedLessons={bookedLessons} loading={loading} />
+        {loading ? (
+          <Spinner />
+        ) : (
+          <BookedLessonsTable bookedLessons={bookedLessons} />
+        )}
       </Grid>
     </Grid>
   )

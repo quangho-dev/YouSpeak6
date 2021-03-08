@@ -68,6 +68,8 @@ const BookLearningTime = (props) => {
     duration: 0,
     bookedTime: [{ start: null, end: null, title: 'Booked time' }],
     price: 0,
+    id1: '',
+    id2: '',
   }
 
   const pages = [
@@ -154,8 +156,7 @@ const BookLearningTime = (props) => {
               {pages[page]}
 
               <Grid item>
-                <pre>{JSON.stringify(values, 0, 2)}</pre>
-                <pre>{JSON.stringify(errors, 0, 2)}</pre>
+                <pre>{JSON.stringify(values, null, 2)}</pre>
               </Grid>
             </Grid>
           </Form>

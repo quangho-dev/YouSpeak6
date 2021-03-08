@@ -106,9 +106,9 @@ const cancelBookedLesson = async (req, res) => {
     const returnTeacherAvailableTime = await teacherAvailableTime.save()
 
     // Check user
-    if (bookedTime.user.toString() !== req.user.id) {
-      return res.status(401).json({ msg: 'User not authorized' })
-    }
+    // if (bookedTime.user.toString() !== req.user.id) {
+    //   return res.status(401).json({ msg: 'User not authorized' })
+    // }
 
     await bookedTime.remove()
 

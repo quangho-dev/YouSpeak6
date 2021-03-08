@@ -14,13 +14,13 @@ import {
 // Book time for learning
 export const bookTime = (bookedTime) => async (dispatch) => {
   try {
-    const res = await api.post('/booking-calendar-student', bookedTime)
+    await api.post('/booking-calendar-student', bookedTime)
 
     dispatch(setAlert('Bạn đã đặt lịch học thành công!', 'success'))
 
     dispatch({
       type: BOOK_TIME_SUCCESS,
-      payload: res.data,
+      payload: { id1: bookedTime.id1, id2: bookedTime.id2 },
     })
   } catch (err) {
     dispatch({
@@ -41,7 +41,7 @@ export const cancelBookedLesson = (bookedLessonId) => async (dispatch) => {
 
     dispatch({
       type: CANCEL_BOOKED_LESSON_SUCCESS,
-      payload: res.data,
+      payload: { res, bookedLessonId },
     })
   } catch (err) {
     dispatch({

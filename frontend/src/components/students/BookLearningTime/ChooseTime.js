@@ -61,10 +61,14 @@ const ChooseTime = ({
               clickedAvailableEvent,
               adjacentAvailableEvent,
             ])
+            setFieldValue('id1', clickedAvailableEvent.id)
+            setFieldValue('id2', adjacentAvailableEvent.id)
             submitForm()
             setError('')
           } else {
             setFieldValue('bookedTime', clickedAvailableEvent)
+            setFieldValue('id1', clickedAvailableEvent.id)
+            setFieldValue('id2', clickedAvailableEvent.id)
             submitForm()
             setError('')
           }

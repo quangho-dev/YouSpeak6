@@ -9,17 +9,44 @@ import {
 } from '@material-ui/core'
 import MyButton from '../../ui/MyButton'
 import Spinner from '../../ui/Spinner'
-import { getBookedLessonById } from '../../../actions/bookingCalendarStudent'
+import {
+  getBookedLessonById,
+  cancelBookedLesson,
+} from '../../../actions/bookingCalendarStudent'
+import { confirmBookedLesson } from '../../../actions/bookingCalendar'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import CancelIcon from '@material-ui/icons/Cancel'
 import CheckCircleIcon from '@material-ui/icons/CheckCircle'
+import { useConfirm } from 'material-ui-confirm'
 
 const BookedLessonInfo = ({
   getBookedLessonById,
+  confirmBookedLesson,
+  cancelBookedLesson,
   match,
   bookingCalendarStudent: { loading, bookedLesson },
+  history,
 }) => {
+  const handleConfirmBookedLesson = (lessonBookedId) => {
+    confirmBookedLesson(lessonBookedId)
+    history.push('/teachers/booked-lessons-manager')
+  }
+
+  const confirm = useConfirm()
+
+  const handleCancelLesson = (bookedLessonId) => {
+    confirm({
+      description: 'Nhấn đồng ý để hủy bài học.',
+      title: 'Bạn có đồng ý hủy bài học không?',
+    })
+      .then(() => {
+        cancelBookedLesson(bookedLessonId)
+        history.push('/teachers/booked-lessons-manager')
+      })
+      .catch(() => {})
+  }
+
   useEffect(() => {
     getBookedLessonById(match.params.bookedLessonId)
   }, [match.params.bookedLessonId, getBookedLessonById])
@@ -50,23 +77,30 @@ const BookedLessonInfo = ({
                 <Grid item>
                   <Typography variant="body1">
                     <strong>Tên người học: </strong>
-                    {bookedLesson.user.name}
+                    {bookedLesson &&
+                      bookedLesson.user &&
+                      bookedLesson.user.name}
                   </Typography>
                 </Grid>
 
                 <Grid item>
                   <Typography variant="body1">
                     <strong>Kiểu bài học: </strong>
-                    {bookedLesson.lesson.lessonName}
+                    {bookedLesson &&
+                      bookedLesson.lesson &&
+                      bookedLesson.lesson.lessonName}
                   </Typography>
                 </Grid>
 
                 <Grid item>
                   <Typography variant="body1">
                     <strong>Thời gian bắt đầu: </strong>
-                    {moment(bookedLesson.bookedTime[0].start).format(
-                      'HH [giờ] mm [phút], [ngày] DD, MMMM, YYYY'
-                    )}
+                    {bookedLesson &&
+                      bookedLesson.bookedTime &&
+                      bookedLesson.bookedTime[0] &&
+                      moment(bookedLesson.bookedTime[0].start).format(
+                        'HH [giờ] mm [phút], [ngày] DD, MMMM, YYYY'
+                      )}
                   </Typography>
                 </Grid>
 
@@ -92,7 +126,9 @@ const BookedLessonInfo = ({
                 <Grid item>
                   <Typography variant="body1">
                     <strong>Email: </strong>
-                    {bookedLesson.user.email}
+                    {bookedLesson &&
+                      bookedLesson.user &&
+                      bookedLesson.user.email}
                   </Typography>
                 </Grid>
               </Grid>
@@ -102,6 +138,7 @@ const BookedLessonInfo = ({
             <Grid container justify="center" alignItems="center" spacing={2}>
               <Grid item>
                 <Button
+                  onClick={() => handleCancelLesson(bookedLesson._id)}
                   variant="contained"
                   style={{
                     backgroundColor: '#f45014',
@@ -113,7 +150,9 @@ const BookedLessonInfo = ({
                 </Button>
               </Grid>
               <Grid item>
-                <MyButton>
+                <MyButton
+                  onClick={() => handleConfirmBookedLesson(bookedLesson._id)}
+                >
                   <CheckCircleIcon />
                   &nbsp;Xác nhận bài học
                 </MyButton>
@@ -130,6 +169,8 @@ const mapStateToProps = (state) => ({
   bookingCalendarStudent: state.bookingCalendarStudent,
 })
 
-export default connect(mapStateToProps, { getBookedLessonById })(
-  BookedLessonInfo
-)
+export default connect(mapStateToProps, {
+  getBookedLessonById,
+  confirmBookedLesson,
+  cancelBookedLesson,
+})(BookedLessonInfo)

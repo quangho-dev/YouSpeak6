@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import {
   Typography,
   Grid,
@@ -12,7 +12,6 @@ import {
 } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { getBookedLessons } from '../../../actions/bookingCalendarStudent'
-import { makeStyles } from '@material-ui/styles'
 import Spinner from '../../ui/Spinner'
 import MyButton from '../../ui/MyButton'
 import FindInPageIcon from '@material-ui/icons/FindInPage'
@@ -59,6 +58,7 @@ const LessonsManager = ({
               {loading ? (
                 <Spinner />
               ) : (
+                bookedLessons &&
                 bookedLessons.map((lesson, index) => (
                   <TableRow
                     key={lesson._id}
@@ -76,6 +76,8 @@ const LessonsManager = ({
                     <TableCell>
                       {lesson.isConfirmed && !lesson.isFinished
                         ? 'Đã xác nhận'
+                        : lesson.isCanceled
+                        ? 'Đã hủy'
                         : lesson.isFinished && lesson.isConfirmed
                         ? 'Đã hoàn thành'
                         : 'Đang chờ xác nhận'}

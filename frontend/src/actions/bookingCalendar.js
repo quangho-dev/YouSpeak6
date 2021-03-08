@@ -6,6 +6,8 @@ import {
   GET_CURRENT_AVAILABLE_TIME,
   GET_CURRENT_AVAILABLE_TIME_ERROR,
   GET_AVAILABLE_TIME_OF_TEACHER_SUCCESS,
+  CONFIRM_BOOKED_LESSON_SUCCESS,
+  CONFIRM_BOOKED_LESSON_ERROR,
 } from './types'
 
 // Set available time for teaching
@@ -60,6 +62,25 @@ export const getAvailableTimeOfATeacher = (teacherCalendarId) => async (
   } catch (err) {
     dispatch({
       type: GET_CURRENT_AVAILABLE_TIME_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
+  }
+}
+
+// Confirm a booked lesson
+export const confirmBookedLesson = (bookedLessonId) => async (dispatch) => {
+  try {
+    const res = await api.put(`/booking-calendar-teacher/${bookedLessonId}`)
+
+    dispatch(setAlert('Xác nhận bài học thành công.', 'success'))
+
+    dispatch({
+      type: CONFIRM_BOOKED_LESSON_SUCCESS,
+      payload: res.data,
+    })
+  } catch (err) {
+    dispatch({
+      type: CONFIRM_BOOKED_LESSON_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     })
   }

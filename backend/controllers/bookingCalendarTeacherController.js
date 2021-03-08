@@ -1,4 +1,5 @@
 import BookingCalendarTeacher from '../models/bookingCalendarModel.js'
+import BookingCalendarStudent from '../models/bookingCalendarStudentModel.js'
 
 // @route    POST api/booking-calendar-teacher
 // @desc     Set available time for teacher
@@ -76,4 +77,94 @@ const getAvailableTimeOfATeacher = async (req, res) => {
   }
 }
 
-export { setAvailableTime, getAvailableTime, getAvailableTimeOfATeacher }
+// @route    PUT api/booking-calendar-teacher/:bookedLessonId
+// @desc     Confirm booked lesson
+// @access   Private
+const confirmBookedLesson = async (req, res) => {
+  try {
+    const bookedLesson = await BookingCalendarStudent.findById(
+      req.params.bookedLessonId
+    )
+
+    if (!bookedLesson) {
+      return res.status(400).json({ msg: 'Không tìm thấy bài học này.' })
+    }
+
+    bookedLesson.isConfirmed = true
+
+    await bookedLesson.save()
+
+    return res.json(bookedLesson)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server Error')
+  }
+}
+
+// @route    DELETE api/booking-calendar-teacher/:bookedLessonId
+// @desc     Cancel a booked lesson
+// @access   Private
+const cancelBookedLesson = async (req, res) => {
+  try {
+    const bookedLesson = await BookingCalendarStudent.findById(
+      req.params.bookedLessonId
+    )
+
+    if (!bookedLesson) {
+      return res.status(404).json({ msg: 'Không tìm thấy giờ học.' })
+    }
+
+    const {
+      user,
+      bookedTime: bookedDuration,
+      teacher,
+      lesson,
+      duration,
+    } = bookedLesson
+
+    const availableTimeArray = bookedDuration.map((duration) => {
+      return {
+        start: duration.start,
+        end: duration.end,
+        title: 'Available Time',
+        id: duration.id,
+      }
+    })
+
+    const teacherAvailableTime = await BookingCalendarTeacher.findOne({
+      user: teacher,
+    })
+
+    const newAvailableTimeArray = [
+      ...teacherAvailableTime.availableTime,
+    ].concat(availableTimeArray)
+
+    teacherAvailableTime.availableTime = newAvailableTimeArray
+
+    const returnTeacherAvailableTime = await teacherAvailableTime.save()
+
+    // Check user
+    if (bookedLesson.user.toString() !== req.user.id) {
+      return res.status(401).json({ msg: 'User not authorized' })
+    }
+
+    await bookedLesson.remove()
+
+    res.json({
+      msg: 'Đã hủy giờ học.',
+      addedAvailableTime: returnTeacherAvailableTime,
+    })
+  } catch (err) {
+    console.error(err.message)
+
+    res.status(500).send('Server Error')
+  }
+}
+
+export {
+  setAvailableTime,
+  getAvailableTime,
+  getAvailableTimeOfATeacher,
+  confirmBookedLesson,
+  cancelBookedLesson,
+}

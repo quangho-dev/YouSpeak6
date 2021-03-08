@@ -1,5 +1,4 @@
-import React, { Fragment, useState } from 'react'
-import { useSelector, useDispatch } from 'react-redux'
+import React, { Fragment, useState, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -17,6 +16,9 @@ import Avatar from '@material-ui/core/Avatar'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import { logout } from '../actions/auth'
+import { connect } from 'react-redux'
+import { getCurrentProfileTeacher } from '../actions/profileTeacher'
+import { getCurrentProfile } from '../actions/profile'
 
 function ElevationScroll(props) {
   const { children } = props
@@ -133,22 +135,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-export default function Header(props) {
+const Header = ({
+  logout,
+  getCurrentProfile,
+  getCurrentProfileTeacher,
+  auth: { user, loading, isAuthenticated },
+  profile: { profile },
+  profileTeacher: { profileTeacher },
+}) => {
   const classes = useStyles()
   const theme = useTheme()
   const iOS = process.browser && /iPad|iPhone|iPod/.test(navigator.userAgent)
   const matches = useMediaQuery(theme.breakpoints.down('sm'))
-
-  const dispatch = useDispatch()
-
-  const auth = useSelector((state) => state.auth)
-  const { isAuthenticated, user } = auth
-
-  const profile = useSelector((state) => state.profile)
-  const { profile: profileUser } = profile
-
-  const profileTeacher = useSelector((state) => state.profileTeacher)
-  const { profileTeacher: profileTeacherRedux } = profileTeacher
 
   const [openDrawer, setOpenDrawer] = useState(false)
 
@@ -163,7 +161,7 @@ export default function Header(props) {
   }
 
   const logoutHandler = () => {
-    dispatch(logout())
+    logout()
     setAnchorEl(null)
   }
 
@@ -337,7 +335,7 @@ export default function Header(props) {
       )}
 
       {/* tabs of teachers after have logged in */}
-      {user && (
+      {user && user.role === 'teacher' && (
         <Grid item>
           <Button
             component={Link}
@@ -360,17 +358,19 @@ export default function Header(props) {
           aria-haspopup="true"
           onMouseOver={onMouseOver}
         >
-          {profileUser && profileUser.imageAvatar !== null ? (
+          {user && profile && profile.imageAvatar && user.role === 'user' ? (
             <Avatar
               style={{ width: '3em', height: '3em', borderRadius: '50%' }}
-              src={null || profileUser.imageAvatar}
+              src={null || profile.imageAvatar}
               alt="image avatar"
             />
-          ) : profileTeacherRedux &&
-            profileTeacherRedux.teacherAvatar !== null ? (
+          ) : profileTeacher &&
+            profileTeacher.teacherAvatar &&
+            user &&
+            user.role === 'teacher' ? (
             <Avatar
               style={{ width: '3em', height: '3em', borderRadius: '50%' }}
-              src={profileTeacherRedux.teacherAvatar}
+              src={null || profileTeacher.teacherAvatar}
               alt="image avatar"
             />
           ) : null}
@@ -410,6 +410,14 @@ export default function Header(props) {
       </Grid>
     </Grid>
   )
+
+  useEffect(() => {
+    if (user && user.role === 'user') {
+      getCurrentProfile()
+    } else if (user && user.role === 'teacher') {
+      getCurrentProfileTeacher()
+    }
+  }, [user, getCurrentProfile, getCurrentProfileTeacher])
 
   return (
     <Fragment>
@@ -481,3 +489,15 @@ export default function Header(props) {
     </Fragment>
   )
 }
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  profile: state.profile,
+  profileTeacher: state.profileTeacher,
+})
+
+export default connect(mapStateToProps, {
+  logout,
+  getCurrentProfile,
+  getCurrentProfileTeacher,
+})(Header)
