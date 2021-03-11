@@ -32,6 +32,7 @@ import LessonsManager from '../students/LessonsManager/LessonsManager'
 import BookedLesson from '../students/bookedLesson/BookedLesson'
 import BookedLessonsManager from '../teachers/bookedLessonsManager/BookedLessonsManager'
 import BookedLessonInfo from '../teachers/bookedLessonInfo/BookedLessonInfo'
+import TeacherInfo from '../teachers/teacherInfo/TeacherInfo'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -147,6 +148,11 @@ const Routes = (props) => {
           exact
           path="/teachers/bookedLesson/:bookedLessonId"
           component={BookedLessonInfo}
+        />
+        <TeacherPrivateRoute
+          exact
+          path="/teachers/:teacherProfileId"
+          component={TeacherInfo}
         />
         <Route path="/test" component={Test} />
         <Route component={NotFound} />

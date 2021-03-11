@@ -32,6 +32,8 @@ const BookedLessonsManager = ({
       <Grid item>
         {loading ? (
           <Spinner />
+        ) : !bookedLessons[0] ? (
+          <Typography variant="body1">Chưa có bài học nào được đặt.</Typography>
         ) : (
           <BookedLessonsTable bookedLessons={bookedLessons} />
         )}

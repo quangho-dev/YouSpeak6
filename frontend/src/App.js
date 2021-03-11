@@ -16,6 +16,7 @@ import moment from 'moment'
 import 'moment/locale/vi'
 // Redux
 import { Provider } from 'react-redux'
+import CssBaseline from '@material-ui/core/CssBaseline'
 
 moment.locale('vi')
 
@@ -37,6 +38,7 @@ const App = () => {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <ConfirmProvider>
+          <CssBaseline />
           <Router>
             <GlobalStyle />
             <Header />

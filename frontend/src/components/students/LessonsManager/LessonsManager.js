@@ -43,60 +43,62 @@ const LessonsManager = ({
         </Typography>
       </Grid>
       <Grid item>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>STT</TableCell>
-                <TableCell>Tên bài học</TableCell>
-                <TableCell>Giáo viên</TableCell>
-                <TableCell align="center">Tình trạng</TableCell>
-                <TableCell align="center">Xem thêm</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {loading ? (
-                <Spinner />
-              ) : (
-                bookedLessons &&
-                bookedLessons.map((lesson, index) => (
-                  <TableRow
-                    key={lesson._id}
-                    style={
-                      index % 2
-                        ? { background: '#F3F5F7' }
-                        : { background: 'white' }
-                    }
-                  >
-                    <TableCell component="th" scope="row">
-                      {index + 1}
-                    </TableCell>
-                    <TableCell>{lesson.lesson.lessonName}</TableCell>
-                    <TableCell>{lesson.teacher.name}</TableCell>
-                    <TableCell>
-                      {lesson.isConfirmed && !lesson.isFinished
-                        ? 'Đã xác nhận'
-                        : lesson.isCanceled
-                        ? 'Đã hủy'
-                        : lesson.isFinished && lesson.isConfirmed
-                        ? 'Đã hoàn thành'
-                        : 'Đang chờ xác nhận'}
-                    </TableCell>
-                    <TableCell>
-                      <MyButton
-                        component={Link}
-                        to={`/students/bookedLesson/${lesson._id}`}
-                      >
-                        <FindInPageIcon />
-                        &nbsp;Xem thêm
-                      </MyButton>
-                    </TableCell>
-                  </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
-        </TableContainer>
+        {loading ? (
+          <Spinner />
+        ) : !bookedLessons[0] ? (
+          <Typography variant="body1">Chưa có bài học nào được đặt.</Typography>
+        ) : (
+          <TableContainer component={Paper}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell>STT</TableCell>
+                  <TableCell>Tên bài học</TableCell>
+                  <TableCell>Giáo viên</TableCell>
+                  <TableCell align="center">Tình trạng</TableCell>
+                  <TableCell align="center">Xem thêm</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {bookedLessons &&
+                  bookedLessons.map((lesson, index) => (
+                    <TableRow
+                      key={lesson._id}
+                      style={
+                        index % 2
+                          ? { background: '#F3F5F7' }
+                          : { background: 'white' }
+                      }
+                    >
+                      <TableCell component="th" scope="row">
+                        {index + 1}
+                      </TableCell>
+                      <TableCell>{lesson.lesson.lessonName}</TableCell>
+                      <TableCell>{lesson.teacher.name}</TableCell>
+                      <TableCell>
+                        {lesson.isConfirmed && !lesson.isFinished
+                          ? 'Đã xác nhận'
+                          : lesson.isCanceled
+                          ? 'Đã hủy'
+                          : lesson.isFinished && lesson.isConfirmed
+                          ? 'Đã hoàn thành'
+                          : 'Đang chờ xác nhận'}
+                      </TableCell>
+                      <TableCell>
+                        <MyButton
+                          component={Link}
+                          to={`/students/bookedLesson/${lesson._id}`}
+                        >
+                          <FindInPageIcon />
+                          &nbsp;Xem thêm
+                        </MyButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+              </TableBody>
+            </Table>
+          </TableContainer>
+        )}
       </Grid>
     </Grid>
   )

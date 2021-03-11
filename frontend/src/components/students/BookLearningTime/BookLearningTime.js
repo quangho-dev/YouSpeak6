@@ -108,7 +108,7 @@ const BookLearningTime = (props) => {
       initialValues={initialValues}
       onSubmit={async (values) => {
         dispatch(bookTime(values))
-        // props.history.push('/teachers/english')
+        props.history.push('/students/lessons-manager')
       }}
     >
       {({ isValid, isSubmitting, values, errors }) => (

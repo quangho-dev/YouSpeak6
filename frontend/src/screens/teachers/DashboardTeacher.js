@@ -258,7 +258,9 @@ const DashboardTeacher = () => {
               Hình ảnh bằng cấp của giáo viên:
             </Typography>
             <Grid container justify="center" alignItems="center" spacing={3}>
-              {renderImages(profileTeacherRedux.degreeImages)}
+              {profileTeacherRedux &&
+                profileTeacherRedux.degreeImages !== null &&
+                renderImages(profileTeacherRedux.degreeImages)}
             </Grid>
           </Grid>
         )}

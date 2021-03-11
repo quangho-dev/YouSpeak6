@@ -4,13 +4,18 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
-import { useDispatch, useSelector } from 'react-redux'
 import Chip from '@material-ui/core/Chip'
 import { Link } from 'react-router-dom'
 import { getCurrentProfile } from '../actions/profile'
 import Rating from '../components/ui/Rating'
+import { connect } from 'react-redux'
+import Spinner from '../components/ui/Spinner'
 
-const Dashboard = () => {
+const Dashboard = ({
+  getCurrentProfile,
+  auth: { user },
+  profile: { profile: profileUser },
+}) => {
   const useStyles = makeStyles((theme) => ({
     toolbarMargin: {
       ...theme.mixins.toolbar,
@@ -28,117 +33,129 @@ const Dashboard = () => {
   }))
   const classes = useStyles()
 
-  const dispatch = useDispatch()
-
-  const auth = useSelector((state) => state.auth)
-  const { user } = auth
-
-  const profile = useSelector((state) => state.profile)
-  const { profile: profileUser } = profile
-
   useEffect(() => {
-    dispatch(getCurrentProfile())
-  }, [dispatch])
+    getCurrentProfile()
+  }, [getCurrentProfile])
 
   return (
-    <div style={{ backgroundColor: '#f7f7f7' }}>
-      <div className={classes.toolbarMargin} />
-      <Grid container direction="column" className={classes.paddingContainer}>
-        <Grid item style={{ marginBottom: '1em' }}>
-          <Typography variant="h4">Xin chào {user && user.name}</Typography>
-        </Grid>
-        <Grid item>
-          {user && (
-            <Chip
-              label={`ID: ${user._id.slice(0, 7)}`}
-              style={{ marginBottom: '1em' }}
-            />
-          )}
-        </Grid>
-        <Grid item>
-          {profileUser && (
-            <Avatar
-              src={profileUser.imageAvatar}
-              style={{
-                marginLeft: '5em',
-                width: '70px',
-                height: '70px',
-                marginBottom: '1em',
-              }}
-            />
-          )}
-        </Grid>
-        {user && (
-          <Grid item style={{ marginBottom: '1em' }}>
-            <Grid container alignItems="center">
-              <Grid item>
-                <Typography variant="body1">{user.name}</Typography>
-              </Grid>
-              <Grid item style={{ marginLeft: '0.5em' }}>
-                <Button
-                  component={Link}
-                  variant="contained"
-                  color="primary"
-                  to="/create-profile"
-                  style={{ color: 'white' }}
-                >
-                  Chỉnh sửa profile
-                </Button>
-              </Grid>
-            </Grid>
-          </Grid>
-        )}
-        {profileUser && (
-          <Grid item style={{ marginBottom: '1em' }}>
-            <Typography variant="body1">
-              {`Địa chỉ: ${profileUser.address}`}
+    <>
+      {user === null || profileUser === null ? (
+        <Spinner />
+      ) : (
+        <Grid container direction="column" className="container">
+          <Grid item style={{ alignSelf: 'center' }}>
+            <Typography
+              variant="h4"
+              style={{ textTransform: 'uppercase', fontWeight: '600' }}
+            >
+              Trang chính
             </Typography>
           </Grid>
-        )}
-        {profileUser && (
+
           <Grid item style={{ marginBottom: '1em' }}>
-            <Grid container alignItems="center">
+            <Typography variant="h4">Xin chào {user && user.name}</Typography>
+          </Grid>
+          <Grid item style={{ alignSelf: 'flex-start' }}>
+            <Grid container direction="column" alignItems="center">
               <Grid item>
-                <Typography variant="body1">Trình độ tiếng Anh: </Typography>
+                {user && (
+                  <Chip
+                    label={`ID: ${user._id}`}
+                    style={{ marginBottom: '1em' }}
+                  />
+                )}
               </Grid>
-              <Grid item style={{ marginLeft: '0.5em' }}>
-                <Rating englishLevel={profileUser.englishLevel} />
+
+              <Grid item>
+                {profileUser && (
+                  <Avatar
+                    src={profileUser.imageAvatar}
+                    style={{
+                      width: '70px',
+                      height: '70px',
+                      marginBottom: '1em',
+                    }}
+                  />
+                )}
               </Grid>
             </Grid>
           </Grid>
-        )}
-        {profileUser && (
-          <Grid item style={{ marginBottom: '1em' }}>
-            <Grid container alignItems="center">
-              <Grid item>
-                <Typography variant="body1">
-                  Các phần mềm dùng để học:{' '}
-                </Typography>
-              </Grid>
-              <Grid item style={{ marginLeft: '0.5em' }}>
-                <Typography variant="body1">
-                  {profileUser.communicationTool.join(', ')}
-                </Typography>
-              </Grid>
-            </Grid>
-          </Grid>
-        )}
-        {profileUser && (
-          <Grid item style={{ marginBottom: '1em' }}>
-            <Grid container alignItems="center">
-              <Grid item>
-                <Typography variant="body1">Thông tin thêm: </Typography>
-              </Grid>
-              <Grid item style={{ marginLeft: '0.5em' }}>
-                <Typography variant="body1">
-                  {profileUser.introduction}
-                </Typography>
+
+          {user && (
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Grid container alignItems="center">
+                <Grid item>
+                  <Typography variant="body1">
+                    <strong>{user.name}</strong>
+                  </Typography>
+                </Grid>
+                <Grid item style={{ marginLeft: '0.5em' }}>
+                  <Button
+                    component={Link}
+                    variant="contained"
+                    color="primary"
+                    to="/create-profile"
+                    style={{ color: 'white' }}
+                  >
+                    Chỉnh sửa profile
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
-        )}
-      </Grid>
-    </div>
+          )}
+          {profileUser && (
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Typography variant="body1">
+                <strong>Địa chỉ:</strong>&nbsp;{profileUser.address}
+              </Typography>
+            </Grid>
+          )}
+          {profileUser && (
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Grid container alignItems="center">
+                <Grid item>
+                  <Typography variant="body1">
+                    <strong>Trình độ tiếng Anh:</strong>
+                  </Typography>
+                </Grid>
+                <Grid item style={{ marginLeft: '0.5em' }}>
+                  <Rating englishLevel={profileUser.englishLevel} />
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
+          {profileUser && (
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Typography variant="body1">
+                <strong>ID Skype:</strong>&nbsp;
+              </Typography>
+            </Grid>
+          )}
+          {profileUser && (
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Grid container alignItems="center">
+                <Grid item>
+                  <Typography variant="body1">
+                    <strong>Thông tin thêm:</strong>
+                  </Typography>
+                </Grid>
+                <Grid item style={{ marginLeft: '0.5em' }}>
+                  <Typography variant="body1">
+                    {profileUser.introduction}
+                  </Typography>
+                </Grid>
+              </Grid>
+            </Grid>
+          )}
+        </Grid>
+      )}
+    </>
   )
 }
-export default Dashboard
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  profile: state.profile,
+})
+
+export default connect(mapStateToProps, { getCurrentProfile })(Dashboard)

@@ -1,5 +1,6 @@
 import ProfileTeacher from '../models/profileTeacherModel.js'
 import User from '../models/userModel.js'
+import Lesson from '../models/lessonModel.js'
 
 // @route    GET api/profileTeacher/me
 // @desc     Get current teacher profile
@@ -27,36 +28,41 @@ const getCurrentProfileTeacher = async (req, res) => {
 // @desc     Create or update teacher profile
 // @access   Private
 const createOrUpdateProfileTeacher = async (req, res) => {
-  const {
-    typeOfTeacher,
-    degreeImages,
-    teacherAvatar,
-    dateOfBirth,
-    hometown,
-    communicationTool,
-    introduction,
-    video,
-    expImages,
-    thumbnail,
-    videoDuration,
-  } = req.body
-
-  const profileTeacherFields = {
-    user: req.user.id,
-    typeOfTeacher,
-    degreeImages,
-    teacherAvatar,
-    dateOfBirth,
-    hometown,
-    communicationTool,
-    introduction,
-    video,
-    expImages,
-    thumbnail,
-    videoDuration,
-  }
-
   try {
+    const lessonsArray = await Lesson.find({ user: req.user.id })
+
+    const objectIdLessonsArray = lessonsArray.map((lesson) => lesson._id)
+
+    const {
+      typeOfTeacher,
+      degreeImages,
+      teacherAvatar,
+      dateOfBirth,
+      hometown,
+      communicationTool,
+      introduction,
+      video,
+      expImages,
+      thumbnail,
+      videoDuration,
+    } = req.body
+
+    const profileTeacherFields = {
+      user: req.user.id,
+      typeOfTeacher,
+      degreeImages,
+      teacherAvatar,
+      dateOfBirth,
+      hometown,
+      communicationTool,
+      introduction,
+      video,
+      expImages,
+      thumbnail,
+      videoDuration,
+      lessons: objectIdLessonsArray,
+    }
+
     // Using upsert option (creates new doc if no match is found):
     let profileTeacher = await ProfileTeacher.findOneAndUpdate(
       { user: req.user.id },
@@ -78,7 +84,9 @@ const getProfileTeacherById = async (req, res) => {
   try {
     const profileTeacher = await ProfileTeacher.findOne({
       user: req.params.teacherId,
-    }).populate('user', ['name', 'email'])
+    })
+      .populate('user', ['name', 'email'])
+      .populate('lessons', ['periods', 'lessonName'])
 
     if (!profileTeacher) {
       return res

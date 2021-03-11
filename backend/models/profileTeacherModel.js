@@ -41,15 +41,14 @@ const ProfileTeacherSchema = new mongoose.Schema(
     videoDuration: {
       type: Number,
     },
-    lesson: {
-      type: Number,
-      default: 0,
-    },
+    lessons: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'lesson',
+      },
+    ],
     trialRate: {
       type: Number,
-    },
-    hourlyRateFrom: {
-      type: [String],
     },
     rating: {
       type: Number,

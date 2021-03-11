@@ -1,28 +1,29 @@
 import React, { useState, useEffect } from 'react'
 import { Grid, Button, Typography } from '@material-ui/core'
-import { useDispatch, useSelector } from 'react-redux'
 import { getTeachers } from '../../actions/teachersList'
 import TeacherInfo from './TeacherInfo'
 import Spinner from '../../components/ui/Spinner'
+import { connect } from 'react-redux'
+import { getLessonsOfTeacherById } from '../../actions/lessons'
+import PropTypes from 'prop-types'
 
-const TeachersListScreen = () => {
+const TeachersListScreen = ({
+  getLessonsOfTeacherById,
+  getTeachers,
+  lesson: { loading, lessons },
+  teachersList: { teachersList: teachers, loading: loadingTeachersList },
+}) => {
   const [visible, setVisible] = useState(10)
 
-  const dispatch = useDispatch()
-
-  const teachersList = useSelector((state) => state.teachersList)
-
-  const { teachersList: teachers, loading } = teachersList
-
   useEffect(() => {
-    dispatch(getTeachers())
-  }, [dispatch])
+    getTeachers()
+  }, [getTeachers])
 
   const handleShowMoreTeachers = () => {
     setVisible((prevValue) => prevValue + 10)
   }
 
-  if (loading) {
+  if (loadingTeachersList) {
     return <Spinner />
   }
 
@@ -31,20 +32,35 @@ const TeachersListScreen = () => {
       container
       direction="column"
       alignItems="center"
-      style={{ backgroundColor: '#F0F2F5', padding: '2em 3em' }}
+      style={{ backgroundColor: '#F0F2F5', padding: '2em 4em' }}
       spacing={1}
     >
-      <Grid item>
-        <Typography variant="h5">
-          Hãy chọn một giáo viên tốt nhất cho bạn:
+      <Grid item style={{ margin: '1em 0 2.5em' }}>
+        <Typography
+          variant="h4"
+          style={{ textTransform: 'uppercase', fontWeight: '500' }}
+        >
+          Tìm một giáo viên:
         </Typography>
       </Grid>
-      <Grid item container direction="column" alignItems="center" spacing={2}>
-        {teachers.slice(0, visible).map((teacher) => (
-          <Grid item style={{ width: '100%' }} key={teacher._id}>
-            <TeacherInfo teacher={teacher} />
-          </Grid>
-        ))}
+      <Grid
+        item
+        container
+        direction="column"
+        alignItems="center"
+        spacing={2}
+        style={{ padding: '0' }}
+      >
+        {teachers &&
+          teachers.slice(0, visible).map((teacher) => (
+            <Grid
+              item
+              style={{ width: '100%', padding: '0' }}
+              key={teacher._id}
+            >
+              <TeacherInfo teacher={teacher} />
+            </Grid>
+          ))}
       </Grid>
 
       <Grid item>
@@ -62,4 +78,18 @@ const TeachersListScreen = () => {
   )
 }
 
-export default TeachersListScreen
+TeachersListScreen.propTypes = {
+  getLessonsOfTeacherById: PropTypes.func.isRequired,
+  lesson: PropTypes.object.isRequired,
+  teachersList: PropTypes.object.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+  lesson: state.lesson,
+  teachersList: state.teachersList,
+})
+
+export default connect(mapStateToProps, {
+  getLessonsOfTeacherById,
+  getTeachers,
+})(TeachersListScreen)

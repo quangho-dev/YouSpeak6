@@ -278,7 +278,9 @@ const resendTokenPost = async (req, res, next) => {
 // @access   Private
 const getTeachers = async (req, res) => {
   try {
-    const teachers = await ProfileTeacher.find().populate('user', ['name'])
+    const teachers = await ProfileTeacher.find()
+      .populate('user', ['name'])
+      .populate('lessons', ['periods'])
     res.json(teachers)
   } catch (err) {
     console.error(err.message)
