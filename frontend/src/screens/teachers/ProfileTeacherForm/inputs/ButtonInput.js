@@ -15,7 +15,7 @@ const ButtonInput = ({ value, nextPage }) => {
         nextPage()
       }}
     >
-      Chọn
+      Choose
     </Button>
   )
 }

@@ -77,7 +77,7 @@ const ProfileTeacherPage1 = ({ setFieldValue, nextPage }) => {
           variant="h4"
           component="h2"
         >
-          Chọn kiểu giáo viên
+          Choose a type of teacher
         </Typography>
       </div>
       <Grid
@@ -103,20 +103,22 @@ const ProfileTeacherPage1 = ({ setFieldValue, nextPage }) => {
                 textAlign: 'center',
               }}
             >
-              Giáo viên chuyên nghiệp
+              Professional teacher
             </Typography>
-            <h4>* Quyền lợi:</h4>
+            <h4>* Benefits:</h4>
             <ul>
               <li>
-                Được hiển thị là kiểu giáo viên chuyên nghiệp, tăng mức độ uy
-                tín.
+                Your profile is displayed as a professional teacher, increase
+                credibility.
               </li>
-              <li>Tự định giá bài học của bạn.</li>
             </ul>
-            <h4>* Yêu cầu:</h4>
+            <h4>* Requirements:</h4>
             <ul>
-              <li>Cung cấp hình ảnh của các văn bằng về dạy tiếng Anh</li>
-              <li>Video giới thiệu dài từ 1 - 3 phút</li>
+              <li>
+                Provide us your scanned images of teaching certificates and
+                teaching experiences.
+              </li>
+              <li>A introduction video of 1 - 3 minutes length.</li>
             </ul>
           </CardContent>
           <CardActions>
@@ -141,16 +143,16 @@ const ProfileTeacherPage1 = ({ setFieldValue, nextPage }) => {
                 component="h2"
                 style={{ textTransform: 'uppercase' }}
               >
-                Giáo viên cộng đồng
+                Community Tutor
               </Typography>
             </div>
-            <h4>* Quyền lợi:</h4>
+            <h4>* Benefits:</h4>
             <ul>
-              <li>Tự định giá bài học của bạn.</li>
+              <li>Your profile is displayed as a community tutor.</li>
             </ul>
-            <h4>* Yêu cầu:</h4>
+            <h4>* Requirements:</h4>
             <ul>
-              <li>Video giới thiệu dài từ 1 - 3 phút</li>
+              <li>A introduction video of 1 - 3 minutes length.</li>
             </ul>
           </CardContent>
           <CardActions>

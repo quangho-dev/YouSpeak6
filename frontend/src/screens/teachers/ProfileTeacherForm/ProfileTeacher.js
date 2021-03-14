@@ -16,12 +16,15 @@ import {
   createOrUpdateProfileTeacher,
 } from '../../../actions/profileTeacher'
 import * as yup from 'yup'
-import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/styles'
 import { Link } from 'react-router-dom'
 import ProfileTeacherPage1 from './ProfileTeacherPage1'
 import ProfileTeacherPage2 from './ProfileTeacherPage2'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
+import Spinner from '../../../components/ui/Spinner'
+import { connect } from 'react-redux'
+import profile from '../../../reducers/profile'
+import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -79,31 +82,25 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ProfileTeacher = ({ history }) => {
-  const [teacherAvatarState, setTeacherAvatarState] = useState(null)
-  const [typeOfTeacherState, setTypeOfTeacherState] = useState('')
-  const [dateOfBirthState, setDateOfBirthState] = useState(null)
-  const [hometownState, setHometownState] = useState('VN')
-  const [communicationToolState, setCommunicationToolState] = useState([])
-  const [introductionState, setIntroductionState] = useState('')
-  const [videoState, setVideoState] = useState('')
-  const [thumbnailState, setThumbnailState] = useState('')
-  const [degreeImagesState, setDegreeImagesState] = useState([])
-  const [expImagesState, setExpImagesState] = useState([])
+const ProfileTeacher = ({
+  profileTeacher: { loading, profileTeacher },
+  history,
+  getCurrentProfileTeacher,
+  createOrUpdateProfileTeacher,
+}) => {
+  const [formData, setFormData] = useState(null)
 
   const [page, setPage] = useState(0)
   const [activeStep, setActiveStep] = useState(0)
 
   // cac step trong stepper
   const getSteps = () => {
-    return ['Chọn kiểu giáo viên', 'Điền thông tin giáo viên']
+    return ['Choose a type of teacher', 'Fill your profile as a teacher']
   }
 
   const steps = getSteps()
 
   const classes = useStyles()
-
-  const dispatch = useDispatch()
 
   // buoc ke tiep cua stepper
   const handleNext = () => {
@@ -132,191 +129,208 @@ const ProfileTeacher = ({ history }) => {
     <ProfileTeacherPage2 nextPage={nextPage} prevPage={prevPage} />,
   ]
 
-  const profileTeacher = useSelector((state) => state.profileTeacher)
-  const { loading, profileTeacher: profileTeacherRedux } = profileTeacher
-
   const validationSchema = yup.object().shape({
     dateOfBirth: yup.date().nullable(),
   })
 
   useEffect(() => {
-    if (!profileTeacher) {
-      dispatch(getCurrentProfileTeacher())
+    if (!profileTeacher) getCurrentProfileTeacher()
+    if (!loading && profileTeacher) {
+      setFormData({
+        hometown: profileTeacher.hometown ? profileTeacher.hometown : null,
+        degreeImages: [],
+        expImages: [],
+        lessons: profileTeacher.lessons ? profileTeacher.lessons : [],
+        rating: profileTeacher.rating ? profileTeacher.ratting : 0,
+        user: profileTeacher.user ? profileTeacher.user : null,
+        skypeId: profileTeacher.skypeId ? profileTeacher.skypeId : '',
+        dateOfBirth: profileTeacher.dateOfBirth
+          ? profileTeacher.dateOfBirth
+          : null,
+        introduction: profileTeacher.introduction
+          ? profileTeacher.introduction
+          : '',
+        teacherAvatar: profileTeacher.teacherAvatar
+          ? profileTeacher.teacherAvatar
+          : null,
+        thumbnail: profileTeacher.thumbnail ? profileTeacher.thumbnail : null,
+        typeOfTeacher: profileTeacher.typeOfTeacher
+          ? profileTeacher.typeOfTeacher
+          : '',
+        video: profileTeacher.video ? profileTeacher.video : null,
+        lesson: profileTeacher.lesson ? profileTeacher.lesson : null,
+      })
     }
-    if (!loading && profileTeacher && profileTeacherRedux) {
-      setTeacherAvatarState(profileTeacherRedux.teacherAvatar)
-      setTypeOfTeacherState(profileTeacherRedux.typeOfTeacher)
-      setDateOfBirthState(profileTeacherRedux.dateOfBirth)
-      setHometownState(profileTeacherRedux.hometown)
-      setCommunicationToolState(profileTeacherRedux.communicationTool)
-      setIntroductionState(profileTeacherRedux.introduction)
-      setVideoState(profileTeacherRedux.video)
-      setThumbnailState(profileTeacherRedux.thumbnail)
-      setDegreeImagesState(profileTeacherRedux.degreeImages)
-      setExpImagesState(profileTeacherRedux.expImages)
-    }
-  }, [profileTeacherRedux, loading, dispatch, profileTeacher])
+  }, [getCurrentProfileTeacher, loading, profileTeacher])
 
   return (
-    <Formik
-      enableReinitialize
-      initialValues={{
-        teacherAvatar: teacherAvatarState,
-        dateOfBirth: dateOfBirthState,
-        typeOfTeacher: typeOfTeacherState,
-        hometown: hometownState,
-        communicationTool: communicationToolState,
-        video: videoState,
-        thumbnail: thumbnailState,
-        degreeImages: degreeImagesState,
-        expImages: expImagesState,
-        introduction: introductionState,
-      }}
-      validationSchema={validationSchema}
-      onSubmit={(values, { setSubmitting }) => {
-        const {
-          teacherAvatar,
-          dateOfBirth,
-          typeOfTeacher,
-          hometown,
-          communicationTool,
-          video,
-          thumbnail,
-          degreeImages,
-          expImages,
-          introduction,
-        } = values
-        setTimeout(() => {
-          dispatch(
-            createOrUpdateProfileTeacher(
-              {
-                teacherAvatar,
-                dateOfBirth,
-                typeOfTeacher,
-                hometown,
-                communicationTool,
-                video,
-                degreeImages,
-                expImages,
-                thumbnail,
-                introduction,
-              },
-              history,
-              profileTeacher ? true : false
-            )
-          )
-          setSubmitting(false)
-        }, 400)
-      }}
-    >
-      {({
-        values,
-        errors,
-        touched,
-        handleSubmit,
-        isSubmitting,
-        dirty,
-        setFieldValue,
-        setTouched,
-        isValid,
-      }) => (
-        <Dialog open fullWidth maxWidth="lg">
-          <div className={classes.toolbarMargin} />
-          <Form autoComplete="off">
-            <Grid
-              container
-              alignItems="center"
-              className={classes.paddingContainer}
-              style={{ marginRight: 'auto' }}
-            >
-              <Grid item>
-                <Link to="/teachers/dashboard">
-                  <ArrowBackIcon fontSize="large" color="primary" />
-                </Link>
-              </Grid>
-              <Grid item>
-                <Typography
-                  variant="body2"
-                  component={Link}
-                  to="/teachers/dashboard"
-                  style={{
-                    fontWeight: '600',
-                    marginLeft: '0.5em',
-                    textDecoration: 'none',
-                  }}
-                  className={classes.linkText}
-                >
-                  Trở về Dashboard
-                </Typography>
-              </Grid>
-            </Grid>
+    <>
+      {loading && profileTeacher === null ? (
+        <Spinner />
+      ) : (
+        <Formik
+          enableReinitialize
+          initialValues={formData}
+          validationSchema={validationSchema}
+          onSubmit={async (values, { setSubmitting }) => {
+            const {
+              teacherAvatar,
+              dateOfBirth,
+              typeOfTeacher,
+              hometown,
+              skypeId,
+              video,
+              thumbnail,
+              degreeImages,
+              expImages,
+              introduction,
+            } = values
+            setTimeout(() => {
+              const formData = new FormData()
 
-            <Stepper activeStep={activeStep} alternativeLabel>
-              {steps.map((label) => (
-                <Step key={label}>
-                  <StepLabel>{label}</StepLabel>
-                </Step>
-              ))}
-            </Stepper>
-            {pages[page]}
-            <DialogActions>
-              <Grid
-                container
-                justify="center"
-                alignItems="center"
-                spacing={3}
-                style={{ marginTop: '1em' }}
-              >
-                {page !== 0 && (
+              for (let i = 0; i < degreeImages.length; i++) {
+                formData.append('degreeImages', degreeImages[i])
+              }
+
+              try {
+                const config = {
+                  headers: {
+                    'Content-Type': 'multipart/form-data',
+                  },
+                }
+
+                axios
+                  .post('/api/uploadDegreeImages', formData, config)
+                  .then((res) => {
+                    const resultDegreeImagesArray = res.data
+
+                    createOrUpdateProfileTeacher(
+                      {
+                        teacherAvatar,
+                        dateOfBirth,
+                        typeOfTeacher,
+                        hometown,
+                        skypeId,
+                        video,
+                        degreeImages: resultDegreeImagesArray,
+                        expImages,
+                        thumbnail,
+                        introduction,
+                      },
+                      history,
+                      profileTeacher ? true : false
+                    )
+                  })
+              } catch (error) {
+                console.error(error)
+              }
+              setSubmitting(false)
+            }, 400)
+          }}
+        >
+          {({ values, isSubmitting, isValid }) => (
+            <Dialog open fullWidth maxWidth="lg">
+              <div className={classes.toolbarMargin} />
+              <Form autoComplete="off">
+                <Grid
+                  container
+                  alignItems="center"
+                  className={classes.paddingContainer}
+                  style={{ marginRight: 'auto' }}
+                >
                   <Grid item>
-                    <Button
-                      onClick={() => prevPage()}
-                      color="primary"
-                      variant="contained"
-                      disableRipple
-                      style={{ color: 'white' }}
-                    >
-                      Trở về
-                    </Button>
+                    <Link to="/teachers/dashboard">
+                      <ArrowBackIcon fontSize="large" color="primary" />
+                    </Link>
                   </Grid>
-                )}
-                {page === pages.length - 1 ? (
                   <Grid item>
-                    <Button
-                      type="submit"
-                      variant="contained"
-                      color="primary"
-                      disableRipple
-                      disabled={!isValid || isSubmitting}
-                      style={{ color: 'white' }}
+                    <Typography
+                      variant="body2"
+                      component={Link}
+                      to="/teachers/dashboard"
+                      style={{
+                        fontWeight: '600',
+                        marginLeft: '0.5em',
+                        textDecoration: 'none',
+                      }}
+                      className={classes.linkText}
                     >
-                      Gửi đăng ký
-                    </Button>
+                      Back to Dashboard
+                    </Typography>
                   </Grid>
-                ) : page !== 0 ? (
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      nextPage()
-                    }}
-                    disableRipple
-                    style={{ color: 'white' }}
+                </Grid>
+
+                <Stepper activeStep={activeStep} alternativeLabel>
+                  {steps.map((label) => (
+                    <Step key={label}>
+                      <StepLabel>{label}</StepLabel>
+                    </Step>
+                  ))}
+                </Stepper>
+                {pages[page]}
+                <DialogActions>
+                  <Grid
+                    container
+                    justify="center"
+                    alignItems="center"
+                    spacing={3}
+                    style={{ marginTop: '1em' }}
                   >
-                    Trang kế tiếp
-                  </Button>
-                ) : null}
-              </Grid>
-            </DialogActions>
-            <div>
-              <pre>{JSON.stringify(values, null, 2)}</pre>
-              <pre>{JSON.stringify(errors, null, 2)}</pre>
-            </div>
-          </Form>
-        </Dialog>
+                    {page !== 0 && (
+                      <Grid item>
+                        <Button
+                          onClick={() => prevPage()}
+                          color="primary"
+                          variant="contained"
+                          disableRipple
+                          style={{ color: 'white' }}
+                        >
+                          Back
+                        </Button>
+                      </Grid>
+                    )}
+                    {page === pages.length - 1 ? (
+                      <Grid item>
+                        <Button
+                          type="submit"
+                          variant="contained"
+                          color="primary"
+                          disableRipple
+                          disabled={!isValid || isSubmitting}
+                          style={{ color: 'white' }}
+                        >
+                          Submit
+                        </Button>
+                      </Grid>
+                    ) : page !== 0 ? (
+                      <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => {
+                          nextPage()
+                        }}
+                        disableRipple
+                        style={{ color: 'white' }}
+                      >
+                        Next
+                      </Button>
+                    ) : null}
+                  </Grid>
+                </DialogActions>
+              </Form>
+            </Dialog>
+          )}
+        </Formik>
       )}
-    </Formik>
+    </>
   )
 }
 
-export default ProfileTeacher
+const mapStateToProps = (state) => ({
+  profileTeacher: state.profileTeacher,
+})
+
+export default connect(mapStateToProps, {
+  getCurrentProfileTeacher,
+  createOrUpdateProfileTeacher,
+})(ProfileTeacher)

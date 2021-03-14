@@ -24,9 +24,10 @@ const ProfileTeacherSchema = new mongoose.Schema(
       type: Date,
     },
     hometown: {
-      type: String,
+      value: String,
+      label: String,
     },
-    communicationTool: [String],
+    skypeId: String,
     introduction: {
       type: String,
       required: true,

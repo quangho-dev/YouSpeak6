@@ -320,10 +320,7 @@ const EditProfileDialog = ({
                     </span>
                   </Button>
 
-                  <Grid item className={classes.formControl}>
-                    <pre>{JSON.stringify(values, null, 2)}</pre>
-                    <pre>{JSON.stringify(errors, null, 2)}</pre>
-                  </Grid>
+                  <Grid item className={classes.formControl}></Grid>
                 </Form>
               )}
             </Formik>

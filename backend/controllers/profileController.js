@@ -31,8 +31,9 @@ const createOrUpdateProfile = async (req, res) => {
     dateOfBirth,
     gender,
     englishLevel,
-    communicationTool,
+    skypeId,
     introduction,
+    phoneNumber,
   } = req.body
 
   const profileFields = {
@@ -42,8 +43,9 @@ const createOrUpdateProfile = async (req, res) => {
     dateOfBirth,
     gender,
     englishLevel,
-    communicationTool,
+    skypeId,
     introduction,
+    phoneNumber,
   }
 
   try {

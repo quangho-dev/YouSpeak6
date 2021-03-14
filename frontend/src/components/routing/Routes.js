@@ -33,6 +33,7 @@ import BookedLesson from '../students/bookedLesson/BookedLesson'
 import BookedLessonsManager from '../teachers/bookedLessonsManager/BookedLessonsManager'
 import BookedLessonInfo from '../teachers/bookedLessonInfo/BookedLessonInfo'
 import TeacherInfo from '../teachers/teacherInfo/TeacherInfo'
+import EditDegreeImages from '../../screens/teachers/ProfileTeacherForm/EditDegreeImages'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -154,7 +155,11 @@ const Routes = (props) => {
           path="/teachers/:teacherProfileId"
           component={TeacherInfo}
         />
-        <Route path="/test" component={Test} />
+        <TeacherPrivateRoute
+          exact
+          path="/teachers/dashboard/edit-degree-images"
+          component={EditDegreeImages}
+        />
         <Route component={NotFound} />
       </Switch>
     </section>

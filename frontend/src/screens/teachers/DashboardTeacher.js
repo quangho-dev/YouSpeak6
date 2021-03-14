@@ -4,7 +4,6 @@ import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar'
 import Button from '@material-ui/core/Button'
-import { useDispatch, useSelector } from 'react-redux'
 import Chip from '@material-ui/core/Chip'
 import { Link } from 'react-router-dom'
 import { getCurrentProfileTeacher } from '../../actions/profileTeacher'
@@ -15,6 +14,10 @@ import ShowMoreText from 'react-show-more-text'
 import EditIcon from '@material-ui/icons/Edit'
 import MenuBookIcon from '@material-ui/icons/MenuBook'
 import DateRangeIcon from '@material-ui/icons/DateRange'
+import capitalizeFirstLetter from '../../utils/capitalizeFirstLetter'
+import { connect } from 'react-redux'
+import Spinner from '../../components/ui/Spinner'
+import PropTypes from 'prop-types'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -50,20 +53,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const DashboardTeacher = () => {
+const DashboardTeacher = ({
+  auth: { user },
+  profileTeacher: { profileTeacher, loading },
+  getCurrentProfileTeacher,
+}) => {
   const classes = useStyles()
-
-  const dispatch = useDispatch()
-
-  const auth = useSelector((state) => state.auth)
-  const { user } = auth
-
-  const profileTeacher = useSelector((state) => state.profileTeacher)
-  const { profileTeacher: profileTeacherRedux } = profileTeacher
-
-  useEffect(() => {
-    dispatch(getCurrentProfileTeacher())
-  }, [dispatch])
 
   const renderImages = (source) => {
     return source.map((photo, index) => {
@@ -79,209 +74,240 @@ const DashboardTeacher = () => {
 
   const executeOnClick = () => {}
 
+  useEffect(() => {
+    getCurrentProfileTeacher()
+  }, [getCurrentProfileTeacher])
+
   return (
-    <Grid
-      container
-      direction="column"
-      className={classes.toolbarMargin}
-      style={{ backgroundColor: '#f7f7f7', padding: '2em 4em' }}
-    >
-      <Grid item style={{ marginBottom: '1em' }}>
-        <Typography variant="h4">
-          Xin chào {user && user !== '' && user.name}
-        </Typography>
-      </Grid>
-      <Grid item>
-        {user && (
-          <Chip
-            label={`ID: ${user._id.slice(0, 7)}`}
-            style={{ marginBottom: '1em' }}
-          />
-        )}
-      </Grid>
-      {profileTeacherRedux && (
-        <Grid item>
-          <Avatar
-            src={profileTeacherRedux.teacherAvatar}
-            style={{
-              marginLeft: '5em',
-              width: '70px',
-              height: '70px',
-              marginBottom: '1em',
-            }}
-          />
-        </Grid>
-      )}
-
-      <Grid item style={{ marginBottom: '1em' }}>
-        <Grid item style={{ marginLeft: '0.5em' }}>
-          <Button
-            component={Link}
-            variant="contained"
-            color="primary"
-            to="/teachers/create-profile"
-            style={{ color: 'white' }}
-          >
-            <EditIcon fontSize="small" />
-            &nbsp;Chỉnh sửa profile
-          </Button>
-        </Grid>
-      </Grid>
-
-      <Grid item style={{ marginBottom: '1em' }}>
-        <Grid item style={{ marginLeft: '0.5em' }}>
-          <Button
-            component={Link}
-            variant="contained"
-            color="primary"
-            to="/teachers/lessons"
-            style={{ color: 'white' }}
-          >
-            <MenuBookIcon fontSize="small" />
-            &nbsp;Chỉnh sửa các bài học
-          </Button>
-        </Grid>
-      </Grid>
-
-      <Grid item style={{ marginBottom: '1em' }}>
-        <Grid item style={{ marginLeft: '0.5em' }}>
-          <Button
-            component={Link}
-            variant="contained"
-            color="primary"
-            to="/booking-calendar-teacher"
-            style={{ color: 'white' }}
-          >
-            <DateRangeIcon fontSize="small" />
-            &nbsp;Đặt thời gian bạn có thể dạy.
-          </Button>
-        </Grid>
-      </Grid>
-
-      {profileTeacherRedux && profileTeacherRedux.typeOfTeacher !== null && (
-        <Grid item style={{ marginBottom: '1em' }}>
-          <Typography variant="body1">
-            <span className={classes.subHeader}>Kiểu giáo viên:</span>
-            {profileTeacherRedux.typeOfTeacher === 'commutor'
-              ? ' Giáo viên cộng đồng'
-              : ' Giáo viên chuyên nghiệp'}
-          </Typography>
-        </Grid>
-      )}
-
-      {profileTeacherRedux && profileTeacherRedux.dateOfBirth !== null && (
-        <Grid item style={{ marginBottom: '1em' }}>
-          <Typography variant="body1">
-            <span className={classes.subHeader}>Ngày tháng năm sinh: </span>
-            {format(new Date(profileTeacherRedux.dateOfBirth), 'dd/MM/yyyy')}
-          </Typography>
-        </Grid>
-      )}
-
-      {profileTeacherRedux && profileTeacherRedux.hometown !== null && (
-        <Grid item style={{ marginBottom: '1em' }}>
-          <Typography variant="body1">
-            <span className={classes.subHeader}>Quốc Tịch: </span>{' '}
-            {profileTeacherRedux.hometown}
-          </Typography>
-        </Grid>
-      )}
-
-      {profileTeacherRedux && profileTeacherRedux.communicationTool !== null && (
-        <Grid item style={{ marginBottom: '1em' }}>
-          <Typography variant="body1">
-            <span className={classes.subHeader}>
-              Phần mềm video call dùng để dạy:{' '}
-            </span>
-            {profileTeacherRedux.communicationTool.join(', ')}
-          </Typography>
-        </Grid>
-      )}
-
-      {profileTeacherRedux && profileTeacherRedux.introduction !== null && (
-        <Grid item style={{ marginBottom: '1em' }}>
-          <Typography variant="body1" className={classes.subHeader}>
-            Giới thiệu về giáo viên:
-          </Typography>
-          <Typography component={'span'} variant="body1">
-            <ShowMoreText
-              lines={3}
-              more="Xem thêm"
-              less="Thu lại"
-              className="content-css"
-              anchorClass="my-anchor-css-class"
-              onClick={executeOnClick}
-              expanded={false}
-              width={700}
+    <>
+      {loading ? (
+        <Spinner />
+      ) : (
+        <Grid container direction="column" className="container">
+          <Grid item style={{ marginBottom: '1em', alignSelf: 'center' }}>
+            <Typography
+              variant="h4"
+              style={{ textTransform: 'uppercase', fontWeight: '500' }}
             >
-              {profileTeacherRedux.introduction}
-            </ShowMoreText>
-          </Typography>
-        </Grid>
-      )}
+              Dashboard
+            </Typography>
+          </Grid>
 
-      {profileTeacherRedux &&
-        profileTeacherRedux.video !== null &&
-        profileTeacherRedux.thumbnail !== null && (
+          <Grid item style={{ marginBottom: '1em' }}>
+            <Typography variant="h5">
+              Hello {user && user !== '' && user.name}
+            </Typography>
+          </Grid>
+
           <Grid
             item
-            className={classes.formControl}
-            style={{ marginBottom: '1em' }}
+            container
+            direction="column"
+            alignItems="center"
+            style={{ marginBottom: '2em' }}
           >
-            <Typography
-              variant="body1"
-              style={{ margin: '0.5em 0' }}
-              className={classes.subHeader}
-            >
-              Video giới thiệu về giáo viên:
-            </Typography>
-            {profileTeacherRedux.video && (
-              <ReactPlayer
-                url={`/${profileTeacherRedux.video}`}
-                controls
-                playing
-                light={`/${profileTeacherRedux.thumbnail}`}
-              />
+            <Grid item>
+              {user && (
+                <Chip
+                  label={`ID: ${user._id}`}
+                  style={{ marginBottom: '1em' }}
+                />
+              )}
+            </Grid>
+
+            {profileTeacher && (
+              <Grid item>
+                <Avatar
+                  src={null || profileTeacher.teacherAvatar}
+                  style={{
+                    width: '70px',
+                    height: '70px',
+                    marginBottom: '0.5em',
+                  }}
+                />
+              </Grid>
             )}
-          </Grid>
-        )}
 
-      {profileTeacherRedux &&
-        Boolean(profileTeacherRedux.degreeImages) &&
-        profileTeacherRedux.typeOfTeacher !== 'commutor' && (
-          <Grid item style={{ marginBottom: '1em' }}>
-            <Typography
-              variant="body1"
-              className={classes.subHeader}
-              style={{ margin: '0.5em 0' }}
-            >
-              Hình ảnh bằng cấp của giáo viên:
-            </Typography>
-            <Grid container justify="center" alignItems="center" spacing={3}>
-              {profileTeacherRedux &&
-                profileTeacherRedux.degreeImages !== null &&
-                renderImages(profileTeacherRedux.degreeImages)}
+            <Grid item>
+              <Button
+                component={Link}
+                variant="contained"
+                color="primary"
+                to="/teachers/create-profile"
+                style={{ color: 'white' }}
+              >
+                <EditIcon fontSize="small" />
+                &nbsp;Edit profile
+              </Button>
             </Grid>
           </Grid>
-        )}
 
-      {profileTeacherRedux &&
-        profileTeacherRedux.expImages !== '' &&
-        profileTeacherRedux.typeOfTeacher !== 'commutor' && (
-          <Grid item style={{ marginBottom: '1em' }}>
-            <Typography
-              variant="body1"
-              className={classes.subHeader}
-              style={{ margin: '0.5em 0' }}
-            >
-              Hình ảnh kinh nghiệm của giáo viên:
-            </Typography>
-            <Grid container justify="center" alignItems="center" spacing={3}>
-              {renderImages(profileTeacherRedux.expImages)}
+          <Grid container justify="center" alignItems="center" spacing={2}>
+            <Grid item>
+              <Button
+                component={Link}
+                variant="contained"
+                color="primary"
+                to="/teachers/lessons"
+                style={{ color: 'white' }}
+              >
+                <MenuBookIcon fontSize="small" />
+                &nbsp;Edit lessons
+              </Button>
+            </Grid>
+
+            <Grid item>
+              <Button
+                component={Link}
+                variant="contained"
+                color="primary"
+                to="/booking-calendar-teacher"
+                style={{ color: 'white' }}
+              >
+                <DateRangeIcon fontSize="small" />
+                &nbsp;Edit available time
+              </Button>
             </Grid>
           </Grid>
-        )}
-    </Grid>
+
+          {profileTeacher && profileTeacher.typeOfTeacher !== null && (
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Typography variant="body1">
+                <span className={classes.subHeader}>Type of teacher:</span>
+                &nbsp;
+                {capitalizeFirstLetter(profileTeacher.typeOfTeacher)}
+              </Typography>
+            </Grid>
+          )}
+
+          {profileTeacher && profileTeacher.dateOfBirth !== null && (
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Typography variant="body1">
+                <span className={classes.subHeader}>Date of birth: </span>
+                {format(new Date(profileTeacher.dateOfBirth), 'dd/MM/yyyy')}
+              </Typography>
+            </Grid>
+          )}
+
+          {profileTeacher.hometown !== null && (
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Typography variant="body1">
+                <span className={classes.subHeader}>From: </span>{' '}
+                {profileTeacher.hometown.label}
+              </Typography>
+            </Grid>
+          )}
+
+          {profileTeacher && profileTeacher.introduction !== null && (
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Typography variant="body1" className={classes.subHeader}>
+                Introduction about teacher:
+              </Typography>
+              <Typography component={'span'} variant="body1">
+                <ShowMoreText
+                  lines={3}
+                  more="Read more"
+                  less="Show less"
+                  className="content-css"
+                  anchorClass="my-anchor-css-class"
+                  onClick={executeOnClick}
+                  expanded={false}
+                  width={700}
+                >
+                  {profileTeacher.introduction}
+                </ShowMoreText>
+              </Typography>
+            </Grid>
+          )}
+
+          {profileTeacher &&
+            profileTeacher.video !== null &&
+            profileTeacher.thumbnail !== null && (
+              <Grid
+                item
+                className={classes.formControl}
+                style={{ marginBottom: '1em' }}
+              >
+                <Typography
+                  variant="body1"
+                  style={{ margin: '0.5em 0' }}
+                  className={classes.subHeader}
+                >
+                  Video introduction:
+                </Typography>
+                {profileTeacher && profileTeacher.video && (
+                  <ReactPlayer
+                    url={`/${profileTeacher.video}`}
+                    controls
+                    playing
+                    light={`/${profileTeacher.thumbnail}`}
+                  />
+                )}
+              </Grid>
+            )}
+
+          {profileTeacher &&
+            profileTeacher.degreeImages &&
+            profileTeacher.degreeImages.length > 0 &&
+            profileTeacher.typeOfTeacher !== 'commutor' && (
+              <Grid item style={{ marginBottom: '3em' }}>
+                <Typography
+                  variant="body1"
+                  className={classes.subHeader}
+                  style={{ margin: '0.5em 0' }}
+                >
+                  Images of teaching certificates:
+                </Typography>
+                <Grid
+                  container
+                  justify="center"
+                  alignItems="center"
+                  spacing={3}
+                >
+                  {renderImages(profileTeacher.degreeImages)}
+                </Grid>
+              </Grid>
+            )}
+
+          {profileTeacher &&
+            profileTeacher.expImages &&
+            profileTeacher.expImages.length > 0 &&
+            profileTeacher.typeOfTeacher !== 'commutor' && (
+              <Grid item style={{ marginBottom: '1em' }}>
+                <Typography
+                  variant="body1"
+                  className={classes.subHeader}
+                  style={{ margin: '0.5em 0' }}
+                >
+                  Images of teaching experiences:
+                </Typography>
+                <Grid
+                  container
+                  justify="center"
+                  alignItems="center"
+                  spacing={3}
+                >
+                  {renderImages(profileTeacher.expImages)}
+                </Grid>
+              </Grid>
+            )}
+        </Grid>
+      )}
+    </>
   )
 }
-export default DashboardTeacher
+
+DashboardTeacher.propTypes = {
+  auth: PropTypes.object.isRequired,
+  profileTeacher: PropTypes.object.isRequired,
+  getCurrentProfileTeacher: PropTypes.func.isRequired,
+}
+
+const mapStateToProps = (state) => ({
+  auth: state.auth,
+  profileTeacher: state.profileTeacher,
+})
+
+export default connect(mapStateToProps, { getCurrentProfileTeacher })(
+  DashboardTeacher
+)

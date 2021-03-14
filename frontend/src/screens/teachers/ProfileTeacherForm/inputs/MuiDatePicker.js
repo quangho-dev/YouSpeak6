@@ -1,22 +1,34 @@
 import React from 'react'
 import { useField, useFormikContext } from 'formik'
 import DatePicker from 'react-datepicker'
-import 'react-datepicker/dist/react-datepicker.css'
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers'
+import DateFnsUtils from '@date-io/date-fns'
 
 const MuiDatePicker = ({ ...props }) => {
-  const { setFieldValue } = useFormikContext()
-  const [field] = useField(props)
+  const { setFieldValue, values } = useFormikContext()
+
+  const handleDateChange = (date) => {
+    setFieldValue('dateOfBirth', date)
+  }
+
   return (
-    <DatePicker
-      {...field}
-      {...props}
-      selected={(field.value && new Date(field.value)) || null}
-      onChange={(val) => {
-        setFieldValue(field.name, val)
-      }}
-      dateFormat="dd/MM/yyyy"
-      timeInputLabel="Ngày tháng năm sinh:"
-    />
+    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+      <KeyboardDatePicker
+        margin="normal"
+        id="date-of-birth"
+        label="Date of birth"
+        format="MM/dd/yyyy"
+        value={values.dateOfBirth}
+        onChange={handleDateChange}
+        KeyboardButtonProps={{
+          'aria-label': 'change date',
+        }}
+      />
+    </MuiPickersUtilsProvider>
   )
 }
 

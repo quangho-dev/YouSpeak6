@@ -8,19 +8,25 @@ import {
   CardActions,
   LinearProgress,
   Avatar,
+  CardMedia,
+  CardContent,
 } from '@material-ui/core'
 import { Field, useFormikContext } from 'formik'
 import { makeStyles } from '@material-ui/styles'
 import ButtonFileInput from './inputs/ButtonFileInput'
-import MuiDatePicker from './inputs/MuiDatePicker'
-import FlagSelector from './inputs/FlagSelector'
 import { TextField } from 'formik-material-ui'
 import Dropzone from 'react-dropzone'
 import AddIcon from '@material-ui/icons/Add'
 import axios from 'axios'
-import Moment from 'react-moment'
-import MyCheckBox from '../../../components/Formik/MyCheckBox'
+import { Link } from 'react-router-dom'
 import AlertMessage from '../../../components/layout/AlertMessage'
+import MuiDatePicker from './inputs/MuiDatePicker'
+import ProfileCountrySelector from './inputs/ProfileCountrySelector'
+import MyButton from '../../../components/ui/MyButton'
+import EditIcon from '@material-ui/icons/Edit'
+import CloudDoneIcon from '@material-ui/icons/CloudDone'
+import CloudUploadIcon from '@material-ui/icons/CloudUpload'
+import { RMIUploader } from 'react-multiple-image-uploader'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -60,7 +66,7 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: '1em',
   },
   rowContainer: {
-    padding: '0 4em',
+    padding: '0 7em',
   },
   degreeImageCard: {
     maxWidth: 300,
@@ -84,15 +90,17 @@ const ProfileTeacherPage2 = () => {
 
   const [uploadVideoPercentage, setUploadVideoPercentage] = useState(0)
 
+  const [previewAvatar, setPreviewAvatar] = useState(null)
+
   const [previewDegreeImages, setPreviewDegreeImages] = useState([])
-  const [uploadingDegreeImages, setUploadingDegreeImages] = useState(false)
+  const [uploadingDegreeImages, setUploadingDegreeImages] = useState([])
 
   const [previewExpImages, setPreviewExpImages] = useState([])
   const [uploadingExpImages, setUploadingExpImages] = useState(false)
 
-  const classes = useStyles()
-
   const { setFieldValue, values } = useFormikContext()
+
+  const classes = useStyles()
 
   const onDrop = (files) => {
     if (files) {
@@ -143,122 +151,81 @@ const ProfileTeacherPage2 = () => {
     }
   }
 
-  const handleDegreeImagesUpload = async (event) => {
+  const handleDegreeImagesUpload = (event) => {
     if (event.target.files) {
-      const filesArray = Array.from(event.target.files).map((file) =>
-        URL.createObjectURL(file)
-      )
+      const filesArray = Array.from(event.target.files)
 
-      setPreviewDegreeImages((prevImages) => prevImages.concat(filesArray))
+      const currentDegreeImages = values.degreeImages
+      setFieldValue('degreeImages', currentDegreeImages.concat(filesArray))
+
+      const degreeImagesFilesArrayToPreview = Array.from(
+        event.target.files
+      ).map((file) => URL.createObjectURL(file))
+
+      setPreviewDegreeImages((prevImages) =>
+        prevImages.concat(degreeImagesFilesArrayToPreview)
+      )
       Array.from(event.target.files).map(
         (file) => URL.revokeObjectURL(file) // avoid memory leak
       )
-
-      const files = event.target.files
-      const formData = new FormData()
-
-      for (let i = 0; i < files.length; i++) {
-        formData.append('degreeImages', files[i])
-      }
-
-      setUploadingDegreeImages(true)
-      try {
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-
-        const { data } = await axios.post(
-          '/api/uploadDegreeImages',
-          formData,
-          config
-        )
-
-        const prevDegreeImages = values.degreeImages
-        setFieldValue('degreeImages', prevDegreeImages.concat(data))
-
-        setUploadingDegreeImages(false)
-      } catch (error) {
-        console.error(error)
-        setUploadingDegreeImages(false)
-      }
     }
   }
 
-  const handleExpImagesUpload = async (event) => {
+  const handleExpImagesUpload = (event) => {
     if (event.target.files) {
-      const filesArray = Array.from(event.target.files).map((file) =>
-        URL.createObjectURL(file)
-      )
+      const filesArray = Array.from(event.target.files)
+      const currentExpImagesFilesArray = values.expImages
+      setFieldValue('expImages', currentExpImagesFilesArray.concat(filesArray))
 
-      setPreviewExpImages((prevImages) => prevImages.concat(filesArray))
+      const expImagesFilesArrayToPreview = Array.from(
+        event.target.files
+      ).map((file) => URL.createObjectURL(file))
+
+      setPreviewExpImages((prevImages) =>
+        prevImages.concat(expImagesFilesArrayToPreview)
+      )
       Array.from(event.target.files).map(
         (file) => URL.revokeObjectURL(file) // avoid memory leak
       )
-
-      const formData = new FormData()
-
-      for (let i = 0; i < event.target.files.length; i++) {
-        formData.append('expImages', event.target.files[i])
-      }
-
-      setUploadingExpImages(true)
-      try {
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
-
-        const { data } = await axios.post(
-          '/api/uploadExpImages',
-          formData,
-          config
-        )
-
-        const prevExpImages = values.expImages
-        setFieldValue('expImages', prevExpImages.concat(data))
-        setUploadingExpImages(false)
-      } catch (error) {
-        console.error(error)
-        setUploadingExpImages(false)
-      }
     }
   }
 
-  const deleteDegreeImages = (e) => {
-    const s = previewDegreeImages.filter((item, index) => index !== e)
-    const sa = values.degreeImages.filter((item, index) => index !== e)
-    setPreviewDegreeImages(s)
-    setFieldValue('degreeImages', sa)
+  const deleteDegreeImages = (imageIndex) => {
+    const filteredPreviewImages = previewDegreeImages.filter(
+      (item, index) => index !== imageIndex
+    )
+    const filteredDegreeImages = values.degreeImages.filter(
+      (item, index) => index !== imageIndex
+    )
+    setPreviewDegreeImages(filteredPreviewImages)
+    setFieldValue('degreeImages', filteredDegreeImages)
   }
 
-  const deleteExpImages = (e) => {
-    const s = previewExpImages.filter((item, index) => index !== e)
-    const sa = values.expImages.filter((item, index) => index !== e)
-    setPreviewExpImages(s)
-    setFieldValue('expImages', sa)
+  const deleteExpImages = (imageIndex) => {
+    const filteredPreviewExpImages = previewExpImages.filter(
+      (item, index) => index !== imageIndex
+    )
+    const filteredExpImages = values.expImages.filter(
+      (item, index) => index !== imageIndex
+    )
+    setPreviewExpImages(filteredPreviewExpImages)
+    setFieldValue('expImages', filteredExpImages)
   }
 
   const renderDegreeImages = (source) => {
-    return source.map((photo, index) => {
+    return source.map((photo, imageIndex) => {
       return (
         <Grid item className={classes.expImageCard} key={photo}>
           <Card>
-            <img
-              src={photo}
-              className={classes.expImage}
-              alt="teacher-avatar"
-            />
+            <img src={photo} className={classes.expImage} alt="degree-images" />
             <CardActions>
               <Button
                 fullWidth
                 variant="contained"
                 color="primary"
-                onClick={() => deleteDegreeImages(index)}
+                onClick={() => deleteDegreeImages(imageIndex)}
               >
-                Bỏ chọn
+                Remove
               </Button>
             </CardActions>
           </Card>
@@ -268,7 +235,7 @@ const ProfileTeacherPage2 = () => {
   }
 
   const renderExpImages = (source) => {
-    return source.map((photo, index) => {
+    return source.map((photo, imageIndex) => {
       return (
         <Grid item className={classes.expImageCard} key={photo}>
           <Card>
@@ -278,9 +245,9 @@ const ProfileTeacherPage2 = () => {
                 fullWidth
                 variant="contained"
                 color="primary"
-                onClick={() => deleteExpImages(index)}
+                onClick={() => deleteExpImages(imageIndex)}
               >
-                Bỏ chọn
+                Remove
               </Button>
             </CardActions>
           </Card>
@@ -301,92 +268,65 @@ const ProfileTeacherPage2 = () => {
       </Grid>
       <Grid item>
         <Typography
-          variant="h5"
-          component="h3"
+          variant="h4"
           align="center"
           className={classes.formControl}
+          style={{ textTransform: 'uppercase', fontSize: '600' }}
         >
-          {values.typeOfTeacher === 'professional'
-            ? 'Điền thông tin giáo viên chuyên nghiệp'
-            : 'Điền thông tin giáo viên cộng đồng'}
+          Edit profile
         </Typography>
       </Grid>
-      <Grid item className={classes.formControl}>
-        <Grid container direction="column" justify="center">
-          <Grid item>
-            <Avatar
-              src={values.teacherAvatar}
-              style={{ width: '4em', height: '4em' }}
-              alt="teacher-avatar"
-            />
-          </Grid>
-          <Grid item>
-            <p>
-              Đổi ảnh profile ( * )
-              <br />
-              Tối đa 2MB
-            </p>
-          </Grid>
-          <Grid item className={classes.formControl}>
-            <ButtonFileInput
-              name="teacherAvatar"
-              label="Tải hình ảnh giáo viên"
-              setUploadingTeacherAvatar={setUploadingTeacherAvatar}
-            />
-            {uploadingTeacherAvatar && <LinearProgress color="secondary" />}
-          </Grid>
+      <Grid item container direction="column" alignItems="center">
+        <Grid item>
+          <Avatar
+            src={values.teacherAvatar}
+            style={{ width: '4em', height: '4em' }}
+            alt="teacher-avatar"
+          />
+        </Grid>
+
+        <Grid item>
+          <p>
+            Change avatar image ( * )
+            <br />
+            Maximum size: 2MB
+          </p>
+        </Grid>
+        <Grid item className={classes.formControl}>
+          <ButtonFileInput
+            name="teacherAvatar"
+            label="Change avatar"
+            setUploadingTeacherAvatar={setUploadingTeacherAvatar}
+          />
+          {uploadingTeacherAvatar && <LinearProgress color="secondary" />}
         </Grid>
       </Grid>
 
       <Grid item className={classes.formControl}>
-        <label htmlFor="date-of-birth">
-          Ngày tháng năm sinh (ví dụ 12/11/1990):
-        </label>
-        <br />
-        <MuiDatePicker name="dateOfBirth" id="date-of-birth" />
+        <MuiDatePicker />
       </Grid>
 
-      <Grid item className={classes.formControl} style={{ marginTop: '1em' }}>
+      <Grid
+        item
+        className={classes.formControl}
+        style={{ marginTop: '1em', maxWidth: '20em' }}
+      >
         <div>
           <label htmlFor={'abc'} style={{ fontWeight: '400' }}>
-            Chọn Quốc tịch của bạn: ( * )
+            Choose your nationality: ( * )
           </label>
           <br />
-          <FlagSelector name="hometown" />
+          <ProfileCountrySelector />
         </div>
       </Grid>
 
       <Grid item className={classes.formControl}>
-        <label>Chọn phần mềm video call bạn dùng để dạy: ( * )</label>
-        <br />
-        <Grid container alignItems="center" className={classes.formControl}>
-          <FormGroup>
-            <MyCheckBox
-              color="primary"
-              name="communicationTool"
-              label="Skype"
-              value="Skype"
-            />
-            <MyCheckBox
-              color="primary"
-              name="communicationTool"
-              label="Viper"
-              value="Viper"
-            />
-            <MyCheckBox
-              color="primary"
-              name="communicationTool"
-              label="Google Hangouts"
-              value="Google Hangouts"
-            />
-            <MyCheckBox
-              color="primary"
-              name="communicationTool"
-              label="Facetime"
-              value="Facetime"
-            />
-          </FormGroup>
-        </Grid>
+        <Field
+          name="skypeId"
+          type="text"
+          component={TextField}
+          label="Skype ID: ( * )"
+        />
       </Grid>
 
       <Grid item className={classes.formControl}>
@@ -394,18 +334,18 @@ const ProfileTeacherPage2 = () => {
           name="introduction"
           type="text"
           component={TextField}
-          label="Hãy viết một đoạn văn để người học có thể hiểu rõ hơn về bạn: ( * )"
+          label="Let's write a short paragraph for students to know more about you: ( * )"
           multiline
           rows={5}
-          style={{ width: '20em' }}
+          style={{ width: '50em' }}
         />
       </Grid>
 
       <Grid item style={{ margin: 'auto' }} className={classes.formControl}>
         <p>
-          Tải video giới thiệu ( * )
+          Upload introduction video ( * )
           <br />
-          Độ dài từ 1 - 3 phút
+          about 1 - 3 minutes of length
         </p>
       </Grid>
       <Grid item>
@@ -446,13 +386,6 @@ const ProfileTeacherPage2 = () => {
               </div>
             )}
           </Grid>
-          <Grid item>
-            {values.thumbnail && (
-              <Typography variant="body1">
-                Độ dài: <Moment format="hh:mm:ss">{videoDurationState}</Moment>
-              </Typography>
-            )}
-          </Grid>
         </Grid>
         <Grid item className={classes.formControl}>
           <div style={{ width: '100%' }}>
@@ -469,36 +402,44 @@ const ProfileTeacherPage2 = () => {
       {values.typeOfTeacher === 'professional' && (
         <>
           <Grid item className={classes.formControl}>
-            <label htmlFor="degree-upload">
-              Tải hình ảnh bằng cấp của bạn: ( * )
-            </label>
-            <br />
-            <Button
-              variant="contained"
-              component="label"
-              color="primary"
-              style={{ color: 'white', fontWeight: '500' }}
-            >
-              Tải file ảnh
-              <input
-                id="degree-upload"
-                type="file"
-                multiple
-                style={{ display: 'none' }}
-                onChange={handleDegreeImagesUpload}
-              />
-            </Button>
-            {uploadingDegreeImages && <LinearProgress color="secondary" />}
-          </Grid>
+            <Grid container direction="column" spacing={2}>
+              <Grid item>
+                <label
+                  htmlFor="degree-upload"
+                  style={{ fontSize: '1.5rem', fontWeight: '400' }}
+                >
+                  Upload your images of teaching certificates: ( * )
+                </label>
+                <br />
+                <MyButton component="label">
+                  <CloudUploadIcon />
+                  &nbsp;Upload images
+                  <input
+                    id="degree-upload"
+                    type="file"
+                    multiple
+                    style={{ display: 'none' }}
+                    onChange={handleDegreeImagesUpload}
+                  />
+                </MyButton>
+              </Grid>
 
-          <Grid item>
-            <Grid container justify="center" alignItems="center" spacing={3}>
-              {renderDegreeImages(values.degreeImages)}
+              <Grid item container spacing={2}>
+                {renderDegreeImages(previewDegreeImages)}
+              </Grid>
             </Grid>
           </Grid>
-          <Grid item className={classes.formControl}>
-            <label htmlFor="exp-upload">
-              Tải hình kinh nghiệm của bạn: ( * )
+
+          <Grid
+            item
+            className={classes.formControl}
+            style={{ marginTop: '2em' }}
+          >
+            <label
+              htmlFor="exp-upload"
+              style={{ fontSize: '1.5rem', fontWeight: '400' }}
+            >
+              Upload your images of teaching experiences: ( * )
             </label>
             <br />
             <Button
@@ -507,7 +448,8 @@ const ProfileTeacherPage2 = () => {
               color="primary"
               style={{ color: 'white', fontWeight: '500' }}
             >
-              Tải file ảnh
+              <CloudUploadIcon />
+              &nbsp;Upload images
               <input
                 id="exp-upload"
                 type="file"
@@ -516,17 +458,20 @@ const ProfileTeacherPage2 = () => {
                 onChange={handleExpImagesUpload}
               />
             </Button>
-            {uploadingExpImages && <LinearProgress color="secondary" />}
           </Grid>
+
           <Grid item>
-            <Grid container justify="center" alignItems="center" spacing={3}>
-              {renderExpImages(values.expImages)}
+            <Grid container justify="center" alignItems="center" spacing={2}>
+              {renderExpImages(previewExpImages)}
             </Grid>
           </Grid>
         </>
       )}
       <Grid item>
-        <Typography variant="body2">( * ) Không được để trống</Typography>
+        <Typography variant="body2">( * ) Required input</Typography>
+      </Grid>
+      <Grid item style={{ maxWidth: '20em' }}>
+        <pre>{JSON.stringify(values, null, 2)}</pre>
       </Grid>
     </Grid>
   )

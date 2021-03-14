@@ -21,7 +21,10 @@ const ProfileSchema = new mongoose.Schema(
     englishLevel: {
       type: Number,
     },
-    communicationTool: [{ type: String }],
+    skypeId: {
+      type: String,
+    },
+    phoneNumber: Number,
     introduction: {
       type: String,
     },

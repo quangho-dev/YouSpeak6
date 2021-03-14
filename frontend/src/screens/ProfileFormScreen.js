@@ -17,12 +17,10 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers'
 import { getCurrentProfile, createOrUpdateProfile } from '../actions/profile'
-import MyCheckBox from '../components/Formik/MyCheckBox'
 import * as yup from 'yup'
 import { useDispatch, useSelector } from 'react-redux'
 import { makeStyles } from '@material-ui/styles'
 import axios from 'axios'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
@@ -36,11 +34,6 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: '2.25em',
     },
   },
-  // closeButton: {
-  //   position: 'absolute',
-  //   right: '1em',
-  //   top: '1em',
-  // },
   formControl: {
     marginBottom: '1.5em',
   },
@@ -58,6 +51,8 @@ const ProfileFormScreen = ({ history }) => {
   const [englishLevelState, setEnglishLevelState] = useState(0)
   const [communicationToolState, setCommunicationToolState] = useState([])
   const [introductionState, setIntroductionState] = useState('')
+  const [skypeIdState, setSkypeIdState] = useState('')
+  const [phoneNumberState, setPhoneNumberState] = useState('')
 
   const [uploading, setUploading] = useState(false)
 
@@ -66,6 +61,8 @@ const ProfileFormScreen = ({ history }) => {
 
   const validationSchema = yup.object().shape({
     dateOfBirth: yup.date().nullable(),
+    phoneNumber: yup.number().required('Vui lòng điền số điện thoại'),
+    skypeId: yup.string().required('Vui lòng điền Skype ID của bạn'),
   })
 
   useEffect(() => {
@@ -80,24 +77,36 @@ const ProfileFormScreen = ({ history }) => {
       setEnglishLevelState(profileUser.englishLevel)
       setCommunicationToolState(profileUser.communicationTool)
       setIntroductionState(profileUser.introduction)
+      setSkypeIdState(profileUser.skypeId)
+      setPhoneNumberState(profileUser.phoneNumber)
     }
   }, [profileUser, loading, dispatch])
 
   return (
-    <Grid container direction="column" justify="center" alignItems="center">
+    <Grid
+      container
+      direction="column"
+      justify="center"
+      alignItems="center"
+      className="container"
+    >
       <Grid item>
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
             <div className={classes.toolbarMargin} />
           </Grid>
           <Grid item>
-            <Typography variant="h4" gutterBottom>
+            <Typography
+              variant="h4"
+              gutterBottom
+              style={{ fontWeight: '500', textTransform: 'uppercase' }}
+            >
               Chỉnh sửa Profile
             </Typography>
           </Grid>
         </Grid>
       </Grid>
-      <Grid item>
+      <Grid item style={{ width: '30em' }}>
         <Formik
           enableReinitialize
           initialValues={{
@@ -108,6 +117,8 @@ const ProfileFormScreen = ({ history }) => {
             englishLevel: englishLevelState,
             communicationTool: communicationToolState,
             introduction: introductionState,
+            skypeId: skypeIdState,
+            phoneNumber: phoneNumberState,
           }}
           validationSchema={validationSchema}
           onSubmit={(values, { setSubmitting }) => {
@@ -119,11 +130,20 @@ const ProfileFormScreen = ({ history }) => {
                   profileUser ? true : false
                 )
               )
+              history.push('/dashboard')
               setSubmitting(false)
             }, 400)
           }}
         >
-          {({ values, errors, isSubmitting, isValidating, setFieldValue }) => (
+          {({
+            values,
+            errors,
+            isSubmitting,
+            isValidating,
+            setFieldValue,
+            dirty,
+            isValid,
+          }) => (
             <Form>
               <Grid container direction="column">
                 <Grid item style={{ margin: 'auto' }}>
@@ -140,7 +160,7 @@ const ProfileFormScreen = ({ history }) => {
                     Tối đa 2MB
                   </p>
                 </Grid>
-                <Grid item className={classes.formControl}>
+                <Grid item style={{ margin: '0 auto 2em' }}>
                   <Button
                     variant="contained"
                     component="label"
@@ -180,17 +200,7 @@ const ProfileFormScreen = ({ history }) => {
                   </Button>
                   {uploading && <LinearProgress color="secondary" />}
                 </Grid>
-                {/* <Grid item className={classes.formControl}>
-                      <FormGroup>
-                        <Field
-                          autoComplete="off"
-                          name="name"
-                          as={TextField}
-                          label="Tên hiển thị"
-                        />
-                        <ErrorMessage name="name" />
-                      </FormGroup>
-                    </Grid> */}
+
                 <Grid item className={classes.formControl}>
                   <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
@@ -251,29 +261,38 @@ const ProfileFormScreen = ({ history }) => {
                     </Field>
                   </FormGroup>
                 </Grid>
+
                 <Grid item className={classes.formControl}>
-                  <label>Chọn phần mềm video mà bạn dùng để học:</label>
                   <FormGroup>
-                    <MyCheckBox
-                      name="communicationTool"
-                      value="Skype"
-                      label="Skype"
-                      color="primary"
+                    <Field
+                      autoComplete="off"
+                      name="skypeId"
+                      as={TextField}
+                      label="Skype ID"
+                      error={errors.skypeId}
                     />
-                    <MyCheckBox
-                      name="communicationTool"
-                      value="Google Hangouts"
-                      label="Google Hangouts"
-                      color="primary"
-                    />
-                    <MyCheckBox
-                      name="communicationTool"
-                      value="Viber"
-                      label="Viber"
-                      color="primary"
-                    />
+                    <ErrorMessage name="skypeId">
+                      {(msg) => <div style={{ color: 'red' }}>{msg}</div>}
+                    </ErrorMessage>
                   </FormGroup>
                 </Grid>
+
+                <Grid item className={classes.formControl}>
+                  <FormGroup>
+                    <Field
+                      autoComplete="off"
+                      name="phoneNumber"
+                      as={TextField}
+                      label="Số điện thoại"
+                      type="number"
+                      error={errors.phoneNumber}
+                    />
+                    <ErrorMessage name="phoneNumber">
+                      {(msg) => <div style={{ color: 'red' }}>{msg}</div>}
+                    </ErrorMessage>
+                  </FormGroup>
+                </Grid>
+
                 <Grid item className={classes.formControl}>
                   <FormGroup>
                     <Field
@@ -287,8 +306,14 @@ const ProfileFormScreen = ({ history }) => {
                     <ErrorMessage name="introduction" />
                   </FormGroup>
                 </Grid>
-                <Grid item>
-                  <Grid container justify="center" alignItems="center">
+                <Grid
+                  item
+                  container
+                  justify="center"
+                  alignItems="center"
+                  spacing={2}
+                >
+                  <Grid item>
                     <Button
                       component={Link}
                       variant="contained"
@@ -303,25 +328,20 @@ const ProfileFormScreen = ({ history }) => {
                     >
                       Quay lại
                     </Button>
+                  </Grid>
+
+                  <Grid item>
                     <Button
                       variant="contained"
                       color="primary"
                       type="submit"
-                      disabled={isSubmitting || isValidating}
+                      disabled={!isValid || isSubmitting}
                       style={{ color: 'white', fontWeight: 600 }}
                     >
                       Lưu lại
-                      <span style={{ marginLeft: '1em' }}>
-                        {loading && <CircularProgress color="secondary" />}
-                      </span>
                     </Button>
                   </Grid>
                 </Grid>
-              </Grid>
-
-              <Grid item className={classes.formControl}>
-                <pre>{JSON.stringify(values, null, 2)}</pre>
-                <pre>{JSON.stringify(errors, null, 2)}</pre>
               </Grid>
             </Form>
           )}
