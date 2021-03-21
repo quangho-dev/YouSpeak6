@@ -1,5 +1,4 @@
 import React, { useEffect } from 'react'
-import { makeStyles } from '@material-ui/styles'
 import Grid from '@material-ui/core/Grid'
 import Typography from '@material-ui/core/Typography'
 import Avatar from '@material-ui/core/Avatar'
@@ -18,23 +17,6 @@ const Dashboard = ({
   auth: { user },
   profile: { profile: profileUser },
 }) => {
-  const useStyles = makeStyles((theme) => ({
-    toolbarMargin: {
-      ...theme.mixins.toolbar,
-      marginBottom: '1em',
-      [theme.breakpoints.down('md')]: {
-        marginBottom: '2em',
-      },
-      [theme.breakpoints.down('xs')]: {
-        marginBottom: '2.25em',
-      },
-    },
-    paddingContainer: {
-      padding: '0 4em',
-    },
-  }))
-  const classes = useStyles()
-
   useEffect(() => {
     getCurrentProfile()
   }, [getCurrentProfile])

@@ -45,6 +45,7 @@ const createOrUpdateProfileTeacher = async (req, res) => {
       expImages,
       thumbnail,
       videoDuration,
+      phoneNumber,
     } = req.body
 
     const profileTeacherFields = {
@@ -60,6 +61,7 @@ const createOrUpdateProfileTeacher = async (req, res) => {
       expImages,
       thumbnail,
       videoDuration,
+      phoneNumber,
       lessons: objectIdLessonsArray,
     }
 

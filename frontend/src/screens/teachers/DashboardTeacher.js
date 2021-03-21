@@ -9,12 +9,10 @@ import { Link } from 'react-router-dom'
 import { getCurrentProfileTeacher } from '../../actions/profileTeacher'
 import ReactPlayer from 'react-player'
 import { format } from 'date-fns'
-import { Card } from '@material-ui/core'
-import ShowMoreText from 'react-show-more-text'
 import EditIcon from '@material-ui/icons/Edit'
 import MenuBookIcon from '@material-ui/icons/MenuBook'
 import DateRangeIcon from '@material-ui/icons/DateRange'
-import capitalizeFirstLetter from '../../utils/capitalizeFirstLetter'
+import ShowMoreText from 'react-show-more-text'
 import { connect } from 'react-redux'
 import Spinner from '../../components/ui/Spinner'
 import PropTypes from 'prop-types'
@@ -64,9 +62,7 @@ const DashboardTeacher = ({
     return source.map((photo, index) => {
       return (
         <Grid item className={classes.expImageCard} key={photo}>
-          <Card>
-            <img src={photo} className={classes.expImage} alt="experience" />
-          </Card>
+          <img src={photo} className={classes.expImage} alt="experience" />
         </Grid>
       )
     })
@@ -175,7 +171,9 @@ const DashboardTeacher = ({
               <Typography variant="body1">
                 <span className={classes.subHeader}>Type of teacher:</span>
                 &nbsp;
-                {capitalizeFirstLetter(profileTeacher.typeOfTeacher)}
+                {profileTeacher.typeOfTeacher === 'professional'
+                  ? 'Professional teacher'
+                  : 'Community tutor'}
               </Typography>
             </Grid>
           )}
@@ -194,6 +192,24 @@ const DashboardTeacher = ({
               <Typography variant="body1">
                 <span className={classes.subHeader}>From: </span>{' '}
                 {profileTeacher.hometown.label}
+              </Typography>
+            </Grid>
+          )}
+
+          {profileTeacher.skypeId && (
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Typography variant="body1">
+                <span className={classes.subHeader}>Skype ID: </span>&nbsp;
+                {profileTeacher.skypeId}
+              </Typography>
+            </Grid>
+          )}
+
+          {profileTeacher.phoneNumber && (
+            <Grid item style={{ marginBottom: '1em' }}>
+              <Typography variant="body1">
+                <span className={classes.subHeader}>Phone number: </span>&nbsp;
+                {profileTeacher.phoneNumber}
               </Typography>
             </Grid>
           )}

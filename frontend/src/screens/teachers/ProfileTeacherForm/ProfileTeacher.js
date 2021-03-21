@@ -23,8 +23,6 @@ import ProfileTeacherPage2 from './ProfileTeacherPage2'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import Spinner from '../../../components/ui/Spinner'
 import { connect } from 'react-redux'
-import profile from '../../../reducers/profile'
-import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -131,6 +129,19 @@ const ProfileTeacher = ({
 
   const validationSchema = yup.object().shape({
     dateOfBirth: yup.date().nullable(),
+    hometown: yup.object().nullable().required('Required'),
+    skypeId: yup.string().required('Required'),
+    phoneNumber: yup.number().required('Required'),
+    introduction: yup.string().required('Required'),
+    video: yup.string().required('Required'),
+    degreeImages: yup.array().when('typeOfTeacher', {
+      is: 'professional',
+      then: yup.array().required('Required'),
+    }),
+    expImages: yup.array().when('typeOfTeacher', {
+      is: 'professional',
+      then: yup.array().required('Required'),
+    }),
   })
 
   useEffect(() => {
@@ -138,10 +149,15 @@ const ProfileTeacher = ({
     if (!loading && profileTeacher) {
       setFormData({
         hometown: profileTeacher.hometown ? profileTeacher.hometown : null,
-        degreeImages: [],
-        expImages: [],
+        selectedDegreeImagesFiles: [],
+        degreeImages: profileTeacher.degreeImages
+          ? profileTeacher.degreeImages
+          : [],
+        expImages: profileTeacher.expImages ? profileTeacher.expImages : [],
         lessons: profileTeacher.lessons ? profileTeacher.lessons : [],
-        rating: profileTeacher.rating ? profileTeacher.ratting : 0,
+        phoneNumber: profileTeacher.phoneNumber
+          ? profileTeacher.phoneNumber
+          : 0,
         user: profileTeacher.user ? profileTeacher.user : null,
         skypeId: profileTeacher.skypeId ? profileTeacher.skypeId : '',
         dateOfBirth: profileTeacher.dateOfBirth
@@ -152,7 +168,8 @@ const ProfileTeacher = ({
           : '',
         teacherAvatar: profileTeacher.teacherAvatar
           ? profileTeacher.teacherAvatar
-          : null,
+          : '',
+        selectedTeacherAvatarFile: null,
         thumbnail: profileTeacher.thumbnail ? profileTeacher.thumbnail : null,
         typeOfTeacher: profileTeacher.typeOfTeacher
           ? profileTeacher.typeOfTeacher
@@ -184,46 +201,26 @@ const ProfileTeacher = ({
               degreeImages,
               expImages,
               introduction,
+              phoneNumber,
             } = values
             setTimeout(() => {
-              const formData = new FormData()
-
-              for (let i = 0; i < degreeImages.length; i++) {
-                formData.append('degreeImages', degreeImages[i])
-              }
-
-              try {
-                const config = {
-                  headers: {
-                    'Content-Type': 'multipart/form-data',
-                  },
-                }
-
-                axios
-                  .post('/api/uploadDegreeImages', formData, config)
-                  .then((res) => {
-                    const resultDegreeImagesArray = res.data
-
-                    createOrUpdateProfileTeacher(
-                      {
-                        teacherAvatar,
-                        dateOfBirth,
-                        typeOfTeacher,
-                        hometown,
-                        skypeId,
-                        video,
-                        degreeImages: resultDegreeImagesArray,
-                        expImages,
-                        thumbnail,
-                        introduction,
-                      },
-                      history,
-                      profileTeacher ? true : false
-                    )
-                  })
-              } catch (error) {
-                console.error(error)
-              }
+              createOrUpdateProfileTeacher(
+                {
+                  teacherAvatar,
+                  dateOfBirth,
+                  typeOfTeacher,
+                  hometown,
+                  skypeId,
+                  video,
+                  degreeImages,
+                  expImages,
+                  thumbnail,
+                  introduction,
+                  phoneNumber,
+                },
+                history,
+                profileTeacher ? true : false
+              )
               setSubmitting(false)
             }, 400)
           }}

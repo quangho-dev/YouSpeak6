@@ -1,5 +1,6 @@
 import api from '../utils/api'
 import { setAlert } from './alert'
+import { toast } from 'react-toastify'
 
 import {
   GET_PROFILE_TEACHER,
@@ -41,13 +42,10 @@ export const createOrUpdateProfileTeacher = (
       payload: res.data,
     })
 
-    dispatch(
-      setAlert(
-        edit
-          ? 'Thông tin giáo viên đã được cập nhật'
-          : 'Thông tin giáo viên đã được tạo',
-        'success'
-      )
+    toast.success(
+      edit
+        ? 'Your profile has been updated successfully!'
+        : 'Your profile has been created!'
     )
 
     if (!edit) {

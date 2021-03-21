@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Grid,
-  Typography,
-  Avatar,
-  Box,
-  Card,
-  CardContent,
-  Container,
-} from '@material-ui/core'
+import { Grid, Typography, Avatar, Card, CardContent } from '@material-ui/core'
 import MyButton from '../../ui/MyButton'
 import { getProfileTeacherById } from '../../../actions/profileTeacher'
 import { connect } from 'react-redux'
@@ -16,14 +8,8 @@ import Spinner from '../../ui/Spinner'
 import PropTypes from 'prop-types'
 import { makeStyles } from '@material-ui/core/styles'
 import ShowMoreText from 'react-show-more-text'
-import ReadMoreText from '../../ui/ReadMoreText'
-import ReadMoreReact from 'read-more-react'
-import ReactReadMoreReadLess from 'react-read-more-read-less'
-import ShowMore from 'react-show-more'
-import ReadMore from '../../ui/ReadMore'
 import getMinPeriodPrice from '../../../utils/getMinPeriodPrice'
 import formatMoney from '../../../utils/formatMoney'
-import profile from '../../../reducers/profile'
 import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
@@ -158,7 +144,7 @@ const TeacherInfo = ({
                       </Grid>
                       {profileTeacher.lessons.length > 0 &&
                         profileTeacher.lessons.map((lesson, index) => (
-                          <Grid item>
+                          <Grid item key={index}>
                             <Typography variant="body1">
                               {index + 1}.&nbsp;
                               {lesson.lessonName}
@@ -214,7 +200,25 @@ const TeacherInfo = ({
                         {profileTeacher.hometown && (
                           <Typography variant="body1">
                             <strong>Đến từ:</strong>&nbsp;
-                            {profileTeacher.hometown}
+                            {profileTeacher.hometown.label}
+                          </Typography>
+                        )}
+                      </Grid>
+
+                      <Grid item>
+                        {profileTeacher.skypeId && (
+                          <Typography variant="body1">
+                            <strong>Skype ID:</strong>&nbsp;
+                            {profileTeacher.skypeId}
+                          </Typography>
+                        )}
+                      </Grid>
+
+                      <Grid item>
+                        {profileTeacher.phoneNumber && (
+                          <Typography variant="body1">
+                            <strong>Số điện thoại:</strong>&nbsp;
+                            {profileTeacher.phoneNumber}
                           </Typography>
                         )}
                       </Grid>

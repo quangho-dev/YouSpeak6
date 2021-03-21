@@ -17,6 +17,7 @@ import 'moment/locale/vi'
 // Redux
 import { Provider } from 'react-redux'
 import CssBaseline from '@material-ui/core/CssBaseline'
+import { ToastContainer } from 'react-toastify'
 
 moment.locale('vi')
 
@@ -45,6 +46,17 @@ const App = () => {
             <Route exact path="/" component={LandingScreen} />
             <Route component={Routes} />
           </Router>
+          <ToastContainer
+            position="top-center"
+            autoClose={5000}
+            hideProgressBar={false}
+            newestOnTop={false}
+            closeOnClick
+            rtl={false}
+            pauseOnFocusLoss
+            draggable
+            pauseOnHover
+          />
           {/* <Footer /> */}
         </ConfirmProvider>
       </ThemeProvider>

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Typography, Button } from '@material-ui/core'
 import BookedLessonInfo from './BookedLessonInfo'
@@ -12,6 +12,8 @@ import { connect } from 'react-redux'
 import CancelIcon from '@material-ui/icons/Cancel'
 import Spinner from '../../ui/Spinner'
 import { useConfirm } from 'material-ui-confirm'
+import { addHours, compareAsc } from 'date-fns'
+import moment from 'moment'
 
 const BookedLesson = ({
   match,
@@ -25,6 +27,8 @@ const BookedLesson = ({
   },
   history,
 }) => {
+  const [teacherId, setTeacherId] = useState('')
+
   const handleCancelLesson = (bookedLessonId) => {
     confirm({
       description: 'Nhấn đồng ý sẽ hủy bài học.',
@@ -41,16 +45,24 @@ const BookedLesson = ({
 
   useEffect(() => {
     getBookedLessonById(match.params.bookedLessonId)
-    if (bookedLesson && bookedLesson._id) {
-      getProfileTeacherById(bookedLesson.teacher)
-    }
+    setTeacherId(bookedLesson.teacher)
+    if (teacherId) getProfileTeacherById(teacherId)
   }, [
     match.params.bookedLessonId,
-    bookedLesson.teacher,
     getBookedLessonById,
+    bookedLesson.teacher,
     getProfileTeacherById,
-    bookedLesson,
+    teacherId,
   ])
+
+  const isAfterNext24Hours = (time) => {
+    const deadlineToCancel = addHours(new Date(time), 24)
+    const res = compareAsc(new Date(), deadlineToCancel)
+    if (res === 1) {
+      return true
+    }
+    return false
+  }
 
   return (
     <Grid
@@ -98,11 +110,12 @@ const BookedLesson = ({
               <Button
                 onClick={() => handleCancelLesson(bookedLesson._id)}
                 variant="contained"
+                color="secondary"
                 style={{
-                  backgroundColor: '#f45014',
                   margin: '1.5em 0 0.5em',
                   color: 'white',
                 }}
+                disabled={isAfterNext24Hours(bookedLesson.createdAt)}
               >
                 <CancelIcon />
                 &nbsp;Hủy bài học
@@ -112,7 +125,7 @@ const BookedLesson = ({
             <Grid item>
               <Typography variant="body1">
                 * Bạn chỉ có thể hủy bài học trước 24 tiếng trước khi bắt đầu
-                bài bài học.
+                bài học.
               </Typography>
             </Grid>
           </Grid>

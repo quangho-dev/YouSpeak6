@@ -26,7 +26,6 @@ import AddALesson from '../lessons/AddALesson/AddALesson'
 import EditALesson from '../lessons/EditALesson/EditALesson'
 import ReuploadLessonDocuments from '../lessons/EditALesson/ReuploadLessonDocuments'
 import BookLearningTime from '../students/BookLearningTime/BookLearningTime'
-import Test from '../Test'
 import SchedulingCalendar from '../teachers/BookingCalendar/SchedulingCalendar'
 import LessonsManager from '../students/LessonsManager/LessonsManager'
 import BookedLesson from '../students/bookedLesson/BookedLesson'
@@ -34,6 +33,7 @@ import BookedLessonsManager from '../teachers/bookedLessonsManager/BookedLessons
 import BookedLessonInfo from '../teachers/bookedLessonInfo/BookedLessonInfo'
 import TeacherInfo from '../teachers/teacherInfo/TeacherInfo'
 import EditDegreeImages from '../../screens/teachers/ProfileTeacherForm/EditDegreeImages'
+import ContactUs from '../layout/contactUs/ContactUs'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -56,6 +56,7 @@ const Routes = (props) => {
           path="/users/request-resend-confirmation-token"
           component={RequestResendConfirmationTokenScreen}
         />
+        <Route exact path="/contact-us" component={ContactUs} />
         <PrivateRoute exact path="/dashboard" component={Dashboard} />
         <PrivateRoute
           exact

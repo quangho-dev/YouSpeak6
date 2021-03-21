@@ -203,6 +203,17 @@ const Header = ({
           Dành cho giáo viên
         </Button>
       </Grid>
+
+      <Grid item>
+        <Button
+          variant="text"
+          component={Link}
+          to="/contact-us"
+          style={{ color: 'white', textTransform: 'none' }}
+        >
+          Liên hệ với chúng tôi
+        </Button>
+      </Grid>
     </Grid>
   )
 
@@ -334,6 +345,23 @@ const Header = ({
         </Grid>
       )}
 
+      {user && user.role !== 'teacher' && (
+        <Grid item>
+          <Button
+            component={Link}
+            to="/contact-us"
+            variant="text"
+            style={{
+              color: '#333',
+              textTransform: 'none',
+              marginRight: '1.5em',
+            }}
+          >
+            Liên hệ với chúng tôi
+          </Button>
+        </Grid>
+      )}
+
       {/* tabs of teachers after have logged in */}
       {user && user.role === 'teacher' && (
         <Grid item>
@@ -347,7 +375,24 @@ const Header = ({
               marginRight: '1.5em',
             }}
           >
-            Quản lý bài học
+            Order management
+          </Button>
+        </Grid>
+      )}
+
+      {user && user.role === 'teacher' && (
+        <Grid item>
+          <Button
+            component={Link}
+            to="/contact-us"
+            variant="text"
+            style={{
+              color: '#333',
+              textTransform: 'none',
+              marginRight: '1.5em',
+            }}
+          >
+            Contact us
           </Button>
         </Grid>
       )}

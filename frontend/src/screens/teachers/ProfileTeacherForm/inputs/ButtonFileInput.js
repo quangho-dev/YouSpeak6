@@ -1,40 +1,19 @@
 import React from 'react'
 import { Button } from '@material-ui/core'
 import { useFormikContext } from 'formik'
-import axios from 'axios'
 
-const ButtonFileInput = ({ label, setUploadingTeacherAvatar }) => {
+const ButtonFileInput = ({ label, setPreviewAvatar }) => {
   const { setFieldValue } = useFormikContext()
 
-  const onChangeHandler = async (e) => {
-    if (e.currentTarget.files[0]) {
+  const onChangeHandler = (e) => {
+    if (e.target.files[0]) {
       const file = e.currentTarget.files[0]
-      const formData = new FormData()
-      formData.append('teacherAvatar', file)
-      setUploadingTeacherAvatar(true)
-      try {
-        const config = {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        }
+      const blobAvatar = URL.createObjectURL(file)
+      setPreviewAvatar(blobAvatar)
 
-        const { data } = await axios.post(
-          '/api/upload-teacher-avatar',
-          formData,
-          config
-        )
-
-        setFieldValue('teacherAvatar', data)
-
-        setUploadingTeacherAvatar(false)
-      } catch (error) {
-        console.error(error)
-        setUploadingTeacherAvatar(false)
-      }
+      setFieldValue('selectedTeacherAvatarFile', file)
     }
   }
-
   return (
     <>
       <Button

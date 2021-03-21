@@ -21,6 +21,7 @@ import resetPasswordRoute from './routes/resetPasswordRoute.js'
 import uploadLessonDocumentsRoute from './routes/uploadLessonDocumentsRoute.js'
 import bookingCalendarTeacherRoutes from './routes/bookingCalendarTeacherRoutes.js'
 import bookingCalendarStudentRoutes from './routes/bookingCalendarStudentRoutes.js'
+import sendContactUsEmail from './routes/contactUsRoute.js'
 
 const mongoURI = config.get('mongoURI')
 const PORT = config.get('PORT')
@@ -43,6 +44,8 @@ app.use('/api/users', userRoutes)
 app.use('/api/forgot', forgotPasswordRoute)
 
 app.use('/api/reset', resetPasswordRoute)
+
+app.use('/api/contact-us', sendContactUsEmail)
 
 app.use('/api/teachers', teacherRoutes)
 

@@ -1,14 +1,5 @@
 import React, { useState } from 'react'
-import {
-  Dialog,
-  Grid,
-  Typography,
-  TextField,
-  Card,
-  CardMedia,
-  CardActions,
-  Button,
-} from '@material-ui/core'
+import { Grid, Typography, Card, CardActions, Button } from '@material-ui/core'
 import MyButton from '../../../components/ui/MyButton'
 import CloudUploadIcon from '@material-ui/icons/CloudUpload'
 import { makeStyles } from '@material-ui/styles'
@@ -22,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const EditDegreeImages = () => {
+const EditDegreeImages = ({ open, onClose }) => {
   const [degreeImagesFiles, setDegreeImagesFiles] = useState([])
   const [previewDegreeImages, setPreviewDegreeImages] = useState([])
 
@@ -46,11 +37,11 @@ const EditDegreeImages = () => {
   }
 
   const renderImages = (source) => {
-    return source.map((photo, imageIndex) => {
+    return source.map((item, imageIndex) => {
       return (
-        <Grid item key={photo}>
+        <Grid item key={imageIndex}>
           <Card>
-            <img className={classes.degreeImage} src={photo} />
+            <img alt="degree" className={classes.degreeImage} src={item} />
             <CardActions>
               <Button
                 fullWidth

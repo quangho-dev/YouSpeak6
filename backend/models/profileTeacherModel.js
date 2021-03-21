@@ -28,6 +28,7 @@ const ProfileTeacherSchema = new mongoose.Schema(
       label: String,
     },
     skypeId: String,
+    phoneNumber: Number,
     introduction: {
       type: String,
       required: true,

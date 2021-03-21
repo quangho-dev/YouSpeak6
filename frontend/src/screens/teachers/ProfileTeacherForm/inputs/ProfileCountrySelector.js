@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useFormikContext } from 'formik'
 import Select from 'react-select'
 import countryList from 'react-select-country-list'
