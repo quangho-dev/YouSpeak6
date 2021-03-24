@@ -63,4 +63,26 @@ const createOrUpdateProfile = async (req, res) => {
   }
 }
 
-export { getCurrentProfile, createOrUpdateProfile }
+// @route    GET api/profile/:studentId
+// @desc     Get profile student by id
+// @access   Private
+const getProfileStudentById = async (req, res) => {
+  try {
+    const profileStudent = await Profile.findOne({
+      user: req.params.studentId,
+    })
+
+    if (!profileStudent) {
+      return res
+        .status(400)
+        .json({ msg: 'There is no profile for this student' })
+    }
+
+    res.json(profileStudent)
+  } catch (err) {
+    console.error(err.message)
+    res.status(500).send('Server Error')
+  }
+}
+
+export { getCurrentProfile, createOrUpdateProfile, getProfileStudentById }

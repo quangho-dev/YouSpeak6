@@ -53,7 +53,7 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        bookedLesson: payload,
+        bookedLesson: payload.bookedLesson,
         bookedLessons: state.bookedLessons.map((lesson) =>
           lesson._id === payload._id ? { ...lesson, isConfirmed: true } : lesson
         ),

@@ -25,7 +25,7 @@ const BookedLessonsManager = ({
           variant="h4"
           style={{ textTransform: 'uppercase', fontWeight: '500' }}
         >
-          Quản lý bài học
+          Order manager
         </Typography>
       </Grid>
 
@@ -33,7 +33,7 @@ const BookedLessonsManager = ({
         {loading ? (
           <Spinner />
         ) : !bookedLessons[0] ? (
-          <Typography variant="body1">Chưa có bài học nào được đặt.</Typography>
+          <Typography variant="body1">There are no orders.</Typography>
         ) : (
           <BookedLessonsTable bookedLessons={bookedLessons} />
         )}

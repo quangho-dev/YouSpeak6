@@ -271,7 +271,7 @@ const ProfileTeacher = ({
                     justify="center"
                     alignItems="center"
                     spacing={3}
-                    style={{ marginTop: '1em' }}
+                    style={{ marginTop: '1em', width: '100%', margin: 0 }}
                   >
                     {page !== 0 && (
                       <Grid item>

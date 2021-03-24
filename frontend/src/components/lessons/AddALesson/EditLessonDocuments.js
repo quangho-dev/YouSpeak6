@@ -49,9 +49,9 @@ const EditLessonDocuments = ({ onClose, open }) => {
 
   const handleAddToList = () => {
     if (!documentName) {
-      setError('Vui lòng điền tên tài liệu.')
+      setError("Document's name is required.")
     } else if (fileDocument === null) {
-      setError('Vui lòng tải file tài liệu')
+      setError('document file is required')
     } else {
       const prevDocuments = values.documents
       setFieldValue(
@@ -83,7 +83,7 @@ const EditLessonDocuments = ({ onClose, open }) => {
         alignItems="center"
         spacing={3}
         className={classes.paddingContainer}
-        style={{ margin: '1em 0' }}
+        style={{ margin: '2em 0' }}
       >
         {error && (
           <Grid item style={{ marginTop: '1em' }}>
@@ -92,13 +92,20 @@ const EditLessonDocuments = ({ onClose, open }) => {
         )}
         <Grid item>
           <Typography variant="h4" style={{ textTransform: 'uppercase' }}>
-            Chỉnh sửa tài liệu
+            Edit lesson's documents
           </Typography>
         </Grid>
-        <Grid item container justify="center" alignItems="center" spacing={2}>
+        <Grid
+          item
+          container
+          justify="center"
+          alignItems="center"
+          spacing={2}
+          style={{ width: '100%', margin: 0 }}
+        >
           <Grid item>
             <TextField
-              label="Tên tài liệu"
+              label="Document's name"
               value={documentName}
               onChange={handleDocumentNameChange}
             />
@@ -111,7 +118,7 @@ const EditLessonDocuments = ({ onClose, open }) => {
               style={{ color: 'white', fontWeight: '500', margin: 'auto' }}
             >
               <PublishIcon />
-              &nbsp;Tải tài liệu
+              &nbsp;Download
               <input
                 type="file"
                 style={{ display: 'none' }}
@@ -129,12 +136,12 @@ const EditLessonDocuments = ({ onClose, open }) => {
         >
           <Grid item>
             <Typography variant="h6" gutterBottom>
-              Tài liệu đang thêm:
+              Document details:
             </Typography>
           </Grid>
           <Grid item style={{ alignSelf: 'flex-start' }}>
             <Typography variant="body1">
-              <span style={{ fontWeight: '600' }}>Tên tài liệu:</span>&nbsp;
+              <span style={{ fontWeight: '600' }}>Document's name:</span>&nbsp;
               {documentName}
             </Typography>
           </Grid>
@@ -145,7 +152,7 @@ const EditLessonDocuments = ({ onClose, open }) => {
             </Typography>
           </Grid>
           <Grid item>
-            <MyButton onClick={handleAddToList}>Thêm vào danh sách</MyButton>
+            <MyButton onClick={handleAddToList}>Add to list</MyButton>
           </Grid>
         </Grid>
 
@@ -157,7 +164,7 @@ const EditLessonDocuments = ({ onClose, open }) => {
           style={{ width: '500px', marginBottom: '2em' }}
         >
           <Grid item>
-            <Typography variant="h6">Danh sách tài liệu:</Typography>
+            <Typography variant="h6">List of documents:</Typography>
           </Grid>
 
           <Grid item style={{ alignSelf: 'flex-start' }}>
@@ -186,7 +193,7 @@ const EditLessonDocuments = ({ onClose, open }) => {
           </Grid>
         </Grid>
         <Grid item>
-          <MyButton onClick={onClose}>Xong</MyButton>
+          <MyButton onClick={onClose}>Done</MyButton>
         </Grid>
       </Grid>
     </Dialog>

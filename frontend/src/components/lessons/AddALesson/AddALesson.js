@@ -144,139 +144,135 @@ const AddALesson = (props) => {
             <Grid item>
               <Typography
                 variant="h4"
-                style={{ margin: '1em 0', textTransform: 'uppercase' }}
+                style={{
+                  margin: '1em 0',
+                  textTransform: 'uppercase',
+                  fontWeight: '600',
+                }}
               >
-                Thêm bài học
+                Add a type of lesson
               </Typography>
             </Grid>
 
-            <Grid item container justify="center" spacing={5}>
-              <Grid item>
-                <Grid container direction="column" alignItems="center">
-                  <Grid item className={classes.bottomGutterFormControl}>
-                    <Field
-                      fullWidth
-                      name="lessonName"
-                      component={TextField}
-                      label="Tên bài học"
-                    />
-                  </Grid>
-                  <Grid item className={classes.bottomGutterFormControl}>
-                    <Field
-                      fullWidth
-                      name="content"
-                      component={TextField}
-                      multiline
-                      rows={4}
-                      label="Nội dung của bài học"
-                    />
-                  </Grid>
-                  <Grid
-                    item
-                    container
-                    direction="column"
-                    alignItems="center"
-                    spacing={1}
-                    style={{ maxWidth: '500px' }}
-                    className={classes.bottomGutterFormControl}
-                  >
-                    <Grid item>
-                      <Typography
-                        variant="h6"
-                        className={classes.controlFormHeader}
-                      >
-                        Tài liệu dạy học:
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <MyButton onClick={handleClickOpen}>
-                        Chỉnh sửa tài liệu
-                      </MyButton>
-                    </Grid>
-                    <Grid item>
-                      <EditLessonDocuments
-                        open={openModelEditDoc}
-                        onClose={handleClose}
-                        documents={values.documents}
+            <Grid
+              item
+              className={classes.bottomGutterFormControl}
+              style={{ width: '20em' }}
+            >
+              <Field
+                fullWidth
+                name="lessonName"
+                component={TextField}
+                label="Lesson's name"
+              />
+            </Grid>
+            <Grid
+              item
+              className={classes.bottomGutterFormControl}
+              style={{ width: '20em' }}
+            >
+              <Field
+                fullWidth
+                name="content"
+                component={TextField}
+                multiline
+                rows={4}
+                label="Lesson's content"
+              />
+            </Grid>
+
+            <Grid item>
+              <Typography variant="h6" className={classes.controlFormHeader}>
+                Lesson's documents:
+              </Typography>
+            </Grid>
+            <Grid item>
+              <MyButton onClick={handleClickOpen}>Edit documents</MyButton>
+            </Grid>
+            <Grid item>
+              <EditLessonDocuments
+                open={openModelEditDoc}
+                onClose={handleClose}
+                documents={values.documents}
+              />
+            </Grid>
+            <Grid item className={classes.bottomGutterFormControl}>
+              <List>
+                {values.documents &&
+                  values.documents.map((document, indexDoc) => (
+                    <ListItem key={indexDoc}>
+                      <ListItemAvatar>
+                        <Avatar>
+                          <FolderIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={document.documentName}
+                        secondary={
+                          <a
+                            href={document.fileDocument}
+                            download="proposed_file_name"
+                          >
+                            Download
+                          </a>
+                        }
                       />
-                    </Grid>
-                    <Grid item>
-                      <List>
-                        {values.documents &&
-                          values.documents.map((document, indexDoc) => (
-                            <ListItem key={indexDoc}>
-                              <ListItemAvatar>
-                                <Avatar>
-                                  <FolderIcon />
-                                </Avatar>
-                              </ListItemAvatar>
-                              <ListItemText
-                                primary={document.documentName}
-                                secondary={
-                                  <a
-                                    href={document.fileDocument}
-                                    download="proposed_file_name"
-                                  >
-                                    Download
-                                  </a>
-                                }
-                              />
-                              <ListItemSecondaryAction>
-                                <IconButton
-                                  edge="end"
-                                  aria-label="delete"
-                                  onClick={function () {
-                                    deleteDoc(indexDoc, values, setFieldValue)
-                                  }}
-                                >
-                                  <DeleteIcon />
-                                </IconButton>
-                              </ListItemSecondaryAction>
-                            </ListItem>
-                          ))}
-                      </List>
-                    </Grid>
-                  </Grid>
-                </Grid>
-              </Grid>
+                      <ListItemSecondaryAction>
+                        <IconButton
+                          edge="end"
+                          aria-label="delete"
+                          onClick={function () {
+                            deleteDoc(indexDoc, values, setFieldValue)
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </ListItemSecondaryAction>
+                    </ListItem>
+                  ))}
+              </List>
+            </Grid>
+
+            <Grid item>
+              <Typography variant="h6" className={classes.controlFormHeader}>
+                Lesson's duration:
+              </Typography>
+            </Grid>
+            <Grid
+              item
+              container
+              justify="center"
+              spacing={1}
+              style={{ width: '100%', margin: 0 }}
+            >
               <Grid item>
-                <Grid container direction="column" alignItems="center">
-                  <Grid item>
-                    <Typography
-                      variant="h6"
-                      className={classes.controlFormHeader}
-                    >
-                      Thời lượng:
-                    </Typography>
-                  </Grid>
-                  <Grid item container spacing={1}>
-                    <LessonPeriodForm
-                      fieldCheckbox="periods[0].thirtyMinutes.isChosen"
-                      labelCheckbox="30 phút"
-                      valueCheckbox={values.periods[0].thirtyMinutes.isChosen}
-                      fieldPrice="periods[0].thirtyMinutes.price"
-                      valuePrice={values.periods[0].thirtyMinutes.price}
-                    />
+                <LessonPeriodForm
+                  fieldCheckbox="periods[0].thirtyMinutes.isChosen"
+                  labelCheckbox="30 minutes"
+                  valueCheckbox={values.periods[0].thirtyMinutes.isChosen}
+                  fieldPrice="periods[0].thirtyMinutes.price"
+                  valuePrice={values.periods[0].thirtyMinutes.price}
+                />
+              </Grid>
 
-                    <LessonPeriodForm
-                      fieldCheckbox="periods[0].fortyFiveMinutes.isChosen"
-                      labelCheckbox="45 phút"
-                      valueCheckbox={
-                        values.periods[0].fortyFiveMinutes.isChosen
-                      }
-                      fieldPrice="periods[0].fortyFiveMinutes.price"
-                      valuePrice={values.periods[0].fortyFiveMinutes.price}
-                    />
+              <Grid item>
+                <LessonPeriodForm
+                  fieldCheckbox="periods[0].fortyFiveMinutes.isChosen"
+                  labelCheckbox="45 minutes"
+                  valueCheckbox={values.periods[0].fortyFiveMinutes.isChosen}
+                  fieldPrice="periods[0].fortyFiveMinutes.price"
+                  valuePrice={values.periods[0].fortyFiveMinutes.price}
+                />
+              </Grid>
 
-                    <LessonPeriodForm
-                      fieldCheckbox="periods[0].oneHour.isChosen"
-                      labelCheckbox="1 giờ"
-                      valueCheckbox={values.periods[0].oneHour.isChosen}
-                      fieldPrice="periods[0].oneHour.price"
-                      valuePrice={values.periods[0].oneHour.price}
-                    />
-                  </Grid>
-                </Grid>
+              <Grid item>
+                <LessonPeriodForm
+                  fieldCheckbox="periods[0].oneHour.isChosen"
+                  labelCheckbox="1 hour"
+                  valueCheckbox={values.periods[0].oneHour.isChosen}
+                  fieldPrice="periods[0].oneHour.price"
+                  valuePrice={values.periods[0].oneHour.price}
+                />
               </Grid>
             </Grid>
 
@@ -285,24 +281,23 @@ const AddALesson = (props) => {
               container
               justify="center"
               spacing={1}
-              style={{ margin: '1em 0' }}
+              style={{ margin: '1em 0', width: '100%' }}
+              className={classes.bottomGutterFormControl}
             >
               <Grid item>
                 <MyButton component={Link} to="/teachers/lessons">
                   <ArrowBackIcon />
-                  &nbsp;Trở về
+                  &nbsp;Back
                 </MyButton>
               </Grid>
               <Grid item>
                 <MyButton type="submit" disabled={!(isValid && dirty)}>
                   <AddIcon />
-                  &nbsp;Thêm bài học
+                  &nbsp;Confirm
                 </MyButton>
               </Grid>
             </Grid>
           </Grid>
-          <pre>{JSON.stringify(values, null, 2)}</pre>
-          <pre>{JSON.stringify(errors, null, 2)}</pre>
         </Form>
       )}
     </Formik>

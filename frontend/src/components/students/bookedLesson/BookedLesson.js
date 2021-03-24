@@ -13,7 +13,6 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import Spinner from '../../ui/Spinner'
 import { useConfirm } from 'material-ui-confirm'
 import { addHours, compareAsc } from 'date-fns'
-import moment from 'moment'
 
 const BookedLesson = ({
   match,

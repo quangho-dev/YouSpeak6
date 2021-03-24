@@ -41,12 +41,12 @@ const BookedLessonsTable = ({
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>STT</TableCell>
-            <TableCell>Tên người học</TableCell>
-            <TableCell>Kiểu bài học</TableCell>
-            <TableCell>Giờ bắt đầu</TableCell>
-            <TableCell>Thời lượng</TableCell>
-            <TableCell>Tình trạng</TableCell>
+            <TableCell>No.</TableCell>
+            <TableCell>Student's name</TableCell>
+            <TableCell>Type of lesson</TableCell>
+            <TableCell>Starting time</TableCell>
+            <TableCell>Lesson's duration</TableCell>
+            <TableCell>Lesson's state</TableCell>
             <TableCell>{''}</TableCell>
           </TableRow>
         </TableHead>

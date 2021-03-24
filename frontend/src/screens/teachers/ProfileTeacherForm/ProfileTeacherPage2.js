@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import DegreeImagesUploader from './DegreeImagesUploader'
 import ExpImagesUploader from './ExpImagesUploader'
 import VideoUploader from './VideoUploader'
+import TeacherAvatarUploader from './TeacherAvatarUploader'
 
 const useStyles = makeStyles((theme) => ({
   toolbarMargin: {
@@ -87,10 +88,22 @@ const ProfileTeacherPage2 = () => {
           variant="h4"
           align="center"
           className={classes.formControl}
-          style={{ textTransform: 'uppercase', fontSize: '600' }}
+          style={{
+            textTransform: 'uppercase',
+            fontSize: '600',
+            fontWeight: '600',
+          }}
         >
           Edit profile
         </Typography>
+      </Grid>
+
+      <Grid item>
+        <Typography variant="body2">( * ) Required input</Typography>
+      </Grid>
+
+      <Grid item>
+        <TeacherAvatarUploader />
       </Grid>
 
       <Grid item className={classes.formControl}>
@@ -147,13 +160,6 @@ const ProfileTeacherPage2 = () => {
       {values.typeOfTeacher === 'professional' && <DegreeImagesUploader />}
 
       {values.typeOfTeacher === 'professional' && <ExpImagesUploader />}
-
-      <Grid item>
-        <Typography variant="body2">( * ) Required input</Typography>
-      </Grid>
-      <Grid item style={{ maxWidth: '20em' }}>
-        <pre>{JSON.stringify(values, null, 2)}</pre>
-      </Grid>
     </Grid>
   )
 }

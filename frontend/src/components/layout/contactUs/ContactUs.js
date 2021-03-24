@@ -8,8 +8,17 @@ import PhoneIcon from '@material-ui/icons/Phone'
 import axios from 'axios'
 import { toast } from 'react-toastify'
 import * as yup from 'yup'
+import { makeStyles } from '@material-ui/styles'
+
+const useStyles = makeStyles((theme) => ({
+  bottomMargin: {
+    marginBottom: '2em',
+  },
+}))
 
 const ContactUs = () => {
+  const classes = useStyles()
+
   const initialValues = { name: '', email: '', phonenumber: '', message: '' }
 
   const validationSchema = yup.object({
@@ -46,16 +55,19 @@ const ContactUs = () => {
       onSubmit={onSubmit}
       validationSchema={validationSchema}
     >
-      {({ values, errors, isSubmitting, isValid, dirty }) => (
+      {({ isSubmitting, isValid, dirty }) => (
         <Form>
           <Grid
             container
             direction="column"
             justify="center"
             className="container"
-            spacing={3}
           >
-            <Grid item style={{ alignSelf: 'center' }}>
+            <Grid
+              item
+              style={{ alignSelf: 'center' }}
+              className={classes.bottomMargin}
+            >
               <Typography
                 variant="h4"
                 style={{ textTransform: 'uppercase', fontWeight: '500' }}
@@ -66,7 +78,11 @@ const ContactUs = () => {
               </Typography>
             </Grid>
 
-            <Grid item style={{ alignSelf: 'center' }}>
+            <Grid
+              item
+              style={{ alignSelf: 'center' }}
+              className={classes.bottomMargin}
+            >
               <Card style={{ width: '30em', backgroundColor: '#F5D832' }}>
                 <CardContent>
                   <Grid container direction="column">
@@ -94,7 +110,7 @@ const ContactUs = () => {
                 </CardContent>
               </Card>
             </Grid>
-            <Grid item>
+            <Grid item className={classes.bottomMargin}>
               <Typography variant="body1">
                 Nếu bạn có bất cứ câu hỏi nào, vui lòng để lại lời nhắn cho
                 chúng tôi.
@@ -103,7 +119,7 @@ const ContactUs = () => {
               </Typography>
             </Grid>
 
-            <Grid item>
+            <Grid item className={classes.bottomMargin}>
               <Field
                 name="name"
                 type="text"
@@ -113,7 +129,12 @@ const ContactUs = () => {
               />
             </Grid>
 
-            <Grid container justify="space-around" alignItems="center">
+            <Grid
+              container
+              justify="space-around"
+              alignItems="center"
+              className={classes.bottomMargin}
+            >
               <Grid item>
                 <Field
                   name="email"
@@ -135,7 +156,7 @@ const ContactUs = () => {
               </Grid>
             </Grid>
 
-            <Grid item>
+            <Grid item className={classes.bottomMargin}>
               <Field
                 name="message"
                 type="text"

@@ -1,6 +1,9 @@
 import BookingCalendarStudent from '../models/bookingCalendarStudentModel.js'
 import BookingCalendarTeacher from '../models/bookingCalendarModel.js'
 import ProfileTeacher from '../models/profileTeacherModel.js'
+import Profile from '../models/profileModel.js'
+import nodemailer from 'nodemailer'
+import User from '../models/userModel.js'
 
 // @route    POST api/booking-calendar-student
 // @desc     Book a time for learning
@@ -19,6 +22,38 @@ const bookTime = async (req, res) => {
     })
 
     const bookedTimeData = await newBookedTime.save()
+
+    // send a notification email to the teacher
+    const teacherInfo = await User.findById(bookedTimeData.teacher)
+
+    const output = `<p>You have received a new order for a lesson</p>
+    <p>Please click <a href='http://localhost:3000/teachers/bookedLesson/${bookedTimeData._id}'>this link</a> to confirm that you can deliver the lesson on time.</p>`
+
+    const smtpTransport = nodemailer.createTransport({
+      service: 'gmail',
+      port: 587,
+      secure: false, // true for 465, false for other ports
+      auth: {
+        user: 'quang.ho1804@gmail.com',
+        pass: 'un1c0rn1234',
+      },
+      tls: {
+        rejectUnauthorized: false,
+      },
+    })
+
+    const mailOptions = {
+      to: teacherInfo.email,
+      from: 'YouSpeak <quang.ho1804@gmail.com>',
+      subject: "You've got a new order",
+      html: output,
+    }
+
+    smtpTransport.sendMail(mailOptions, (error, info) => {
+      if (error) {
+        return console.log(error)
+      }
+    })
 
     const teacherAvailableTime = await BookingCalendarTeacher.findOne({
       user: teacher,
@@ -165,7 +200,20 @@ const getBookedLessonById = async (req, res) => {
         .json({ msg: 'Không tìm thấy profile của giáo viên của bài học này.' })
     }
 
-    res.json({ bookedLesson, profileTeacher })
+    const profileStudent = await Profile.findOne({
+      user: bookedLesson.user,
+    })
+
+    if (!profileStudent) {
+      return res
+        .status(400)
+        .json({ msg: 'There is no profile for this student' })
+    }
+
+    res.json({
+      bookedLesson: { bookedLesson, profileStudent },
+      profileTeacher,
+    })
   } catch (err) {
     console.error(err.message)
     res.status(500).send('Server error')

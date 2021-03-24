@@ -44,6 +44,16 @@ const useStyles = makeStyles((theme) => ({
       marginBottom: '2.25em',
     },
   },
+  toolbarPadding: {
+    ...theme.mixins.toolbar,
+    paddingBottom: '1em',
+    [theme.breakpoints.down('md')]: {
+      paddingBottom: '2em',
+    },
+    [theme.breakpoints.down('xs')]: {
+      paddingBottom: '2.25em',
+    },
+  },
   logo: {
     height: '5em',
     [theme.breakpoints.down('md')]: {
@@ -498,6 +508,7 @@ const Header = ({
               </Toolbar>
             </AppBar>
           </ElevationScroll>
+          <div className={classes.toolbarPadding} />
         </>
       ) : (
         <>
@@ -529,6 +540,7 @@ const Header = ({
               </Toolbar>
             </AppBar>
           </ElevationScroll>
+          {/* <div className={classes.toolbarMargin} /> */}
         </>
       )}
     </Fragment>

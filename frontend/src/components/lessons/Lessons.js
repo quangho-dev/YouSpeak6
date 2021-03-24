@@ -26,10 +26,19 @@ const Lessons = () => {
 
   return (
     <>
-      <Grid container direction="column" alignItems="center">
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        className="container"
+        style={{ width: '100%', margin: 0 }}
+      >
         <Grid item>
-          <Typography variant="h4">
-            Quản lý các khóa học của giáo viên:
+          <Typography
+            variant="h4"
+            style={{ textTransform: 'uppercase', fontWeight: '500' }}
+          >
+            Type Of Lesson Manager
           </Typography>
         </Grid>
         <Grid item style={{ marginTop: '1em' }}>
@@ -40,19 +49,19 @@ const Lessons = () => {
           container
           justify="center"
           alignItems="center"
-          spacing={1}
           style={{ marginTop: '1em' }}
+          spacing={3}
         >
           <Grid item>
             <MyButton component={Link} to="/teachers/dashboard">
               <ArrowBackIcon />
-              &nbsp; Trở về dashboard
+              &nbsp; Back to dashboard
             </MyButton>
           </Grid>
           <Grid item>
             <MyButton component={Link} to="/teachers/add-a-lesson">
               <AddIcon />
-              &nbsp; Thêm bài học
+              &nbsp; Add a type of lesson
             </MyButton>
           </Grid>
         </Grid>

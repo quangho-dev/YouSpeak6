@@ -34,6 +34,7 @@ import BookedLessonInfo from '../teachers/bookedLessonInfo/BookedLessonInfo'
 import TeacherInfo from '../teachers/teacherInfo/TeacherInfo'
 import EditDegreeImages from '../../screens/teachers/ProfileTeacherForm/EditDegreeImages'
 import ContactUs from '../layout/contactUs/ContactUs'
+import LandingScreen from '../../screens/LandingScreen'
 
 const Routes = (props) => {
   const alerts = useSelector((state) => state.alert)
@@ -42,6 +43,7 @@ const Routes = (props) => {
     <section>
       {alerts && <AlertMessage />}
       <Switch>
+        <Route exact path="/" component={LandingScreen} />
         <Route exact path="/login" component={LogInScreen} />
         <Route exact path="/register-user" component={RegisterScreen} />
         <Route exact path="/forgot" component={ForgotPasswordScreen} />

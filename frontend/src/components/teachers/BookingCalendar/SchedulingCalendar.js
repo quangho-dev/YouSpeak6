@@ -77,9 +77,16 @@ const SchedulingCalendar = () => {
 
   return (
     <div style={{ padding: '0 3em' }}>
-      <Grid container direction="column" alignItems="center">
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        className="container"
+      >
         <Grid item style={{ marginBottom: '1em' }}>
-          <Typography variant="h4">SET AVAILABLE TIME FOR TEACHING</Typography>
+          <Typography variant="h4" style={{ fontWeight: '600' }}>
+            SET AVAILABLE TIME FOR TEACHING
+          </Typography>
         </Grid>
       </Grid>
       <Grid
@@ -103,7 +110,7 @@ const SchedulingCalendar = () => {
           </MyButton>
         </Grid>
       </Grid>
-      <Grid item>
+      <Grid item style={{ backgroundColor: 'white', padding: '1em' }}>
         <FullCalendar
           initialView="timeGridWeek"
           headerToolbar={{

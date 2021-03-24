@@ -6,6 +6,8 @@ import {
   PROFILE_ERROR,
   CLEAR_PROFILE,
   ACCOUNT_DELETED,
+  GET_PROFILE_STUDENT_BY_ID_SUCCESS,
+  GET_PROFILE_STUDENT_BY_ID_ERROR,
 } from './types'
 
 // Get current users profile
@@ -73,5 +75,19 @@ export const deleteAccount = () => async (dispatch) => {
         payload: { msg: err.response.statusText, status: err.response.status },
       })
     }
+  }
+}
+
+// Get student's profile by id
+export const getProfileStudentById = (studentId) => async (dispatch) => {
+  try {
+    const res = await api.get(`/profile/${studentId}`)
+
+    dispatch({ type: GET_PROFILE_STUDENT_BY_ID_SUCCESS, payload: res.data })
+  } catch (err) {
+    dispatch({
+      type: GET_PROFILE_STUDENT_BY_ID_ERROR,
+      payload: { msg: err.response.statusText, status: err.response.status },
+    })
   }
 }

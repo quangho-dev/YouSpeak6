@@ -35,11 +35,11 @@ const LessonPeriodForm = ({
             error={valueCheckbox && valuePrice <= 0}
             variant="outlined"
             type="number"
-            label="Giá tiền (VNĐ):"
+            label="Price (VNĐ):"
             value={valuePrice}
             onChange={handleChangePrice}
             helperText={
-              valueCheckbox && valuePrice <= 0 ? 'Vui lòng điền giá tiền.' : ''
+              valueCheckbox && valuePrice <= 0 ? 'Price is required.' : ''
             }
           />
         </Grid>

@@ -9,6 +9,7 @@ import {
   CONFIRM_BOOKED_LESSON_SUCCESS,
   CONFIRM_BOOKED_LESSON_ERROR,
 } from './types'
+import { toast } from 'react-toastify'
 
 // Set available time for teaching
 export const setAvailableTime = (availableTimeArray) => async (dispatch) => {
@@ -72,13 +73,14 @@ export const confirmBookedLesson = (bookedLessonId) => async (dispatch) => {
   try {
     const res = await api.put(`/booking-calendar-teacher/${bookedLessonId}`)
 
-    dispatch(setAlert('Xác nhận bài học thành công.', 'success'))
+    toast.success('Order has been confirmed successully!')
 
     dispatch({
       type: CONFIRM_BOOKED_LESSON_SUCCESS,
       payload: res.data,
     })
   } catch (err) {
+    toast.error('Confirm error')
     dispatch({
       type: CONFIRM_BOOKED_LESSON_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },

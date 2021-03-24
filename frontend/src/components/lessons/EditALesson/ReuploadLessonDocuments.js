@@ -153,21 +153,25 @@ const ReuploadLessonDocuments = (props) => {
       )}
       <Grid item container direction="column" alignItems="center">
         <Grid item>
-          <Typography variant="h4" style={{ textTransform: 'uppercase' }}>
-            Thay thế toàn bộ tài liệu cho bài học
+          <Typography
+            variant="h4"
+            style={{ textTransform: 'uppercase', fontWeight: '600' }}
+          >
+            Edit documents for type of lesson
           </Typography>
         </Grid>
         <Grid item>
           <Typography
             variant="h4"
-            style={{ textTransform: 'uppercase' }}
+            style={{ textTransform: 'uppercase', fontWeight: '600' }}
           >{`"${singleLesson.lessonName}"`}</Typography>
         </Grid>
       </Grid>
+
       <Grid item container justify="center" alignItems="center" spacing={2}>
         <Grid item>
           <TextField
-            label="Tên tài liệu"
+            label="Document's name"
             value={documentName}
             onChange={handleDocumentNameChange}
           />
@@ -180,7 +184,7 @@ const ReuploadLessonDocuments = (props) => {
             style={{ color: 'white', fontWeight: '500', margin: 'auto' }}
           >
             <PublishIcon />
-            &nbsp;Tải tài liệu
+            &nbsp;Upload document file
             <input
               type="file"
               style={{ display: 'none' }}
@@ -198,12 +202,12 @@ const ReuploadLessonDocuments = (props) => {
       >
         <Grid item>
           <Typography variant="h6" gutterBottom>
-            Tài liệu đang thêm:
+            Document's details:
           </Typography>
         </Grid>
         <Grid item style={{ alignSelf: 'flex-start' }}>
           <Typography variant="body1">
-            <span style={{ fontWeight: '600' }}>Tên tài liệu:</span>&nbsp;
+            <span style={{ fontWeight: '600' }}>Document's name:</span>&nbsp;
             {documentName}
           </Typography>
         </Grid>
@@ -214,7 +218,7 @@ const ReuploadLessonDocuments = (props) => {
           </Typography>
         </Grid>
         <Grid item>
-          <MyButton onClick={handleAddToList}>Thêm vào danh sách</MyButton>
+          <MyButton onClick={handleAddToList}>Add to list</MyButton>
         </Grid>
       </Grid>
 
@@ -226,7 +230,7 @@ const ReuploadLessonDocuments = (props) => {
         style={{ width: '500px', marginBottom: '2em' }}
       >
         <Grid item>
-          <Typography variant="h6">Danh sách tài liệu:</Typography>
+          <Typography variant="h6">List of documents:</Typography>
         </Grid>
 
         <Grid item style={{ alignSelf: 'flex-start' }}>
@@ -257,13 +261,11 @@ const ReuploadLessonDocuments = (props) => {
       <Grid item container justify="center" spacing={1}>
         <Grid item>
           <MyButton component={Link} to={`/teachers/lessons/edit/${lessonId}`}>
-            Trở về
+            Back
           </MyButton>
         </Grid>
         <Grid item>
-          <MyButton onClick={handleConfirmChange}>
-            Xác nhận thay đổi tài liệu
-          </MyButton>
+          <MyButton onClick={handleConfirmChange}>Confirm changes</MyButton>
         </Grid>
       </Grid>
     </Grid>

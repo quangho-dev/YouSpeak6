@@ -154,9 +154,13 @@ const EditALesson = (props) => {
             <Grid item>
               <Typography
                 variant="h4"
-                style={{ margin: '1em 0', textTransform: 'uppercase' }}
+                style={{
+                  margin: '1em 0',
+                  textTransform: 'uppercase',
+                  fontWeight: '600',
+                }}
               >
-                Chỉnh sửa bài học
+                Edit type of lesson
               </Typography>
             </Grid>
 
@@ -168,7 +172,8 @@ const EditALesson = (props) => {
                       fullWidth
                       name="lessonName"
                       component={TextField}
-                      label="Tên bài học"
+                      label="Lesson's name"
+                      style={{ width: '30em' }}
                     />
                   </Grid>
                   <Grid item className={classes.bottomGutterFormControl}>
@@ -178,7 +183,7 @@ const EditALesson = (props) => {
                       component={TextField}
                       multiline
                       rows={4}
-                      label="Nội dung của bài học"
+                      label="Content"
                     />
                   </Grid>
                   <Grid
@@ -195,7 +200,7 @@ const EditALesson = (props) => {
                         variant="h6"
                         className={classes.controlFormHeader}
                       >
-                        Tài liệu dạy học:
+                        Lesson's documents:
                       </Typography>
                     </Grid>
                     <Grid item>
@@ -203,7 +208,7 @@ const EditALesson = (props) => {
                         component={Link}
                         to={`/teachers/lessons/re-upload-documents/${lessonId}`}
                       >
-                        Thay thế tài liệu
+                        Edit list of documents
                       </MyButton>
                     </Grid>
                     <Grid item>
@@ -247,14 +252,14 @@ const EditALesson = (props) => {
                       variant="h6"
                       className={classes.controlFormHeader}
                     >
-                      Thời lượng:
+                      Lesson's duration:
                     </Typography>
                   </Grid>
                   <Grid item container spacing={1}>
                     {values.periods && (
                       <LessonPeriodForm
                         fieldCheckbox="periods[0].thirtyMinutes.isChosen"
-                        label="30 phút"
+                        label="30 minutes"
                         valueCheckbox={values.periods[0].thirtyMinutes.isChosen}
                         fieldPrice="periods[0].thirtyMinutes.price"
                         valuePrice={values.periods[0].thirtyMinutes.price}
@@ -263,7 +268,7 @@ const EditALesson = (props) => {
                     {values.periods && (
                       <LessonPeriodForm
                         fieldCheckbox="periods[0].fortyFiveMinutes.isChosen"
-                        label="45 phút"
+                        label="45 minutes"
                         valueCheckbox={
                           values.periods[0].fortyFiveMinutes.isChosen
                         }
@@ -275,7 +280,7 @@ const EditALesson = (props) => {
                     {values.periods && (
                       <LessonPeriodForm
                         fieldCheckbox="periods[0].oneHour.isChosen"
-                        label="1 giờ"
+                        label="1 hour"
                         valueCheckbox={values.periods[0].oneHour.isChosen}
                         fieldPrice="periods[0].oneHour.price"
                         valuePrice={values.periods[0].oneHour.price}
@@ -296,13 +301,13 @@ const EditALesson = (props) => {
               <Grid item>
                 <MyButton component={Link} to="/teachers/lessons">
                   <ArrowBackIcon />
-                  &nbsp;Trở về
+                  &nbsp;Back
                 </MyButton>
               </Grid>
               <Grid item>
                 <MyButton type="submit">
                   <AddIcon />
-                  &nbsp;Xác nhận
+                  &nbsp;Confirm
                 </MyButton>
               </Grid>
             </Grid>

@@ -47,9 +47,9 @@ const LessonTable = ({ lessons }) => {
       <Table className={classes.table} aria-label="jlessons table">
         <TableHead>
           <TableRow>
-            <TableCell>STT</TableCell>
-            <TableCell>Tên bài học</TableCell>
-            <TableCell align="right">Nội dung</TableCell>
+            <TableCell>No.</TableCell>
+            <TableCell>Type of lesson</TableCell>
+            <TableCell align="right">Content</TableCell>
             <TableCell align="right">{''}</TableCell>
           </TableRow>
         </TableHead>
@@ -72,25 +72,20 @@ const LessonTable = ({ lessons }) => {
                 </TableCell>
                 <TableCell align="right">{lesson.content}</TableCell>
                 <TableCell align="right">
-                  <Grid
-                    container
-                    justify="center"
-                    alignItems="center"
-                    spacing={1}
-                  >
+                  <Grid container justify="center" alignItems="center">
                     <Grid item>
                       <MyButton
                         component={Link}
                         to={`/teachers/lessons/edit/${lesson._id}`}
                       >
                         <EditIcon />
-                        &nbsp;Sửa
+                        &nbsp;Edit
                       </MyButton>
                     </Grid>
                     <Grid item>
                       <MyButton onClick={() => handleDeleteClick(lesson._id)}>
                         <DeleteIcon />
-                        &nbsp;Xóa
+                        &nbsp;Delete
                       </MyButton>
                     </Grid>
                   </Grid>

@@ -83,7 +83,6 @@ const ProfileTeacherPage1 = ({ setFieldValue, nextPage }) => {
       <Grid
         container
         justify="center"
-        spacing={3}
         alignItems="stretch"
         style={{ padding: '0 3em' }}
       >

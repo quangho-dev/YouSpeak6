@@ -2,11 +2,9 @@ import React, { useEffect } from 'react'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import { ThemeProvider } from '@material-ui/styles'
 import theme from './components/Theme'
-import GlobalStyle from './globalStyles'
 import Header from './components/Header'
-// import Footer from './components/Footer'
+import Footer from './components/Footer'
 import Routes from './components/routing/Routes'
-import LandingScreen from './screens/LandingScreen'
 import setAuthToken from './utils/setAuthToken'
 import store from './store'
 import { LOGOUT } from './actions/types'
@@ -18,6 +16,7 @@ import 'moment/locale/vi'
 import { Provider } from 'react-redux'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { ToastContainer } from 'react-toastify'
+import './App.css'
 
 moment.locale('vi')
 
@@ -39,25 +38,27 @@ const App = () => {
     <Provider store={store}>
       <ThemeProvider theme={theme}>
         <ConfirmProvider>
-          <CssBaseline />
           <Router>
-            <GlobalStyle />
-            <Header />
-            <Route exact path="/" component={LandingScreen} />
-            <Route component={Routes} />
+            <div className="page-container">
+              <div className="content-wrap">
+                <CssBaseline />
+                <Header />
+                <Route component={Routes} />
+                <ToastContainer
+                  position="top-center"
+                  autoClose={5000}
+                  hideProgressBar={false}
+                  newestOnTop={false}
+                  closeOnClick
+                  rtl={false}
+                  pauseOnFocusLoss
+                  draggable
+                  pauseOnHover
+                />
+              </div>
+              <Footer />
+            </div>
           </Router>
-          <ToastContainer
-            position="top-center"
-            autoClose={5000}
-            hideProgressBar={false}
-            newestOnTop={false}
-            closeOnClick
-            rtl={false}
-            pauseOnFocusLoss
-            draggable
-            pauseOnHover
-          />
-          {/* <Footer /> */}
         </ConfirmProvider>
       </ThemeProvider>
     </Provider>

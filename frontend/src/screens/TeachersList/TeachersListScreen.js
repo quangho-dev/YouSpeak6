@@ -32,8 +32,9 @@ const TeachersListScreen = ({
       container
       direction="column"
       alignItems="center"
-      style={{ backgroundColor: '#F0F2F5', padding: '2em 4em' }}
+      className="container"
       spacing={1}
+      style={{ width: '100%', margin: 0 }}
     >
       <Grid item style={{ margin: '1em 0 2.5em' }}>
         <Typography
