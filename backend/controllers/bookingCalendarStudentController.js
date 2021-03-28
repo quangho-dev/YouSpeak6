@@ -192,7 +192,7 @@ const getBookedLessonById = async (req, res) => {
 
     const profileTeacher = await ProfileTeacher.findOne({
       user: bookedLesson.teacher,
-    })
+    }).populate('user', ['name', 'email'])
 
     if (!profileTeacher) {
       return res

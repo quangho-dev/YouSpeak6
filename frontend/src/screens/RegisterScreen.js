@@ -14,16 +14,6 @@ import Avatar from '@material-ui/core/Avatar'
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 
 const useStyles = makeStyles((theme) => ({
-  toolbarMargin: {
-    ...theme.mixins.toolbar,
-    marginBottom: '1em',
-    [theme.breakpoints.down('md')]: {
-      marginBottom: '2em',
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: '2.25em',
-    },
-  },
   formControl: {
     marginBottom: '1em',
   },
@@ -71,7 +61,6 @@ const RegisterScreen = () => {
 
   return (
     <Fragment>
-      <div className={classes.toolbarMargin} />
       <Grid container justify="center" alignItems="center" direction="column">
         <Grid item>
           <Avatar className={classes.avatar}>

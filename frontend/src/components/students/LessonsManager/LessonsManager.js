@@ -55,7 +55,6 @@ const LessonsManager = ({
                   <TableCell>STT</TableCell>
                   <TableCell>Tên bài học</TableCell>
                   <TableCell>Giáo viên</TableCell>
-                  <TableCell align="center">Tình trạng</TableCell>
                   <TableCell align="center">Xem thêm</TableCell>
                 </TableRow>
               </TableHead>
@@ -75,15 +74,6 @@ const LessonsManager = ({
                       </TableCell>
                       <TableCell>{lesson.lesson.lessonName}</TableCell>
                       <TableCell>{lesson.teacher.name}</TableCell>
-                      <TableCell>
-                        {lesson.isConfirmed && !lesson.isFinished
-                          ? 'Đã xác nhận'
-                          : lesson.isCanceled
-                          ? 'Đã hủy'
-                          : lesson.isFinished && lesson.isConfirmed
-                          ? 'Đã hoàn thành'
-                          : 'Đang chờ xác nhận'}
-                      </TableCell>
                       <TableCell>
                         <MyButton
                           component={Link}

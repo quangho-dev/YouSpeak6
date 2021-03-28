@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { Grid, Stepper, Step, StepLabel, Dialog } from '@material-ui/core'
-import { useDispatch, useSelector } from 'react-redux'
 import { getAvailableTimeOfATeacher } from '../../../actions/bookingCalendar'
 import { getLessonsOfTeacherById } from '../../../actions/lessons'
 import { Link } from 'react-router-dom'
@@ -9,40 +8,32 @@ import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import { Formik, Form } from 'formik'
 import ChooseLesson from './ChooseLesson'
 import ChooseDuration from './ChooseDuration'
-import ChooseTime from './ChooseTime'
-import { makeStyles } from '@material-ui/styles'
 import { bookTime } from '../../../actions/bookingCalendarStudent'
+import ChooseTime from './ChooseTime'
+import { connect } from 'react-redux'
+import { makeStyles } from '@material-ui/styles'
 
 const useStyles = makeStyles((theme) => ({
-  toolbarMargin: {
-    ...theme.mixins.toolbar,
-    marginBottom: '1em',
-    [theme.breakpoints.down('md')]: {
-      marginBottom: '2em',
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: '2.25em',
-    },
+  container: {
+    marginTop: '3em',
   },
 }))
 
-const BookLearningTime = (props) => {
+const BookLearningTime = ({
+  bookingCalendar: { availableTime, loading, currentTeacher },
+  lesson: { lessons, loading: loadingLessons },
+  getAvailableTimeOfATeacher,
+  getLessonsOfTeacherById,
+  bookTime,
+  match,
+  history,
+}) => {
   const [page, setPage] = useState(0)
-  const [calendarEvents, setCalendarEvents] = useState([])
-  const [lessonListState, setLessonListState] = useState([])
   const [activeStep, setActiveStep] = useState(0)
 
   const classes = useStyles()
 
-  const teacherCalendarId = props.match.params.teacherCalendarId
-
-  const dispatch = useDispatch()
-
-  const bookingCalendar = useSelector((state) => state.bookingCalendar)
-  const { availableTime, loading, currentTeacher } = bookingCalendar
-
-  const lesson = useSelector((state) => state.lesson)
-  const { lessons, loading: loadingLessons } = lesson
+  const teacherCalendarId = match.params.teacherCalendarId
 
   const handleNext = () => {
     setActiveStep((prevActiveStep) => prevActiveStep + 1)
@@ -63,7 +54,7 @@ const BookLearningTime = (props) => {
   }
 
   const initialValues = {
-    lesson: '6034ad53e2a3912a68b1d2c0',
+    lesson: '',
     teacher: teacherCalendarId,
     duration: 0,
     bookedTime: [{ start: null, end: null, title: 'Booked time' }],
@@ -76,44 +67,34 @@ const BookLearningTime = (props) => {
     <ChooseLesson
       nextPage={nextPage}
       currentTeacher={currentTeacher}
-      lessonListState={lessonListState}
-      calendarEvents={calendarEvents}
+      lessonListState={lessons}
+      calendarEvents={availableTime}
       loading={loading}
       loadingLessons={loadingLessons}
     />,
     <ChooseDuration
       nextPage={nextPage}
       prevPage={prevPage}
-      lessonListState={lessonListState}
+      lessonListState={lessons}
     />,
-    <ChooseTime prevPage={prevPage} calendarEvents={calendarEvents} />,
+    <ChooseTime prevPage={prevPage} calendarEvents={availableTime} />,
   ]
 
   useEffect(() => {
-    if (
-      !availableTime[0] ||
-      currentTeacher._id !== teacherCalendarId ||
-      !lessons[0]
-    ) {
-      dispatch(getAvailableTimeOfATeacher(teacherCalendarId))
-      dispatch(getLessonsOfTeacherById(teacherCalendarId))
-    } else {
-      setCalendarEvents(availableTime)
-      setLessonListState(lessons)
-    }
-  }, [dispatch, availableTime, teacherCalendarId, currentTeacher, lessons])
+    getAvailableTimeOfATeacher(teacherCalendarId)
+    getLessonsOfTeacherById(teacherCalendarId)
+  }, [teacherCalendarId, getAvailableTimeOfATeacher, getLessonsOfTeacherById])
 
   return (
     <Formik
       initialValues={initialValues}
       onSubmit={async (values) => {
-        dispatch(bookTime(values))
-        props.history.push('/students/lessons-manager')
+        bookTime(values)
+        history.push('/students/lessons-manager')
       }}
     >
       {({ isValid, isSubmitting, values, errors }) => (
         <Dialog open fullWidth maxWidth="lg">
-          <div className={classes.toolbarMargin} />
           <Form autoComplete="off">
             <Grid
               container
@@ -121,6 +102,7 @@ const BookLearningTime = (props) => {
               alignItems="center"
               style={{ padding: '2em 3em', backgroundColor: '#F0F2F5' }}
               spacing={1}
+              className={classes.container}
             >
               <Grid item style={{ alignSelf: 'flex-start' }}>
                 {page === 0 ? (
@@ -154,10 +136,6 @@ const BookLearningTime = (props) => {
               </Grid>
 
               {pages[page]}
-
-              <Grid item>
-                <pre>{JSON.stringify(values, null, 2)}</pre>
-              </Grid>
             </Grid>
           </Form>
         </Dialog>
@@ -166,4 +144,13 @@ const BookLearningTime = (props) => {
   )
 }
 
-export default BookLearningTime
+const mapStateToProps = (state) => ({
+  bookingCalendar: state.bookingCalendar,
+  lesson: state.lesson,
+})
+
+export default connect(mapStateToProps, {
+  getAvailableTimeOfATeacher,
+  getLessonsOfTeacherById,
+  bookTime,
+})(BookLearningTime)

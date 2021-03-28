@@ -1,5 +1,4 @@
 import api from '../utils/api'
-import { setAlert } from './alert'
 import {
   SET_AVAILABLE_TIME_SUCCESS,
   SET_AVAILABLE_TIME_ERROR,
@@ -18,7 +17,7 @@ export const setAvailableTime = (availableTimeArray) => async (dispatch) => {
       availableTime: availableTimeArray,
     })
 
-    dispatch(setAlert('Đã đặt thời gian có thể dạy.', 'success'))
+    toast.success('Đã đặt thời gian có thể dạy.')
 
     dispatch({
       type: SET_AVAILABLE_TIME_SUCCESS,

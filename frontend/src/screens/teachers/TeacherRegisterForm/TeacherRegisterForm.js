@@ -11,16 +11,6 @@ import { Link } from 'react-router-dom'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
 const useStyles = makeStyles((theme) => ({
-  toolbarMargin: {
-    ...theme.mixins.toolbar,
-    marginBottom: '1em',
-    [theme.breakpoints.down('md')]: {
-      marginBottom: '2em',
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: '2.25em',
-    },
-  },
   card: {
     // Provide some spacing between cards
     margin: 16,
@@ -101,7 +91,6 @@ const TeacherRegisterForm = (props) => {
     >
       {({ isSubmitting, isValid }) => (
         <Form>
-          <div className={classes.toolbarMargin} />
           <Grid
             container
             alignItems="center"

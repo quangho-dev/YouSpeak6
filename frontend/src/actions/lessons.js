@@ -9,7 +9,7 @@ import {
   GET_LESSONS_OF_A_TEACHER_ERROR,
 } from './types'
 import api from '../utils/api'
-import { setAlert } from './alert'
+import { toast } from 'react-toastify'
 
 // get all lessons of current teacher
 export const getLessons = () => async (dispatch) => {
@@ -40,7 +40,7 @@ export const createALesson = (formData) => async (dispatch) => {
       payload: res.data,
     })
 
-    dispatch(setAlert('Bài học đã được tạo', 'success'))
+    toast.success('Bài học đã được tạo')
   } catch (err) {
     dispatch({
       type: LESSON_ERROR,
@@ -79,7 +79,7 @@ export const createOrUpdateALesson = (lessonId, formData) => async (
       payload: res.data,
     })
 
-    dispatch(setAlert('Cập nhật thông tin bài học thành công!', 'success'))
+    toast.success('Cập nhật thông tin bài học thành công!')
   } catch (err) {
     dispatch({
       type: LESSON_ERROR,

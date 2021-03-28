@@ -25,16 +25,6 @@ import Spinner from '../../../components/ui/Spinner'
 import { connect } from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
-  toolbarMargin: {
-    ...theme.mixins.toolbar,
-    marginBottom: '1em',
-    [theme.breakpoints.down('md')]: {
-      marginBottom: '2em',
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: '2.25em',
-    },
-  },
   card: {
     // Provide some spacing between cards
     margin: 16,
@@ -227,7 +217,6 @@ const ProfileTeacher = ({
         >
           {({ values, isSubmitting, isValid }) => (
             <Dialog open fullWidth maxWidth="lg">
-              <div className={classes.toolbarMargin} />
               <Form autoComplete="off">
                 <Grid
                   container

@@ -1,7 +1,5 @@
 import api from '../utils/api'
-import { setAlert } from './alert'
 import { toast } from 'react-toastify'
-
 import {
   GET_PROFILE_TEACHER,
   PROFILE_TEACHER_ERROR,
@@ -68,7 +66,7 @@ export const deleteAccount = () => async (dispatch) => {
       dispatch({ type: CLEAR_PROFILE_TEACHER })
       dispatch({ type: ACCOUNT_DELETED })
 
-      dispatch(setAlert('Your account has been permanently deleted'))
+      toast.success('Your account has been permanently deleted')
     } catch (err) {
       dispatch({
         type: PROFILE_TEACHER_ERROR,

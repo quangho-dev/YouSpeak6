@@ -27,43 +27,67 @@ const BookedLessonInfo = ({ bookedLessonProps }) => {
             <Grid item>
               <Typography variant="body1">
                 <strong>Tên bài học:</strong>&nbsp;
-                {bookedLessonProps && bookedLessonProps.lesson.lessonName}
+                {bookedLessonProps &&
+                  bookedLessonProps.bookedLesson &&
+                  bookedLessonProps.bookedLesson.lesson &&
+                  bookedLessonProps.bookedLesson.lesson.lessonName}
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body1">
                 <strong>Thời lượng:</strong>&nbsp;
-                {convertMillisecondsToMinutes(bookedLessonProps.duration)} phút
+                {bookedLessonProps &&
+                  bookedLessonProps.bookedLesson &&
+                  bookedLessonProps.bookedLesson &&
+                  bookedLessonProps.bookedLesson.duration &&
+                  convertMillisecondsToMinutes(
+                    bookedLessonProps.bookedLesson.duration
+                  )}{' '}
+                phút
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body1">
                 <strong>Giá tiền:</strong>&nbsp;
-                {formatMoney(bookedLessonProps.price)} VNĐ
+                {bookedLessonProps &&
+                  bookedLessonProps.bookedLesson &&
+                  bookedLessonProps.bookedLesson.price &&
+                  formatMoney(bookedLessonProps.bookedLesson.price)}{' '}
+                VNĐ
               </Typography>
             </Grid>
 
             <Grid item>
               <Typography variant="body1">
                 <strong>Thời gian bắt đầu:</strong>&nbsp;
-                {moment(bookedLessonProps.bookedTime[0].start).format(
-                  'HH [giờ] mm [phút], [ngày] DD, MMMM, YYYY'
-                )}
+                {bookedLessonProps &&
+                  bookedLessonProps.bookedLesson &&
+                  bookedLessonProps.bookedLesson.bookedTime[0] &&
+                  moment(
+                    bookedLessonProps.bookedLesson.bookedTime[0].start
+                  ).format('HH [giờ] mm [phút], [ngày] DD, MMMM, YYYY')}
               </Typography>
             </Grid>
             <Grid item>
               <Typography variant="body1">
                 <strong>Thời gian kết thúc:</strong>&nbsp;
-                {bookedLessonProps && bookedLessonProps.duration === 1800000
-                  ? moment(bookedLessonProps.bookedTime[0].start)
+                {bookedLessonProps &&
+                bookedLessonProps.bookedLesson &&
+                bookedLessonProps.bookedLesson.duration === 1800000
+                  ? moment(bookedLessonProps.bookedLesson.bookedTime[0].start)
                       .add(30, 'minutes')
                       .format('HH [giờ] mm [phút], [ngày] DD, MMMM, YYYY')
-                  : bookedLessonProps && bookedLessonProps.duration === 2700000
-                  ? moment(bookedLessonProps.bookedTime[0].start)
+                  : bookedLessonProps &&
+                    bookedLessonProps.bookedLesson &&
+                    bookedLessonProps.bookedLesson.duration === 2700000
+                  ? moment(bookedLessonProps.bookedLesson.bookedTime[0].start)
                       .add(45, 'minutes')
                       .format('HH [giờ] mm [phút], [ngày] DD, MMMM, YYYY')
-                  : bookedLessonProps && bookedLessonProps.duration === 3600000
-                  ? moment(bookedLessonProps.bookedTime[0].start)
+                  : bookedLessonProps &&
+                    bookedLessonProps.bookedLesson &&
+                    bookedLessonProps.bookedLesson.duration &&
+                    bookedLessonProps.bookedLesson.duration === 3600000
+                  ? moment(bookedLessonProps.bookedLesson.bookedTime[0].start)
                       .add(60, 'minutes')
                       .format('HH [giờ] mm [phút], [ngày] DD, MMMM, YYYY')
                   : null}

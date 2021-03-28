@@ -13,16 +13,6 @@ import LockOpenIcon from '@material-ui/icons/LockOpen'
 import Avatar from '@material-ui/core/Avatar'
 
 const useStyles = makeStyles((theme) => ({
-  toolbarMargin: {
-    ...theme.mixins.toolbar,
-    marginBottom: '1em',
-    [theme.breakpoints.down('md')]: {
-      marginBottom: '2em',
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: '2.25em',
-    },
-  },
   formControl: {
     marginBottom: '1em',
   },
@@ -61,7 +51,6 @@ const LogInScreen = () => {
 
   return (
     <>
-      <div className={classes.toolbarMargin}></div>
       <Grid container justify="center" alignItems="center" direction="column">
         <Grid item>
           <Avatar className={classes.avatar}>

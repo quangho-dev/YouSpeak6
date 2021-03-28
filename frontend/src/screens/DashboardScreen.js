@@ -9,16 +9,6 @@ import { Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
-  toolbarMargin: {
-    ...theme.mixins.toolbar,
-    marginBottom: '1em',
-    [theme.breakpoints.down('md')]: {
-      marginBottom: '2em',
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: '2.25em',
-    },
-  },
   avatarImg: {
     width: '4em',
     height: '4em',
@@ -35,7 +25,6 @@ const Dashboard = () => {
 
   return (
     <div style={{ backgroundColor: '#f7f7f7' }}>
-      <div className={classes.toolbarMargin} />
       <Grid container justify="center" spacing={2}>
         <Grid item sm={4}>
           <Card>

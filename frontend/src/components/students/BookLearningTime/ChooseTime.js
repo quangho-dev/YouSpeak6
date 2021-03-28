@@ -105,6 +105,13 @@ const ChooseTime = ({
         </Typography>
       </Grid>
 
+      <Grid item style={{ alignSelf: 'flex-start' }}>
+        <Typography variant="body1">
+          <strong>Lưu ý:</strong> bạn chỉ được hủy các bài học trước lúc bài học
+          bắt đầu 24 tiếng.
+        </Typography>
+      </Grid>
+
       <Grid item style={{ backgroundColor: '#fff', padding: '2em' }}>
         <FullCalendar
           initialView="timeGridWeek"

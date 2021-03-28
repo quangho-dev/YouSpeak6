@@ -15,16 +15,6 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 
 const useStyles = makeStyles((theme) => ({
-  toolbarMargin: {
-    ...theme.mixins.toolbar,
-    marginBottom: '1em',
-    [theme.breakpoints.down('md')]: {
-      marginBottom: '2em',
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: '2.25em',
-    },
-  },
   formControl: {
     marginBottom: '1em',
   },
@@ -49,7 +39,6 @@ const RegisterTeacherStep1Screen = () => {
 
   return (
     <Fragment>
-      <div className={classes.toolbarMargin} />
       <Grid container justify="center" alignItems="center" direction="column">
         <Grid
           item

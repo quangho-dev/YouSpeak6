@@ -19,28 +19,38 @@ const TeacherInfo = ({ profileTeacher }) => {
             <Grid item>
               <Typography variant="body1">
                 <strong>Tên giáo viên:</strong>&nbsp;
-                {profileTeacher.user.name}
+                {profileTeacher &&
+                  profileTeacher.user &&
+                  profileTeacher.user.name &&
+                  profileTeacher.user.name}
               </Typography>
             </Grid>
 
             <Grid item>
               <Typography variant="body1">
                 <strong>Skype ID:</strong>&nbsp;
-                {profileTeacher.skypeId}
+                {profileTeacher &&
+                  profileTeacher.skypeId &&
+                  profileTeacher.skypeId}
               </Typography>
             </Grid>
 
             <Grid item>
               <Typography variant="body1">
                 <strong>Số điện thoại:</strong>&nbsp;
-                {profileTeacher.phoneNumber}
+                {profileTeacher &&
+                  profileTeacher.phoneNumber &&
+                  profileTeacher.phoneNumber}
               </Typography>
             </Grid>
 
             <Grid item>
               <Typography variant="body1">
                 <strong>Email:</strong>&nbsp;
-                {profileTeacher.user.email}
+                {profileTeacher &&
+                  profileTeacher.user &&
+                  profileTeacher.user.email &&
+                  profileTeacher.user.email}
               </Typography>
             </Grid>
           </Grid>

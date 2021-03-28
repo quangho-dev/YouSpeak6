@@ -7,7 +7,6 @@ import {
   Typography,
   Button,
 } from '@material-ui/core'
-import MyButton from '../../ui/MyButton'
 import Spinner from '../../ui/Spinner'
 import {
   getBookedLessonById,
@@ -17,7 +16,6 @@ import { confirmBookedLesson } from '../../../actions/bookingCalendar'
 import { connect } from 'react-redux'
 import moment from 'moment'
 import CancelIcon from '@material-ui/icons/Cancel'
-import CheckCircleIcon from '@material-ui/icons/CheckCircle'
 import { useConfirm } from 'material-ui-confirm'
 
 const BookedLessonInfo = ({
@@ -29,18 +27,6 @@ const BookedLessonInfo = ({
   history,
 }) => {
   const confirm = useConfirm()
-
-  const handleConfirmBookedLesson = (lessonBookedId) => {
-    confirm({
-      description: 'Press OK to confirm the order',
-      tittle: 'Are you sure?',
-    })
-      .then(() => {
-        confirmBookedLesson(lessonBookedId)
-        history.push('/teachers/booked-lessons-manager')
-      })
-      .catch(() => {})
-  }
 
   const handleCancelLesson = (bookedLessonId) => {
     confirm({
@@ -193,16 +179,6 @@ const BookedLessonInfo = ({
                   <CancelIcon />
                   &nbsp;Cancel order
                 </Button>
-              </Grid>
-              <Grid item>
-                <MyButton
-                  onClick={() =>
-                    handleConfirmBookedLesson(bookedLesson.bookedLesson._id)
-                  }
-                >
-                  <CheckCircleIcon />
-                  &nbsp;Confirm order
-                </MyButton>
               </Grid>
             </Grid>
           </CardActions>

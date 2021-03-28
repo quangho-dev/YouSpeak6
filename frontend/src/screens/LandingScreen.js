@@ -15,7 +15,6 @@ import CardMedia from '@material-ui/core/CardMedia'
 import Avatar from '@material-ui/core/Avatar'
 import Box from '@material-ui/core/Box'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
-import Header from '../components/Header'
 import { useSelector } from 'react-redux'
 import landing1 from '../assets/landing1.jpg'
 
@@ -27,6 +26,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundRepeat: 'no-repeat',
     height: '100vh',
     width: '100%',
+    marginTop: '-78px',
   },
   overlay: {
     position: 'absolute',
@@ -65,9 +65,6 @@ const useStyles = makeStyles((theme) => ({
     height: '7em',
     width: '7em',
   },
-  // comment: {
-  //   maxWidth: '25em',
-  // },
 }))
 
 const Landing = (props) => {
@@ -88,7 +85,6 @@ const Landing = (props) => {
 
   return (
     <Fragment>
-      <Header />
       <Grid
         container
         direction="row"
@@ -141,7 +137,7 @@ const Landing = (props) => {
               color="primary"
               size="large"
               style={{ color: 'white', padding: '1em 2em', fontSize: '1rem' }}
-              to="/teacher"
+              to="/teachers/english"
             >
               Tìm một giáo viên
               <SearchIcon style={{ marginLeft: '5px', fontSize: '2rem' }} />

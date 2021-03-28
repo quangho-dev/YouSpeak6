@@ -1,5 +1,4 @@
 import api from '../utils/api'
-import { setAlert } from './alert'
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -8,6 +7,7 @@ import {
   LOGOUT,
 } from './types'
 import { loadUser } from './auth'
+import { toast } from 'react-toastify'
 
 // Register Teacher
 export const registerTeacher = (formData) => async (dispatch) => {
@@ -21,7 +21,7 @@ export const registerTeacher = (formData) => async (dispatch) => {
     })
 
     if (res) {
-      dispatch(setAlert(res.data.msg, 'success'))
+      toast.success(res.data.msg)
     }
 
     dispatch({
@@ -33,7 +33,7 @@ export const registerTeacher = (formData) => async (dispatch) => {
     const errors = err.response.data.errors
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'error')))
+      errors.forEach((error) => toast.error(error.msg))
     }
 
     dispatch({
@@ -59,7 +59,7 @@ export const loginTeacher = (email, password) => async (dispatch) => {
     const errors = err.response.data.errors
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'error')))
+      errors.forEach((error) => toast.error(error.msg))
     }
 
     dispatch({
@@ -76,12 +76,12 @@ export const resendConfirmationToken = (email) => async (dispatch) => {
   try {
     const res = await api.post('/teachers/resend-confirmation-token', { email })
 
-    dispatch(setAlert(res.data.msg, 'success'))
+    toast.success(res.data.msg)
   } catch (err) {
     const errors = err.response.data.errors
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'error')))
+      errors.forEach((error) => toast.error(error.msg))
     }
   }
 }

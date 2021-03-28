@@ -1,5 +1,4 @@
 import api from '../utils/api'
-import { setAlert } from './alert'
 import {
   REGISTER_SUCCESS,
   REGISTER_FAIL,
@@ -9,6 +8,7 @@ import {
   LOGIN_FAIL,
   LOGOUT,
 } from './types'
+import { toast } from 'react-toastify'
 
 // Load User
 export const loadUser = () => async (dispatch) => {
@@ -31,7 +31,7 @@ export const registerUser = (formData) => async (dispatch) => {
   try {
     const res = await api.post('/users/register-user', formData)
 
-    dispatch(setAlert(res.data.msg, 'success', 10000))
+    toast.success(res.data.msg)
 
     dispatch({
       type: REGISTER_SUCCESS,
@@ -43,7 +43,7 @@ export const registerUser = (formData) => async (dispatch) => {
     const errors = err.response.data.errors
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'error')))
+      errors.forEach((error) => toast.error(error.msg))
     }
 
     dispatch({
@@ -62,14 +62,14 @@ export const registerTeacher = (formData) => async (dispatch) => {
       payload: res.data,
     })
 
-    dispatch(setAlert(res.data.msg, 'success', 10000))
+    toast.success(res.data.msg)
 
     dispatch(loadUser())
   } catch (err) {
     const errors = err.response.data.errors
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'error')))
+      errors.forEach((error) => toast.error(error.msg))
     }
 
     dispatch({
@@ -95,7 +95,7 @@ export const login = (email, password) => async (dispatch) => {
     const errors = err.response.data.errors
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'error')))
+      errors.forEach((error) => toast.error(error.msg))
     }
 
     dispatch({
@@ -112,12 +112,12 @@ export const resendConfirmationToken = (email) => async (dispatch) => {
   try {
     const res = await api.post('/users/resend-confirmation-token', { email })
 
-    dispatch(setAlert(res.data.msg, 'success'))
+    toast.success(res.data.msg)
   } catch (err) {
     const errors = err.response.data.errors
 
     if (errors) {
-      errors.forEach((error) => dispatch(setAlert(error.msg, 'error')))
+      errors.forEach((error) => toast.error(error.msg))
     }
   }
 }

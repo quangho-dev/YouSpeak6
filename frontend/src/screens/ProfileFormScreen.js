@@ -24,16 +24,6 @@ import axios from 'axios'
 import { Link } from 'react-router-dom'
 
 const useStyles = makeStyles((theme) => ({
-  toolbarMargin: {
-    ...theme.mixins.toolbar,
-    marginBottom: '1em',
-    [theme.breakpoints.down('md')]: {
-      marginBottom: '2em',
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: '2.25em',
-    },
-  },
   formControl: {
     marginBottom: '1.5em',
   },
@@ -92,9 +82,6 @@ const ProfileFormScreen = ({ history }) => {
     >
       <Grid item>
         <Grid container justify="space-between" alignItems="center">
-          <Grid item>
-            <div className={classes.toolbarMargin} />
-          </Grid>
           <Grid item>
             <Typography
               variant="h4"

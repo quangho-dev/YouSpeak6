@@ -244,9 +244,9 @@ const Header = ({
           alignItems="flex-end"
           style={{ width: '14em' }}
         >
-          <Grid item>
+          {/* <Grid item>
             <div className={classes.toolbarMargin} />
-          </Grid>
+          </Grid> */}
           <Grid
             item
             style={{
@@ -385,7 +385,7 @@ const Header = ({
               marginRight: '1.5em',
             }}
           >
-            Order management
+            Order manager
           </Button>
         </Grid>
       )}
@@ -443,23 +443,53 @@ const Header = ({
           style={{ zIndex: 1302 }}
           classes={{ paper: classes.menu }}
         >
-          <MenuItem
-            component={Link}
-            classes={{ root: classes.menuItem }}
-            onClick={handleClose}
-            to="/create-profile"
-            disableRipple
-          >
-            Profile
-          </MenuItem>
-          <MenuItem classes={{ root: classes.menuItem }} onClick={handleClose}>
-            My account
-          </MenuItem>
+          {user && user.role === 'teacher' ? (
+            <MenuItem
+              component={Link}
+              classes={{ root: classes.menuItem }}
+              onClick={handleClose}
+              to="/teachers/dashboard"
+              disableRipple
+            >
+              Dashboard
+            </MenuItem>
+          ) : (
+            <MenuItem
+              component={Link}
+              classes={{ root: classes.menuItem }}
+              onClick={handleClose}
+              to="/dashboard"
+              disableRipple
+            >
+              Màn hình chính
+            </MenuItem>
+          )}
+
+          {user && user.role === 'teacher' ? (
+            <MenuItem
+              component={Link}
+              classes={{ root: classes.menuItem }}
+              onClick={handleClose}
+              to="/teachers/booked-lessons-manager"
+            >
+              Order management
+            </MenuItem>
+          ) : (
+            <MenuItem
+              component={Link}
+              classes={{ root: classes.menuItem }}
+              onClick={handleClose}
+              to="/students/lessons-manager"
+            >
+              Quản lý bài học
+            </MenuItem>
+          )}
+
           <MenuItem
             classes={{ root: classes.menuItem }}
             onClick={logoutHandler}
           >
-            Đăng xuất
+            {user && user.role === 'teacher' ? 'Log out' : 'Đăng xuất'}
           </MenuItem>
         </Menu>
       </Grid>
@@ -508,7 +538,7 @@ const Header = ({
               </Toolbar>
             </AppBar>
           </ElevationScroll>
-          <div className={classes.toolbarPadding} />
+          <div className={classes.toolbarMargin} />
         </>
       ) : (
         <>
@@ -540,7 +570,7 @@ const Header = ({
               </Toolbar>
             </AppBar>
           </ElevationScroll>
-          {/* <div className={classes.toolbarMargin} /> */}
+          <div className={classes.toolbarMargin} />
         </>
       )}
     </Fragment>

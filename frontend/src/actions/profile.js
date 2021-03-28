@@ -1,5 +1,4 @@
 import api from '../utils/api'
-import { setAlert } from './alert'
 
 import {
   GET_PROFILE,
@@ -9,6 +8,7 @@ import {
   GET_PROFILE_STUDENT_BY_ID_SUCCESS,
   GET_PROFILE_STUDENT_BY_ID_ERROR,
 } from './types'
+import { toast } from 'react-toastify'
 
 // Get current users profile
 export const getCurrentProfile = () => async (dispatch) => {
@@ -41,12 +41,9 @@ export const createOrUpdateProfile = (
       payload: res.data,
     })
 
-    dispatch(
-      setAlert(
-        edit ? 'Thông tin đã được cập nhật' : 'Thông tin đã được tạo',
-        'success'
-      )
-    )
+    edit
+      ? toast.success('Thông tin đã được cập nhật')
+      : toast.success('Thông tin đã được tạo')
 
     if (!edit) {
       history.push('/dashboard')
@@ -68,7 +65,7 @@ export const deleteAccount = () => async (dispatch) => {
       dispatch({ type: CLEAR_PROFILE })
       dispatch({ type: ACCOUNT_DELETED })
 
-      dispatch(setAlert('Your account has been permanently deleted'))
+      toast.success('Your account has been permanently deleted')
     } catch (err) {
       dispatch({
         type: PROFILE_ERROR,

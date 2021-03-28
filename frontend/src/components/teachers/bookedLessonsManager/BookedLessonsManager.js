@@ -32,7 +32,7 @@ const BookedLessonsManager = ({
       <Grid item>
         {loading ? (
           <Spinner />
-        ) : !bookedLessons[0] ? (
+        ) : bookedLessons.length === 0 ? (
           <Typography variant="body1">There are no orders.</Typography>
         ) : (
           <BookedLessonsTable bookedLessons={bookedLessons} />

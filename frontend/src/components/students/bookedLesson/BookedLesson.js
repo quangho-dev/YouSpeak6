@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Grid, Typography, Button } from '@material-ui/core'
 import BookedLessonInfo from './BookedLessonInfo'
@@ -7,7 +7,6 @@ import {
   getBookedLessonById,
   cancelBookedLesson,
 } from '../../../actions/bookingCalendarStudent'
-import { getProfileTeacherById } from '../../../actions/profileTeacher'
 import { connect } from 'react-redux'
 import CancelIcon from '@material-ui/icons/Cancel'
 import Spinner from '../../ui/Spinner'
@@ -17,17 +16,10 @@ import { addHours, compareAsc } from 'date-fns'
 const BookedLesson = ({
   match,
   getBookedLessonById,
-  getProfileTeacherById,
   cancelBookedLesson,
-  bookingCalendarStudent: { loading, bookedLesson },
-  profileTeacher: {
-    profileTeacher: profileTeacherReduxState,
-    loading: loadingProfileTeacher,
-  },
+  bookingCalendarStudent: { loading, bookedLesson, profileTeacher },
   history,
 }) => {
-  const [teacherId, setTeacherId] = useState('')
-
   const handleCancelLesson = (bookedLessonId) => {
     confirm({
       description: 'Nhấn đồng ý sẽ hủy bài học.',
@@ -44,15 +36,7 @@ const BookedLesson = ({
 
   useEffect(() => {
     getBookedLessonById(match.params.bookedLessonId)
-    setTeacherId(bookedLesson.teacher)
-    if (teacherId) getProfileTeacherById(teacherId)
-  }, [
-    match.params.bookedLessonId,
-    getBookedLessonById,
-    bookedLesson.teacher,
-    getProfileTeacherById,
-    teacherId,
-  ])
+  }, [match.params.bookedLessonId, getBookedLessonById])
 
   const isAfterNext24Hours = (time) => {
     const deadlineToCancel = addHours(new Date(time), 24)
@@ -88,7 +72,7 @@ const BookedLesson = ({
         style={{ marginTop: '1em' }}
       >
         <Grid item>
-          {loading || !bookedLesson || !bookedLesson._id ? (
+          {loading || !bookedLesson ? (
             <Spinner />
           ) : (
             <BookedLessonInfo bookedLessonProps={bookedLesson} />
@@ -98,16 +82,18 @@ const BookedLesson = ({
         <Grid item>
           <Grid container direction="column" alignItems="center">
             <Grid item>
-              {loadingProfileTeacher || !profileTeacherReduxState ? (
+              {!profileTeacher ? (
                 <Spinner />
               ) : (
-                <TeacherInfo profileTeacher={profileTeacherReduxState} />
+                <TeacherInfo profileTeacher={profileTeacher} />
               )}
             </Grid>
 
             <Grid item>
               <Button
-                onClick={() => handleCancelLesson(bookedLesson._id)}
+                onClick={() =>
+                  handleCancelLesson(bookedLesson.bookedLesson._id)
+                }
                 variant="contained"
                 color="secondary"
                 style={{
@@ -141,11 +127,9 @@ BookedLesson.propTypes = {
 
 const mapStateToProps = (state) => ({
   bookingCalendarStudent: state.bookingCalendarStudent,
-  profileTeacher: state.profileTeacher,
 })
 
 export default connect(mapStateToProps, {
   getBookedLessonById,
-  getProfileTeacherById,
   cancelBookedLesson,
 })(BookedLesson)

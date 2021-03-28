@@ -1,15 +1,15 @@
 import api from '../utils/api'
-import { setAlert } from './alert'
+import { toast } from 'react-toastify'
 
 export const sendForgotPassword = (email) => async (dispatch) => {
   try {
     const res = await api.post('/forgot', { email })
 
-    dispatch(setAlert(res.data.msg, 'success'))
+    toast.success(res.data.msg)
   } catch (err) {
     const error = err.response.data.error
 
-    dispatch(setAlert(error, 'error'))
+    toast.error(error)
   }
 }
 
@@ -17,10 +17,10 @@ export const resetPassword = ({ password, token }) => async (dispatch) => {
   try {
     const res = await api.post(`/reset/${token}`, { password })
 
-    dispatch(setAlert(res.data.msg, 'success'))
+    toast.success(res.data.msg)
   } catch (err) {
     const error = err.response.data.msg
 
-    dispatch(setAlert(error, 'error'))
+    toast.error(error)
   }
 }

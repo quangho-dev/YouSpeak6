@@ -43,16 +43,6 @@ const getSteps = () => {
 }
 
 const useStyles = makeStyles((theme) => ({
-  toolbarMargin: {
-    ...theme.mixins.toolbar,
-    marginBottom: '1em',
-    [theme.breakpoints.down('md')]: {
-      marginBottom: '2em',
-    },
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: '2.25em',
-    },
-  },
   card: {
     // Provide some spacing between cards
     margin: 16,
@@ -258,7 +248,6 @@ const TeacherRegisterForm = ({ history }) => {
       }) => (
         <Dialog open fullWidth maxWidth="lg">
           <Form autoComplete="off">
-            <div className={classes.toolbarMargin} />
             <Stepper activeStep={activeStep} alternativeLabel>
               {steps.map((label) => (
                 <Step key={label}>

@@ -56,7 +56,7 @@ const TeacherInfo = ({
 
   return (
     <>
-      {profileTeacher === null ? (
+      {loading || profileTeacher === null ? (
         <Spinner />
       ) : (
         <Grid
@@ -109,11 +109,17 @@ const TeacherInfo = ({
                         </Grid>
                         <Grid item>
                           <Typography variant="body1">
-                            {profileTeacher.lessons.length > 0 &&
+                            {profileTeacher &&
+                              profileTeacher.lessons &&
+                              profileTeacher.lessons.length > 0 &&
                               formatMoney(
                                 Math.min(
-                                  ...profileTeacher.lessons.map((lesson) =>
-                                    getMinPeriodPrice(lesson.periods[0])
+                                  ...profileTeacher.lessons.map(
+                                    (lesson) =>
+                                      lesson &&
+                                      lesson.periods.length > 0 &&
+                                      lesson.periods[0] &&
+                                      getMinPeriodPrice(lesson.periods[0])
                                   )
                                 )
                               )}

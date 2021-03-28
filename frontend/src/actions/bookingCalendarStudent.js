@@ -1,5 +1,4 @@
 import api from '../utils/api'
-import { setAlert } from './alert'
 import {
   BOOK_TIME_SUCCESS,
   BOOK_TIME_ERROR,
@@ -10,13 +9,14 @@ import {
   GET_BOOKED_LESSON_SUCCESS,
   GET_BOOKED_LESSON_ERROR,
 } from './types'
+import { toast } from 'react-toastify'
 
 // Book time for learning
 export const bookTime = (bookedTime) => async (dispatch) => {
   try {
     await api.post('/booking-calendar-student', bookedTime)
 
-    dispatch(setAlert('Bạn đã đặt lịch học thành công!', 'success'))
+    toast.success('Bạn đã đặt lịch học thành công!')
 
     dispatch({
       type: BOOK_TIME_SUCCESS,
@@ -37,7 +37,7 @@ export const cancelBookedLesson = (bookedLessonId) => async (dispatch) => {
       `/booking-calendar-student/cancel-booked-lesson/${bookedLessonId}`
     )
 
-    dispatch(setAlert('Đã hủy bài học', 'info'))
+    toast.error('Đã hủy bài học')
 
     dispatch({
       type: CANCEL_BOOKED_LESSON_SUCCESS,
