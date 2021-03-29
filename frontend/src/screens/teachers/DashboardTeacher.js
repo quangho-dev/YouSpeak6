@@ -138,7 +138,7 @@ const DashboardTeacher = ({
                 style={{ color: 'white' }}
               >
                 <MenuBookIcon fontSize="small" />
-                &nbsp;Edit lessons
+                &nbsp;Edit types of lesson
               </Button>
             </Grid>
 

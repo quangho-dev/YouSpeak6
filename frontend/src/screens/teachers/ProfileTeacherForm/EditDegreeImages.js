@@ -69,9 +69,6 @@ const EditDegreeImages = ({ open, onClose }) => {
     setDegreeImagesFiles(filteredImagesFiles)
   }
 
-  console.log('degreeImagesFiles', degreeImagesFiles)
-  console.log('previewDegreeImagesFiles', previewDegreeImages)
-
   return (
     <Grid
       container

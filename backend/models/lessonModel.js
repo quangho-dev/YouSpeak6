@@ -46,12 +46,7 @@ const LessonSchema = new mongoose.Schema({
       },
     },
   ],
-  documents: [
-    {
-      documentName: String,
-      fileDocument: String,
-    },
-  ],
+  documents: [String],
 })
 
 const Lesson = mongoose.model('lesson', LessonSchema)

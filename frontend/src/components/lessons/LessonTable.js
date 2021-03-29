@@ -68,11 +68,16 @@ const LessonTable = ({ lessons }) => {
                   {indexLesson + 1}
                 </TableCell>
                 <TableCell component="th" scope="row">
-                  {lesson.lessonName}
+                  {lesson && lesson.lessonName && lesson.lessonName}
                 </TableCell>
                 <TableCell align="right">{lesson.content}</TableCell>
                 <TableCell align="right">
-                  <Grid container justify="center" alignItems="center">
+                  <Grid
+                    container
+                    justify="center"
+                    alignItems="center"
+                    spacing={1}
+                  >
                     <Grid item>
                       <MyButton
                         component={Link}

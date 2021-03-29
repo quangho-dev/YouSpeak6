@@ -1,13 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import {
-  Grid,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-} from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import { Formik, Field, Form } from 'formik'
 import { useDispatch, useSelector } from 'react-redux'
 import MyButton from '../../ui/MyButton'
@@ -15,15 +7,12 @@ import { Link } from 'react-router-dom'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import AddIcon from '@material-ui/icons/Add'
 import { TextField } from 'formik-material-ui'
-import FolderIcon from '@material-ui/icons/Folder'
 import Spinner from '../../ui/Spinner'
-import EditLessonDocuments from './EditLessonDocuments'
 import LessonPeriodForm from './LessonPeriodForm'
 import * as yup from 'yup'
 import { makeStyles } from '@material-ui/styles'
 import { getLessonById, createOrUpdateALesson } from '../../../actions/lessons'
-import axios from 'axios'
-import useFileDownloader from '../../../hooks/useFileDownloader'
+import EditDocuments from './EditDocuments'
 
 const useStyles = makeStyles((theme) => ({
   bottomGutterFormControl: {
@@ -39,14 +28,7 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const EditALesson = (props) => {
-  const [openModelEditDoc, setOpenModelEditDoc] = useState(false)
   const [formValues, setFormValues] = useState(null)
-
-  const [downloadFile, downloaderComponentUI] = useFileDownloader()
-
-  const download = (file) => {
-    downloadFile(file)
-  }
 
   const lessonId = props.match.params.id
 
@@ -58,8 +40,8 @@ const EditALesson = (props) => {
   const { lesson: singleLesson, loading } = lesson
 
   const validationSchema = yup.object().shape({
-    lessonName: yup.string().required('Vui lòng điền tên bài học.'),
-    content: yup.string().required('Vui lòng điền nội dung của bài học.'),
+    lessonName: yup.string().required("Lesson's name is required."),
+    content: yup.string().nullable(true).required('Content is required.'),
     documents: yup.array(),
     periods: yup.array(),
   })
@@ -77,53 +59,6 @@ const EditALesson = (props) => {
     ],
   }
 
-  const handleSubmit = async (values, { resetForm }) => {
-    const { lessonName, content, documents, periods } = values
-
-    const docFilesArray = documents.map((doc) => doc.fileDocument)
-    const formData = new FormData()
-
-    for (let i = 0; i < docFilesArray.length; i++) {
-      formData.append('lessonDocuments', docFilesArray[i])
-    }
-
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-      axios
-        .post('/api/upload-lesson-documents', formData, config)
-        .then(function (res) {
-          const newData = documents.map((doc, index) => {
-            return {
-              documentName: doc.documentName,
-              fileDocument: res.data[index],
-            }
-          })
-
-          const lessonData = {
-            lessonName,
-            content,
-            documents: newData,
-            periods,
-          }
-
-          dispatch(createOrUpdateALesson(lessonId, lessonData))
-        })
-        .catch(function (error) {
-          console.log(error)
-        })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleClose = () => {
-    setOpenModelEditDoc(false)
-  }
-
   useEffect(() => {
     if (!singleLesson || singleLesson._id !== lessonId) {
       dispatch(getLessonById(lessonId))
@@ -136,12 +71,20 @@ const EditALesson = (props) => {
     return <Spinner />
   }
 
+  const onSubmit = async (values, { setSubmitting }) => {
+    setTimeout(() => {
+      dispatch(createOrUpdateALesson(lessonId, values))
+      setSubmitting(false)
+      props.history.push('/teachers/lessons')
+    }, 500)
+  }
+
   return (
     <Formik
       enableReinitialize
       initialValues={formValues || initialValues}
-      onSubmit={handleSubmit}
       validationSchema={validationSchema}
+      onSubmit={onSubmit}
     >
       {({ isSubmitting, isValid, values, errors, setFieldValue, dirty }) => (
         <Form>
@@ -179,70 +122,15 @@ const EditALesson = (props) => {
                   <Grid item className={classes.bottomGutterFormControl}>
                     <Field
                       fullWidth
+                      multiline
+                      rows={6}
                       name="content"
                       component={TextField}
-                      multiline
-                      rows={4}
                       label="Content"
+                      style={{ width: '30em' }}
                     />
                   </Grid>
-                  <Grid
-                    item
-                    container
-                    direction="column"
-                    alignItems="center"
-                    spacing={1}
-                    style={{ maxWidth: '500px' }}
-                    className={classes.bottomGutterFormControl}
-                  >
-                    <Grid item>
-                      <Typography
-                        variant="h6"
-                        className={classes.controlFormHeader}
-                      >
-                        Lesson's documents:
-                      </Typography>
-                    </Grid>
-                    <Grid item>
-                      <MyButton
-                        component={Link}
-                        to={`/teachers/lessons/re-upload-documents/${lessonId}`}
-                      >
-                        Edit list of documents
-                      </MyButton>
-                    </Grid>
-                    <Grid item>
-                      <EditLessonDocuments
-                        open={openModelEditDoc}
-                        onClose={handleClose}
-                      />
-                    </Grid>
-                    <Grid item>
-                      <List>
-                        {values.documents &&
-                          values.documents.map((document, indexDoc) => (
-                            <ListItem key={indexDoc}>
-                              <ListItemAvatar>
-                                <Avatar>
-                                  <FolderIcon />
-                                </Avatar>
-                              </ListItemAvatar>
-                              <ListItemText
-                                primary={document.documentName}
-                                secondary={
-                                  <span
-                                    onClick={() => download(document)}
-                                    style={{ cursor: 'pointer' }}
-                                  >
-                                    download
-                                  </span>
-                                }
-                              />
-                            </ListItem>
-                          ))}
-                      </List>
-                    </Grid>
-                  </Grid>
+                  <EditDocuments />
                 </Grid>
               </Grid>
               <Grid item>
@@ -305,14 +193,13 @@ const EditALesson = (props) => {
                 </MyButton>
               </Grid>
               <Grid item>
-                <MyButton type="submit">
+                <MyButton disabled={!isValid || isSubmitting} type="submit">
                   <AddIcon />
                   &nbsp;Confirm
                 </MyButton>
               </Grid>
             </Grid>
           </Grid>
-          {downloaderComponentUI}
         </Form>
       )}
     </Formik>

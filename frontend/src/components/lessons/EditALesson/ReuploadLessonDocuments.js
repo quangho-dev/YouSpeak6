@@ -23,6 +23,8 @@ import { createOrUpdateALesson, getLessonById } from '../../../actions/lessons'
 import axios from 'axios'
 import Spinner from '../../ui/Spinner'
 import { Link } from 'react-router-dom'
+import AddIcon from '@material-ui/icons/Add'
+import addMilliseconds from 'date-fns/addMilliseconds/index'
 
 const useStyles = makeStyles((theme) => ({
   paddingContainer: {
@@ -51,11 +53,7 @@ const ReuploadLessonDocuments = (props) => {
     setDocumentName(e.target.value)
   }
 
-  const handleFileChange = (e) => {
-    setError(null)
-    const file = e.target.files[0]
-    setFileDocument(file)
-  }
+  const handleFileChange = (e) => {}
 
   const handleAddToList = () => {
     if (!documentName) {
@@ -183,42 +181,14 @@ const ReuploadLessonDocuments = (props) => {
             color="primary"
             style={{ color: 'white', fontWeight: '500', margin: 'auto' }}
           >
-            <PublishIcon />
-            &nbsp;Upload document file
+            <AddIcon />
+            &nbsp;Add document
             <input
               type="file"
               style={{ display: 'none' }}
               onChange={handleFileChange}
             />
           </Button>
-        </Grid>
-      </Grid>
-      <Grid
-        item
-        container
-        direction="column"
-        alignItems="center"
-        style={{ width: '500px', marginBottom: '2em' }}
-      >
-        <Grid item>
-          <Typography variant="h6" gutterBottom>
-            Document's details:
-          </Typography>
-        </Grid>
-        <Grid item style={{ alignSelf: 'flex-start' }}>
-          <Typography variant="body1">
-            <span style={{ fontWeight: '600' }}>Document's name:</span>&nbsp;
-            {documentName}
-          </Typography>
-        </Grid>
-        <Grid item style={{ alignSelf: 'flex-start' }}>
-          <Typography variant="body1" gutterBottom>
-            <span style={{ fontWeight: '600' }}>File:</span>&nbsp;
-            {fileDocument && fileDocument.name}
-          </Typography>
-        </Grid>
-        <Grid item>
-          <MyButton onClick={handleAddToList}>Add to list</MyButton>
         </Grid>
       </Grid>
 
