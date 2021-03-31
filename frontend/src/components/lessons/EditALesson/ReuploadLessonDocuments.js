@@ -13,9 +13,7 @@ import {
   IconButton,
 } from '@material-ui/core'
 import MyButton from '../../ui/MyButton'
-import PublishIcon from '@material-ui/icons/Publish'
 import { makeStyles } from '@material-ui/styles'
-import Alert from '@material-ui/lab/Alert'
 import DeleteIcon from '@material-ui/icons/Delete'
 import FolderIcon from '@material-ui/icons/Folder'
 import { useDispatch, useSelector } from 'react-redux'
@@ -24,7 +22,6 @@ import axios from 'axios'
 import Spinner from '../../ui/Spinner'
 import { Link } from 'react-router-dom'
 import AddIcon from '@material-ui/icons/Add'
-import addMilliseconds from 'date-fns/addMilliseconds/index'
 
 const useStyles = makeStyles((theme) => ({
   paddingContainer: {
@@ -34,10 +31,9 @@ const useStyles = makeStyles((theme) => ({
 
 const ReuploadLessonDocuments = (props) => {
   const [documentName, setDocumentName] = useState('')
-  const [fileDocument, setFileDocument] = useState(null)
+
   const [documentsArray, setDocumentsArray] = useState([])
   const [lessonInfo, setLessonInfo] = useState({})
-  const [error, setError] = useState(null)
 
   const lessonId = props.match.params.id
 
@@ -49,27 +45,10 @@ const ReuploadLessonDocuments = (props) => {
   const classes = useStyles()
 
   const handleDocumentNameChange = (e) => {
-    setError(null)
     setDocumentName(e.target.value)
   }
 
-  const handleFileChange = (e) => {}
-
-  const handleAddToList = () => {
-    if (!documentName) {
-      setError('Vui lòng điền tên tài liệu.')
-    } else if (fileDocument === null) {
-      setError('Vui lòng tải file tài liệu')
-    } else {
-      setDocumentsArray((currentState) => [
-        ...currentState,
-        { documentName, fileDocument },
-      ])
-      setDocumentName('')
-      setFileDocument(null)
-      setError(null)
-    }
-  }
+  const clickAddHandler = () => {}
 
   const deleteDoc = (indexDoc) => {
     const filterdDocuments = documentsArray.filter(
@@ -144,11 +123,6 @@ const ReuploadLessonDocuments = (props) => {
       className={classes.paddingContainer}
       style={{ margin: '1em 0' }}
     >
-      {error && (
-        <Grid item style={{ marginTop: '1em' }}>
-          <Alert severity="error">{error}</Alert>
-        </Grid>
-      )}
       <Grid item container direction="column" alignItems="center">
         <Grid item>
           <Typography
@@ -186,7 +160,7 @@ const ReuploadLessonDocuments = (props) => {
             <input
               type="file"
               style={{ display: 'none' }}
-              onChange={handleFileChange}
+              onClick={clickAddHandler}
             />
           </Button>
         </Grid>

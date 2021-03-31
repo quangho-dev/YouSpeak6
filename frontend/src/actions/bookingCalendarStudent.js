@@ -10,6 +10,8 @@ import {
   GET_BOOKED_LESSON_ERROR,
 } from './types'
 import { toast } from 'react-toastify'
+import { getProfileTeacherById } from './profileTeacher'
+import { getProfileStudentById } from './profile'
 
 // Book time for learning
 export const bookTime = (bookedTime) => async (dispatch) => {
@@ -77,10 +79,28 @@ export const getBookedLessonById = (bookedLessonId) => async (dispatch) => {
       type: GET_BOOKED_LESSON_SUCCESS,
       payload: res.data,
     })
+
+    return res.data
   } catch (err) {
     dispatch({
       type: GET_BOOKED_LESSON_ERROR,
       payload: { msg: err.response.statusText, status: err.response.status },
     })
   }
+}
+
+export const getBookedLessonAndProfileTeacher = (bookedLessonId) => async (
+  dispatch
+) => {
+  dispatch(getBookedLessonById(bookedLessonId)).then((res) =>
+    dispatch(getProfileTeacherById(res.teacher))
+  )
+}
+
+export const getBookedLessonAndProfileStudent = (bookedLessonId) => async (
+  dispatch
+) => {
+  dispatch(getBookedLessonById(bookedLessonId)).then((res) =>
+    dispatch(getProfileStudentById(res.user._id))
+  )
 }

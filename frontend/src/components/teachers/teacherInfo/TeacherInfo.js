@@ -20,8 +20,8 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '15px',
   },
   teacherAvatar: {
-    width: '70px',
-    height: '70px',
+    width: '100px',
+    height: '100px',
   },
   container: {
     backgroundColor: 'white',
@@ -110,7 +110,6 @@ const TeacherInfo = ({
                         <Grid item>
                           <Typography variant="body1">
                             {profileTeacher &&
-                              profileTeacher.lessons &&
                               profileTeacher.lessons.length > 0 &&
                               formatMoney(
                                 Math.min(
@@ -164,8 +163,8 @@ const TeacherInfo = ({
             </Grid>
           </Grid>
 
-          <Grid item style={{ width: '100%' }} className={classes.marginBottom}>
-            <Card style={{ padding: '2em 0' }}>
+          <Grid item className={classes.marginBottom}>
+            <Card style={{ padding: '2em' }}>
               <CardContent>
                 <Grid
                   container
@@ -207,24 +206,6 @@ const TeacherInfo = ({
                           <Typography variant="body1">
                             <strong>Đến từ:</strong>&nbsp;
                             {profileTeacher.hometown.label}
-                          </Typography>
-                        )}
-                      </Grid>
-
-                      <Grid item>
-                        {profileTeacher.skypeId && (
-                          <Typography variant="body1">
-                            <strong>Skype ID:</strong>&nbsp;
-                            {profileTeacher.skypeId}
-                          </Typography>
-                        )}
-                      </Grid>
-
-                      <Grid item>
-                        {profileTeacher.phoneNumber && (
-                          <Typography variant="body1">
-                            <strong>Số điện thoại:</strong>&nbsp;
-                            {profileTeacher.phoneNumber}
                           </Typography>
                         )}
                       </Grid>

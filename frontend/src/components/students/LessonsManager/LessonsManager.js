@@ -45,7 +45,7 @@ const LessonsManager = ({
       <Grid item>
         {loading ? (
           <Spinner />
-        ) : !bookedLessons[0] ? (
+        ) : !(bookedLessons.length > 0) ? (
           <Typography variant="body1">Chưa có bài học nào được đặt.</Typography>
         ) : (
           <TableContainer component={Paper}>
@@ -55,11 +55,14 @@ const LessonsManager = ({
                   <TableCell>STT</TableCell>
                   <TableCell>Tên bài học</TableCell>
                   <TableCell>Giáo viên</TableCell>
+                  {/* <TableCell>Skype Id</TableCell>
+                  <TableCell>Số điện thoại</TableCell> */}
                   <TableCell align="center">Xem thêm</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {bookedLessons &&
+                  bookedLessons.length > 0 &&
                   bookedLessons.map((lesson, index) => (
                     <TableRow
                       key={lesson._id}
@@ -79,8 +82,20 @@ const LessonsManager = ({
                           component={Link}
                           to={`/students/bookedLesson/${lesson._id}`}
                         >
-                          <FindInPageIcon />
-                          &nbsp;Xem thêm
+                          <Grid container justify="center" alignItems="center">
+                            <Grid item>
+                              <FindInPageIcon />
+                            </Grid>
+
+                            <Grid item>
+                              <Typography
+                                variant="body2"
+                                style={{ fontWeight: '500' }}
+                              >
+                                &nbsp;Xem thêm
+                              </Typography>
+                            </Grid>
+                          </Grid>
                         </MyButton>
                       </TableCell>
                     </TableRow>

@@ -11,9 +11,7 @@ import TeacherRegisterForm from '../../screens/teachers/TeacherRegisterForm/Teac
 import DashboardTeacher from '../../screens/teachers/DashboardTeacher'
 import LoginTeacher from '../../screens/teachers/LoginTeacher'
 import ProfileTeacher from '../../screens/teachers/ProfileTeacherForm/ProfileTeacher'
-import AlertMessage from '../layout/AlertMessage'
 import ForgotPasswordScreen from '../../screens/ForgotPasswordScreen'
-import { useSelector } from 'react-redux'
 import ResetPasswordScreen from '../../screens/ResetPasswordScreen'
 import ConfirmationSuccessScreen from '../../screens/ConfirmationSuccessScreen'
 import TeacherConfirmationSuccessScreen from '../../screens/TeacherConfirmationSuccessScreen'
@@ -37,11 +35,8 @@ import ContactUs from '../layout/contactUs/ContactUs'
 import LandingScreen from '../../screens/LandingScreen'
 
 const Routes = (props) => {
-  const alerts = useSelector((state) => state.alert)
-
   return (
     <section>
-      {alerts && <AlertMessage />}
       <Switch>
         <Route exact path="/" component={LandingScreen} />
         <Route exact path="/login" component={LogInScreen} />

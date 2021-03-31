@@ -9,7 +9,7 @@ import {
 } from '@material-ui/core'
 import Spinner from '../../ui/Spinner'
 import {
-  getBookedLessonById,
+  getBookedLessonAndProfileStudent,
   cancelBookedLesson,
 } from '../../../actions/bookingCalendarStudent'
 import { confirmBookedLesson } from '../../../actions/bookingCalendar'
@@ -19,11 +19,11 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import { useConfirm } from 'material-ui-confirm'
 
 const BookedLessonInfo = ({
-  getBookedLessonById,
-  confirmBookedLesson,
+  getBookedLessonAndProfileStudent,
   cancelBookedLesson,
   match,
   bookingCalendarStudent: { loading, bookedLesson },
+  profile: { loadingProfileStudent, profile: profileStudent },
   history,
 }) => {
   const confirm = useConfirm()
@@ -41,8 +41,8 @@ const BookedLessonInfo = ({
   }
 
   useEffect(() => {
-    getBookedLessonById(match.params.bookedLessonId)
-  }, [match.params.bookedLessonId, getBookedLessonById])
+    getBookedLessonAndProfileStudent(match.params.bookedLessonId)
+  }, [match.params.bookedLessonId, getBookedLessonAndProfileStudent])
 
   return (
     <Grid
@@ -65,8 +65,8 @@ const BookedLessonInfo = ({
           <CardContent>
             {loading ||
             !bookedLesson ||
-            !bookedLesson.bookedLesson ||
-            !bookedLesson.profileStudent ? (
+            loadingProfileStudent ||
+            !profileStudent ? (
               <Spinner />
             ) : (
               <Grid container direction="column" spacing={1}>
@@ -74,9 +74,8 @@ const BookedLessonInfo = ({
                   <Typography variant="body1">
                     <strong>Student's name: </strong>
                     {bookedLesson &&
-                      bookedLesson.bookedLesson &&
-                      bookedLesson.bookedLesson.user &&
-                      bookedLesson.bookedLesson.user.name}
+                      bookedLesson.user &&
+                      bookedLesson.user.name}
                   </Typography>
                 </Grid>
 
@@ -84,9 +83,8 @@ const BookedLessonInfo = ({
                   <Typography variant="body1">
                     <strong>Type of lesson: </strong>
                     {bookedLesson &&
-                      bookedLesson.bookedLesson &&
-                      bookedLesson.bookedLesson.lesson &&
-                      bookedLesson.bookedLesson.lesson.lessonName}
+                      bookedLesson.lesson &&
+                      bookedLesson.lesson.lessonName}
                   </Typography>
                 </Grid>
 
@@ -94,27 +92,22 @@ const BookedLessonInfo = ({
                   <Typography variant="body1">
                     <strong>Student's email: </strong>
                     {bookedLesson &&
-                      bookedLesson.bookedLesson &&
-                      bookedLesson.bookedLesson.user &&
-                      bookedLesson.bookedLesson.user.email}
+                      bookedLesson.user &&
+                      bookedLesson.user.email}
                   </Typography>
                 </Grid>
 
                 <Grid item>
                   <Typography variant="body1">
                     <strong>Student's Skype ID: </strong>
-                    {bookedLesson &&
-                      bookedLesson.profileStudent &&
-                      bookedLesson.profileStudent.skypeId}
+                    {profileStudent && profileStudent.skypeId}
                   </Typography>
                 </Grid>
 
                 <Grid item>
                   <Typography variant="body1">
                     <strong>Student's phone number: </strong>
-                    {bookedLesson &&
-                      bookedLesson.profileStudent &&
-                      bookedLesson.profileStudent.phoneNumber}
+                    {profileStudent && profileStudent.phoneNumber}
                   </Typography>
                 </Grid>
 
@@ -122,10 +115,9 @@ const BookedLessonInfo = ({
                   <Typography variant="body1">
                     <strong>Order's starting time: </strong>
                     {bookedLesson &&
-                      bookedLesson.bookedLesson &&
-                      bookedLesson.bookedLesson.bookedTime &&
-                      bookedLesson.bookedLesson.bookedTime[0] &&
-                      moment(bookedLesson.bookedLesson.bookedTime[0].start)
+                      bookedLesson.bookedTime &&
+                      bookedLesson.bookedTime[0] &&
+                      moment(bookedLesson.bookedTime[0].start)
                         .locale('en')
                         .format('h:mm, dddd, MMMM Do YYYY')}
                   </Typography>
@@ -135,25 +127,21 @@ const BookedLessonInfo = ({
                   <Typography variant="body1">
                     <strong>Order's ending time:</strong>&nbsp;
                     {bookedLesson &&
-                    bookedLesson.bookedLesson &&
-                    bookedLesson.bookedLesson.duration &&
-                    bookedLesson.bookedLesson.duration === 1800000
-                      ? moment(bookedLesson.bookedLesson.bookedTime[0].start)
+                    bookedLesson.duration &&
+                    bookedLesson.duration === 1800000
+                      ? moment(bookedLesson.bookedTime[0].start)
                           .add(30, 'minutes')
                           .locale('en')
                           .format('h:mm, dddd, MMMM Do YYYY')
                       : bookedLesson &&
-                        bookedLesson.bookedLesson &&
-                        bookedLesson.bookedLesson.duration &&
-                        bookedLesson.bookedLesson.duration === 2700000
-                      ? moment(bookedLesson.bookedLesson.bookedTime[0].start)
+                        bookedLesson.duration &&
+                        bookedLesson.duration === 2700000
+                      ? moment(bookedLesson.bookedTime[0].start)
                           .add(45, 'minutes')
                           .locale('en')
                           .format('h:mm, dddd, MMMM Do YYYY')
-                      : bookedLesson &&
-                        bookedLesson.bookedLesson.duration &&
-                        bookedLesson.bookedLesson.duration === 3600000
-                      ? moment(bookedLesson.bookedLesson.bookedTime[0].start)
+                      : bookedLesson && bookedLesson.duration === 3600000
+                      ? moment(bookedLesson.bookedTime[0].start)
                           .add(60, 'minutes')
                           .locale('en')
                           .format('h:mm, dddd, MMMM Do YYYY')
@@ -167,9 +155,7 @@ const BookedLessonInfo = ({
             <Grid container justify="center" alignItems="center" spacing={2}>
               <Grid item>
                 <Button
-                  onClick={() =>
-                    handleCancelLesson(bookedLesson.bookedLesson._id)
-                  }
+                  onClick={() => handleCancelLesson(bookedLesson._id)}
                   variant="contained"
                   style={{
                     backgroundColor: '#f45014',
@@ -190,10 +176,11 @@ const BookedLessonInfo = ({
 
 const mapStateToProps = (state) => ({
   bookingCalendarStudent: state.bookingCalendarStudent,
+  profile: state.profile,
 })
 
 export default connect(mapStateToProps, {
-  getBookedLessonById,
   confirmBookedLesson,
   cancelBookedLesson,
+  getBookedLessonAndProfileStudent,
 })(BookedLessonInfo)

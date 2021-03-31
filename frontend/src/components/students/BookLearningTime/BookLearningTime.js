@@ -90,7 +90,6 @@ const BookLearningTime = ({
       initialValues={initialValues}
       onSubmit={async (values) => {
         bookTime(values)
-        history.push('/students/lessons-manager')
       }}
     >
       {({ isValid, isSubmitting, values, errors }) => (

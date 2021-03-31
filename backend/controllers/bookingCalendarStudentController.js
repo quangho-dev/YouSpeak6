@@ -190,30 +190,7 @@ const getBookedLessonById = async (req, res) => {
       return res.status(404).json({ msg: 'Không tìm thấy bài học đã đặt này.' })
     }
 
-    const profileTeacher = await ProfileTeacher.findOne({
-      user: bookedLesson.teacher,
-    }).populate('user', ['name', 'email'])
-
-    if (!profileTeacher) {
-      return res
-        .status(404)
-        .json({ msg: 'Không tìm thấy profile của giáo viên của bài học này.' })
-    }
-
-    const profileStudent = await Profile.findOne({
-      user: bookedLesson.user,
-    })
-
-    if (!profileStudent) {
-      return res
-        .status(400)
-        .json({ msg: 'There is no profile for this student' })
-    }
-
-    res.json({
-      bookedLesson: { bookedLesson, profileStudent },
-      profileTeacher,
-    })
+    res.json(bookedLesson)
   } catch (err) {
     console.error(err.message)
     res.status(500).send('Server error')

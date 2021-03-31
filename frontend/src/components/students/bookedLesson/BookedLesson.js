@@ -12,12 +12,15 @@ import CancelIcon from '@material-ui/icons/Cancel'
 import Spinner from '../../ui/Spinner'
 import { useConfirm } from 'material-ui-confirm'
 import { addHours, compareAsc } from 'date-fns'
+import { getBookedLessonAndProfileTeacher } from '../../../actions/bookingCalendarStudent'
 
 const BookedLesson = ({
   match,
   getBookedLessonById,
   cancelBookedLesson,
-  bookingCalendarStudent: { loading, bookedLesson, profileTeacher },
+  getBookedLessonAndProfileTeacher,
+  bookingCalendarStudent: { loading, bookedLesson },
+  profileTeacher: { loading: loadingProfileTeacher, profileTeacher },
   history,
 }) => {
   const handleCancelLesson = (bookedLessonId) => {
@@ -35,8 +38,8 @@ const BookedLesson = ({
   const confirm = useConfirm()
 
   useEffect(() => {
-    getBookedLessonById(match.params.bookedLessonId)
-  }, [match.params.bookedLessonId, getBookedLessonById])
+    getBookedLessonAndProfileTeacher(match.params.bookedLessonId)
+  }, [getBookedLessonAndProfileTeacher, match.params.bookedLessonId])
 
   const isAfterNext24Hours = (time) => {
     const deadlineToCancel = addHours(new Date(time), 24)
@@ -72,10 +75,10 @@ const BookedLesson = ({
         style={{ marginTop: '1em' }}
       >
         <Grid item>
-          {loading || !bookedLesson ? (
+          {loading || !bookedLesson || !profileTeacher ? (
             <Spinner />
           ) : (
-            <BookedLessonInfo bookedLessonProps={bookedLesson} />
+            <BookedLessonInfo bookedLesson={bookedLesson} />
           )}
         </Grid>
 
@@ -91,9 +94,7 @@ const BookedLesson = ({
 
             <Grid item>
               <Button
-                onClick={() =>
-                  handleCancelLesson(bookedLesson.bookedLesson._id)
-                }
+                onClick={() => handleCancelLesson(bookedLesson._id)}
                 variant="contained"
                 color="secondary"
                 style={{
@@ -127,9 +128,11 @@ BookedLesson.propTypes = {
 
 const mapStateToProps = (state) => ({
   bookingCalendarStudent: state.bookingCalendarStudent,
+  profileTeacher: state.profileTeacher,
 })
 
 export default connect(mapStateToProps, {
   getBookedLessonById,
   cancelBookedLesson,
+  getBookedLessonAndProfileTeacher,
 })(BookedLesson)

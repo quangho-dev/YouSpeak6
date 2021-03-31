@@ -94,40 +94,6 @@ const confirmBookedLesson = async (req, res) => {
     bookedLesson.isConfirmed = true
 
     await bookedLesson.save()
-
-    // Send a notification email to student
-    // const output = `<p>Your lessonnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn</p>`
-
-    //   const smtpTransport = nodemailer.createTransport({
-    //     service: 'gmail',
-    //     port: 587,
-    //     secure: false, // true for 465, false for other ports
-    //     auth: {
-    //       user: 'quang.ho1804@gmail.com',
-    //       pass: 'un1c0rn1234',
-    //     },
-    //     tls: {
-    //       rejectUnauthorized: false,
-    //     },
-    //   })
-
-    //   const mailOptions = {
-    //     to: 'quang.ho1804@gmail.com',
-    //     from: `"${name}" <${email}>`,
-    //     subject: 'Contact us message',
-    //     html: output,
-    //   }
-
-    //   smtpTransport.sendMail(mailOptions, (error, info) => {
-    //     if (error) {
-    //       return console.log(error)
-    //     }
-    //     return res
-    //       .status(200)
-    //       .json({ success: true, msg: "You've sent an email successfully!" })
-    //   })
-
-    //     return res.json(bookedLesson)
   } catch (err) {
     console.error(err.message)
     res.status(500).send('Server Error')

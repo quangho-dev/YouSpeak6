@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect } from 'react'
 import { Grid, Typography } from '@material-ui/core'
 import FullCalendar from '@fullcalendar/react'
 import timeGridPlugin from '@fullcalendar/timegrid'
@@ -11,15 +11,9 @@ import { getLessonById } from '../../../actions/lessons'
 import { connect } from 'react-redux'
 import { addMinutes } from 'date-fns'
 import { useConfirm } from 'material-ui-confirm'
-import Alert from '@material-ui/lab/Alert'
+import { toast } from 'react-toastify'
 
-const ChooseTime = ({
-  calendarEvents,
-  getLessonById,
-  lessons: { lesson, loading },
-  onSubmit,
-}) => {
-  const [error, setError] = useState('')
+const ChooseTime = ({ calendarEvents, getLessonById, lessons: { lesson } }) => {
   const { setFieldValue, values, submitForm } = useFormikContext()
 
   const handleEventMouseEnter = (mouseEnterInfo) => {
@@ -64,20 +58,16 @@ const ChooseTime = ({
             setFieldValue('id1', clickedAvailableEvent.id)
             setFieldValue('id2', adjacentAvailableEvent.id)
             submitForm()
-            setError('')
           } else {
             setFieldValue('bookedTime', clickedAvailableEvent)
             setFieldValue('id1', clickedAvailableEvent.id)
             setFieldValue('id2', clickedAvailableEvent.id)
             submitForm()
-            setError('')
           }
         })
         .catch(() => {})
     } else {
-      setError(
-        'Thời gian có thể dạy của giáo viên không đủ cho thời lượng của bài học mà bạn đã chọn.'
-      )
+      toast.error('Không đủ thời gian cho bài học bạn đã chọn.')
     }
   }
 
@@ -91,7 +81,6 @@ const ChooseTime = ({
 
   return (
     <Grid container direction="column" alignItems="center" spacing={2}>
-      <Grid item>{error && <Alert severity="error">{error}</Alert>}</Grid>
       <Grid item>
         <Typography variant="h5" style={{ textTransform: 'uppercase' }}>
           Chọn thời gian học

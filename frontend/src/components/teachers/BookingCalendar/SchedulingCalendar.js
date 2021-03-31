@@ -110,6 +110,12 @@ const SchedulingCalendar = () => {
           </MyButton>
         </Grid>
       </Grid>
+
+      <Grid item>
+        <Typography variant="body1">
+          * Click the calendar to set available time for teaching.
+        </Typography>
+      </Grid>
       <Grid item style={{ backgroundColor: 'white', padding: '1em' }}>
         <FullCalendar
           initialView="timeGridWeek"

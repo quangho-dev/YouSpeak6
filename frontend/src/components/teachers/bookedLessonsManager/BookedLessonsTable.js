@@ -7,6 +7,8 @@ import {
   TableHead,
   TableRow,
   Paper,
+  Grid,
+  Typography,
 } from '@material-ui/core'
 import { Link } from 'react-router-dom'
 import MyButton from '../../ui/MyButton'
@@ -59,8 +61,19 @@ const BookedLessonsTable = ({ bookedLessons }) => {
                     component={Link}
                     to={`/teachers/bookedLesson/${lesson._id}`}
                   >
-                    <FindInPageIcon />
-                    &nbsp;Watch details
+                    <Grid container justify="center" alignItems="center">
+                      <Grid item>
+                        <FindInPageIcon />
+                      </Grid>
+                      <Grid item>
+                        <Typography
+                          variant="body2"
+                          style={{ fontWeight: '500' }}
+                        >
+                          &nbsp;Watch details
+                        </Typography>
+                      </Grid>
+                    </Grid>
                   </MyButton>
                 </TableCell>
               </TableRow>

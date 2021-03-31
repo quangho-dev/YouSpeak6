@@ -1,15 +1,5 @@
-import React, { useState } from 'react'
-import {
-  Grid,
-  Typography,
-  List,
-  ListItem,
-  ListItemText,
-  ListItemAvatar,
-  Avatar,
-  ListItemSecondaryAction,
-  IconButton,
-} from '@material-ui/core'
+import React from 'react'
+import { Grid, Typography } from '@material-ui/core'
 import { Formik, Field, Form } from 'formik'
 import { useDispatch } from 'react-redux'
 import MyButton from '../../ui/MyButton'
@@ -17,14 +7,11 @@ import { Link } from 'react-router-dom'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import AddIcon from '@material-ui/icons/Add'
 import { TextField } from 'formik-material-ui'
-import FolderIcon from '@material-ui/icons/Folder'
-import DeleteIcon from '@material-ui/icons/Delete'
-import EditLessonDocuments from './EditLessonDocuments'
 import LessonPeriodForm from './LessonPeriodForm'
 import * as yup from 'yup'
 import { makeStyles } from '@material-ui/styles'
 import { createALesson } from '../../../actions/lessons'
-import axios from 'axios'
+import AddDocuments from './AddDocuments'
 
 const useStyles = makeStyles((theme) => ({
   bottomGutterFormControl: {
@@ -37,8 +24,6 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const AddALesson = (props) => {
-  const [openModelEditDoc, setOpenModelEditDoc] = useState(false)
-
   const classes = useStyles()
 
   const dispatch = useDispatch()
@@ -64,72 +49,20 @@ const AddALesson = (props) => {
   })
 
   const handleSubmit = async (values, { resetForm }) => {
-    const { lessonName, content, documents, periods } = values
+    dispatch(createALesson(values))
 
-    const docFilesArray = documents.map((doc) => doc.fileDocument)
-    const formData = new FormData()
+    props.history.push('/teachers/lessons')
 
-    for (let i = 0; i < docFilesArray.length; i++) {
-      formData.append('lessonDocuments', docFilesArray[i])
-    }
-
-    try {
-      const config = {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      }
-
-      axios
-        .post('/api/upload-lesson-documents', formData, config)
-        .then((res) => {
-          const newData = documents.map((doc, index) => {
-            return {
-              documentName: doc.documentName,
-              fileDocument: res.data[index],
-            }
-          })
-
-          const lessonData = {
-            lessonName,
-            content,
-            documents: newData,
-            periods,
-          }
-
-          dispatch(createALesson(lessonData))
-
-          props.history.push('/teachers/lessons')
-        })
-
-      resetForm({
-        lessonName: '',
-        content: '',
-        documents: [],
-        periods: [
-          { thirtyMinutes: { isChosen: false, price: 0 } },
-          { fortyFiveMinutes: { isChosen: false, price: 0 } },
-          { oneHour: { isChosen: false, price: 0 } },
-        ],
-      })
-    } catch (error) {
-      console.log(error)
-    }
-  }
-
-  const handleClickOpen = () => {
-    setOpenModelEditDoc(true)
-  }
-
-  const handleClose = () => {
-    setOpenModelEditDoc(false)
-  }
-
-  const deleteDoc = (indexDoc, values, setFieldValue) => {
-    const filteredDocuments = values.documents.filter(
-      (doc, index) => index !== indexDoc
-    )
-    setFieldValue('documents', filteredDocuments)
+    resetForm({
+      lessonName: '',
+      content: '',
+      documents: [],
+      periods: [
+        { thirtyMinutes: { isChosen: false, price: 0 } },
+        { fortyFiveMinutes: { isChosen: false, price: 0 } },
+        { oneHour: { isChosen: false, price: 0 } },
+      ],
+    })
   }
 
   return (
@@ -138,7 +71,7 @@ const AddALesson = (props) => {
       onSubmit={handleSubmit}
       validationSchema={validationSchema}
     >
-      {({ isValid, values, errors, setFieldValue, dirty }) => (
+      {({ isValid, values, dirty }) => (
         <Form>
           <Grid container direction="column" alignItems="center">
             <Grid item>
@@ -157,7 +90,7 @@ const AddALesson = (props) => {
             <Grid
               item
               className={classes.bottomGutterFormControl}
-              style={{ width: '20em' }}
+              style={{ width: '20em', marginBottom: '2em' }}
             >
               <Field
                 fullWidth
@@ -169,7 +102,7 @@ const AddALesson = (props) => {
             <Grid
               item
               className={classes.bottomGutterFormControl}
-              style={{ width: '20em' }}
+              style={{ width: '20em', marginBottom: '2em' }}
             >
               <Field
                 fullWidth
@@ -181,59 +114,9 @@ const AddALesson = (props) => {
               />
             </Grid>
 
-            <Grid item>
-              <Typography variant="h6" className={classes.controlFormHeader}>
-                Lesson's documents:
-              </Typography>
-            </Grid>
-            <Grid item>
-              <MyButton onClick={handleClickOpen}>Edit documents</MyButton>
-            </Grid>
-            <Grid item>
-              <EditLessonDocuments
-                open={openModelEditDoc}
-                onClose={handleClose}
-                documents={values.documents}
-              />
-            </Grid>
-            <Grid item className={classes.bottomGutterFormControl}>
-              <List>
-                {values.documents &&
-                  values.documents.map((document, indexDoc) => (
-                    <ListItem key={indexDoc}>
-                      <ListItemAvatar>
-                        <Avatar>
-                          <FolderIcon />
-                        </Avatar>
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={document.documentName}
-                        secondary={
-                          <a
-                            href={document.fileDocument}
-                            download="proposed_file_name"
-                          >
-                            Download
-                          </a>
-                        }
-                      />
-                      <ListItemSecondaryAction>
-                        <IconButton
-                          edge="end"
-                          aria-label="delete"
-                          onClick={function () {
-                            deleteDoc(indexDoc, values, setFieldValue)
-                          }}
-                        >
-                          <DeleteIcon />
-                        </IconButton>
-                      </ListItemSecondaryAction>
-                    </ListItem>
-                  ))}
-              </List>
-            </Grid>
+            <AddDocuments />
 
-            <Grid item>
+            <Grid item style={{ marginBottom: '2em' }}>
               <Typography variant="h6" className={classes.controlFormHeader}>
                 Lesson's duration:
               </Typography>

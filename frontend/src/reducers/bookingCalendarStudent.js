@@ -16,7 +16,6 @@ const initialState = {
   loading: true,
   error: null,
   bookedLesson: {},
-  profileTeacher: {},
 }
 
 export default function (state = initialState, action) {
@@ -46,14 +45,13 @@ export default function (state = initialState, action) {
       return {
         ...state,
         loading: false,
-        bookedLesson: payload.bookedLesson,
-        profileTeacher: payload.profileTeacher,
+        bookedLesson: payload,
       }
     case CONFIRM_BOOKED_LESSON_SUCCESS:
       return {
         ...state,
         loading: false,
-        bookedLesson: payload.bookedLesson,
+        bookedLesson: payload,
         bookedLessons: state.bookedLessons.map((lesson) =>
           lesson._id === payload._id ? { ...lesson, isConfirmed: true } : lesson
         ),
