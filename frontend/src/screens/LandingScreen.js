@@ -70,7 +70,7 @@ const useStyles = makeStyles((theme) => ({
 const Landing = (props) => {
   const classes = useStyles()
   const theme = useTheme()
-  const matchesSM = useMediaQuery(theme.breakpoints.down('sm'))
+  const matchesSM = useMediaQuery(theme.breakpoints.up('sm'))
 
   const auth = useSelector((state) => state.auth)
   const { isAuthenticated, user } = auth
@@ -111,8 +111,10 @@ const Landing = (props) => {
               gutterBottom
               style={{
                 color: 'white',
-                fontWeight: matchesSM ? 400 : 500,
+                fontWeight: matchesSM ? 700 : 500,
                 textTransform: 'uppercase',
+                fontSize: '3rem',
+                padding: '0 0.2em',
               }}
             >
               Trở nên thành thạo tiếng Anh
@@ -122,8 +124,7 @@ const Landing = (props) => {
               gutterBottom
               style={{
                 color: 'white',
-                fontSize: matchesSM ? '1.5rem' : undefined,
-                lineHeight: matchesSM ? '1.5em' : undefined,
+                fontSize: matchesSM ? '1.5rem' : '1.5rem',
               }}
             >
               Hãy chọn một giáo viên dạy 1 kèm 1 dựa vào mục tiêu và sở thích

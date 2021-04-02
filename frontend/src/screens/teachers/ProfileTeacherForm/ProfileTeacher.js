@@ -23,6 +23,7 @@ import ProfileTeacherPage2 from './ProfileTeacherPage2'
 import ArrowBackIcon from '@material-ui/icons/ArrowBack'
 import Spinner from '../../../components/ui/Spinner'
 import { connect } from 'react-redux'
+import PublishIcon from '@material-ui/icons/Publish'
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -271,7 +272,20 @@ const ProfileTeacher = ({
                           disableRipple
                           style={{ color: 'white' }}
                         >
-                          Back
+                          <Grid container justify="center" alignItems="center">
+                            <Grid item>
+                              <ArrowBackIcon style={{ fontSize: '1.5rem' }} />
+                            </Grid>
+
+                            <Grid item>
+                              <Typography
+                                variant="body1"
+                                style={{ fontWeight: '500' }}
+                              >
+                                Back
+                              </Typography>
+                            </Grid>
+                          </Grid>
                         </Button>
                       </Grid>
                     )}
@@ -285,7 +299,20 @@ const ProfileTeacher = ({
                           disabled={!isValid || isSubmitting}
                           style={{ color: 'white' }}
                         >
-                          Submit
+                          <Grid container justify="center" alignItems="center">
+                            <Grid item>
+                              <PublishIcon style={{ fontSize: '1.5rem' }} />
+                            </Grid>
+
+                            <Grid item>
+                              <Typography
+                                variant="body1"
+                                style={{ fontWeight: '500' }}
+                              >
+                                Submit
+                              </Typography>
+                            </Grid>
+                          </Grid>
                         </Button>
                       </Grid>
                     ) : page !== 0 ? (

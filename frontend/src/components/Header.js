@@ -244,15 +244,10 @@ const Header = ({
           alignItems="flex-end"
           style={{ width: '14em' }}
         >
-          {/* <Grid item>
+          <Grid item>
             <div className={classes.toolbarMargin} />
-          </Grid> */}
-          <Grid
-            item
-            style={{
-              borderBottom: '1px solid #333',
-            }}
-          >
+          </Grid>
+          <Grid item>
             <Button
               component={Link}
               to="/login"
