@@ -56,7 +56,8 @@ const BookedLessonInfo = ({ bookedLesson }) => {
               <Typography variant="body1">
                 <strong>Thời gian bắt đầu:</strong>&nbsp;
                 {bookedLesson &&
-                  bookedLesson.bookedTime[0] &&
+                  bookedLesson.bookedTime &&
+                  bookedLesson.bookedTime.length > 0 &&
                   moment(bookedLesson.bookedTime[0].start).format(
                     'HH [giờ] mm [phút], [ngày] DD, MMMM, YYYY'
                   )}

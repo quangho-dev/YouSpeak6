@@ -27,6 +27,7 @@ const useStyles = makeStyles((theme) => ({
     height: '100vh',
     width: '100%',
     marginTop: '-78px',
+    padding: '0 1em',
   },
   overlay: {
     position: 'absolute',
@@ -102,7 +103,7 @@ const Landing = (props) => {
             zIndex: 1,
             textAlign: 'center',
             paddingRight: matchesSM ? '1em' : undefined,
-            paddingLeft: matchesSM ? '1em' : undefined,
+            paddingleft: matchesSM ? '1em' : undefined,
           }}
         >
           <Grid item>
@@ -113,14 +114,14 @@ const Landing = (props) => {
                 color: 'white',
                 fontWeight: matchesSM ? 700 : 500,
                 textTransform: 'uppercase',
-                fontSize: '3rem',
+                fontSize: '2.5rem',
                 padding: '0 0.2em',
               }}
             >
               Trở nên thành thạo tiếng Anh
             </Typography>
             <Typography
-              variant="subtitle1"
+              variant="body2"
               gutterBottom
               style={{
                 color: 'white',
@@ -150,7 +151,7 @@ const Landing = (props) => {
             <Grid item>
               <LinkScroll
                 activeClass="active"
-                to="teacher-showcase"
+                to="why-choose-youspeak"
                 spy={true}
                 smooth={true}
                 offset={-72}
@@ -164,262 +165,21 @@ const Landing = (props) => {
           </Grid>
         </Grid>
       </Grid>
-      {/*Teacher showcase */}
-      <Grid
-        container
-        id="teacher-showcase"
-        direction="column"
-        alignItems="center"
-        style={{ paddingTop: '5em' }}
-      >
-        <Grid item>
-          <Typography variant="h3" align="center">
-            Nhiều giáo viên để bạn lựa chọn.
-          </Typography>
-        </Grid>
-        <Grid
-          container
-          justify="center"
-          item
-          spacing={2}
-          style={{ margin: 0, width: '100%', marginTop: '1.5em' }}
-        >
-          <Grid item className={classes.teacherShowcaseCard}>
-            <Card>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt="Contemplative Reptile"
-                  className={classes.media}
-                  image="https://source.unsplash.com/random/220x220"
-                  title="random teacher image"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    Teacher
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    123
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
 
-          <Grid item className={classes.teacherShowcaseCard}>
-            <Card>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt="Contemplative Reptile"
-                  className={classes.media}
-                  image="https://source.unsplash.com/random/221x221"
-                  title="random teacher image"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    Teacher
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    123
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-
-          <Grid item className={classes.teacherShowcaseCard}>
-            <Card>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt="Contemplative Reptile"
-                  className={classes.media}
-                  image="https://source.unsplash.com/random/222x222"
-                  title="random teacher image"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    Teacher
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    123
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-
-          <Grid item className={classes.teacherShowcaseCard}>
-            <Card>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt="Contemplative Reptile"
-                  className={classes.media}
-                  image="https://source.unsplash.com/random/223x223"
-                  title="random teacher image"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    Teacher
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    123
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        </Grid>
-
-        <Grid
-          container
-          justify="center"
-          item
-          spacing={2}
-          style={{ margin: 0, width: '100%', marginTop: '1.5em' }}
-        >
-          <Grid item className={classes.teacherShowcaseCard}>
-            <Card>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt="Contemplative Reptile"
-                  className={classes.media}
-                  image="https://source.unsplash.com/random/220x220"
-                  title="random teacher image"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    Teacher
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    123
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-
-          <Grid item className={classes.teacherShowcaseCard}>
-            <Card>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt="Contemplative Reptile"
-                  className={classes.media}
-                  image="https://source.unsplash.com/random/221x221"
-                  title="random teacher image"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    Teacher
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    123
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-
-          <Grid item className={classes.teacherShowcaseCard}>
-            <Card>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt="Contemplative Reptile"
-                  className={classes.media}
-                  image="https://source.unsplash.com/random/222x222"
-                  title="random teacher image"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    Teacher
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    123
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-
-          <Grid item className={classes.teacherShowcaseCard}>
-            <Card>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  alt="Contemplative Reptile"
-                  className={classes.media}
-                  image="https://source.unsplash.com/random/223x223"
-                  title="random teacher image"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="h2">
-                    Teacher
-                  </Typography>
-                  <Typography
-                    variant="body2"
-                    color="textSecondary"
-                    component="p"
-                  >
-                    123
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-        </Grid>
-        <Grid item>
-          <Button
-            variant="contained"
-            color="primary"
-            size="large"
-            style={{ color: 'white', marginTop: '3em' }}
-          >
-            Tìm giáo viên của bạn
-          </Button>
-        </Grid>
-      </Grid>
       {/* Why YouSpeak */}
       <Grid
+        id="why-choose-youspeak"
         container
         direction="column"
         alignItems="center"
-        style={{ marginTop: '5em', backgroundColor: '#FAFAFC' }}
+        style={{ paddingTop: '3em' }}
       >
         <Grid item>
-          <Typography variant={matchesSM ? 'h4' : 'h3'} gutterBottom>
+          <Typography
+            variant={matchesSM ? 'h3' : 'h4'}
+            style={{ fontWeight: '500' }}
+            gutterBottom
+          >
             Tại sao chọn YouSpeak?
           </Typography>
         </Grid>
@@ -498,7 +258,6 @@ const Landing = (props) => {
         direction="column"
         style={{
           marginTop: '4em',
-          backgroundColor: '#FAFAFC',
           paddingBottom: '3em',
         }}
       >
@@ -596,100 +355,6 @@ const Landing = (props) => {
                 </Typography>
               </Grid>
             </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      {/*Testimonials  */}
-      <Grid
-        container
-        direction="column"
-        alignItems="center"
-        style={{ padding: '4em 7em' }}
-      >
-        <Grid item>
-          <Typography variant="h3" gutterbottom>
-            Hơn 1.000 học viên theo học
-          </Typography>
-        </Grid>
-        <Grid
-          container
-          spacing={2}
-          item
-          justify="center"
-          direction="row"
-          style={{ margin: 0, width: '100%' }}
-        >
-          <Grid item className={classes.whyCard}>
-            <Card>
-              <Box display="flex" width="100%">
-                <Box m="auto">
-                  <Avatar
-                    alt="user avatar"
-                    src="https://source.unsplash.com/random/50x50"
-                    className={classes.avatar}
-                    bottomGutter
-                  />
-                </Box>
-              </Box>
-
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="h2">
-                  Cá nhân hóa việc học
-                </Typography>
-                <Typography variant="body1" color="textSecondary" component="p">
-                  Chọn một giáo viên cho bài học 1 kèm 1, tùy theo mục tiêu và
-                  sở thích của bạn.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item className={classes.whyCard}>
-            <Card>
-              <Box display="flex" width="100%">
-                <Box m="auto">
-                  <Avatar
-                    alt="user avatar"
-                    src="https://source.unsplash.com/random/50x50"
-                    className={classes.avatar}
-                    bottomGutter
-                  />
-                </Box>
-              </Box>
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="h2">
-                  Cá nhân hóa việc học
-                </Typography>
-                <Typography variant="body1" color="textSecondary" component="p">
-                  Chọn một giáo viên cho bài học 1 kèm 1, tùy theo mục tiêu và
-                  sở thích của bạn.
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-
-          <Grid item className={classes.whyCard}>
-            <Card>
-              <Box display="flex" width="100%">
-                <Box m="auto">
-                  <Avatar
-                    alt="user avatar"
-                    src="https://source.unsplash.com/random/50x50"
-                    className={classes.avatar}
-                    bottomGutter
-                  />
-                </Box>
-              </Box>
-              <CardContent>
-                <Typography gutterBottom variant="h6" component="h2">
-                  Cá nhân hóa việc học
-                </Typography>
-                <Typography variant="body1" color="textSecondary" component="p">
-                  Chọn một giáo viên cho bài học 1 kèm 1, tùy theo mục tiêu và
-                  sở thích của bạn.
-                </Typography>
-              </CardContent>
-            </Card>
           </Grid>
         </Grid>
       </Grid>

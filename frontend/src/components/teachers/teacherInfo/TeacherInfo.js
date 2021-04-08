@@ -110,6 +110,7 @@ const TeacherInfo = ({
                         <Grid item>
                           <Typography variant="body1">
                             {profileTeacher &&
+                              profileTeacher.lessons !== undefined &&
                               profileTeacher.lessons.length > 0 &&
                               formatMoney(
                                 Math.min(
