@@ -33,6 +33,8 @@ import TeacherInfo from '../teachers/teacherInfo/TeacherInfo'
 import EditDegreeImages from '../../screens/teachers/ProfileTeacherForm/EditDegreeImages'
 import ContactUs from '../layout/contactUs/ContactUs'
 import LandingScreen from '../../screens/LandingScreen'
+import VnpayForm from '../students/BookLearningTime/PaymentMethods/VnpayForm'
+import VnpayReturn from '../students/BookLearningTime/PaymentMethods/VnpayReturn'
 
 const Routes = (props) => {
   return (
@@ -83,6 +85,8 @@ const Routes = (props) => {
           path="/students/bookedLesson/:bookedLessonId"
           component={BookedLesson}
         />
+        <PrivateRoute exact path="/vnpay-form" component={VnpayForm} />
+        <PrivateRoute exact path="/vnpay_return" component={VnpayReturn} />
 
         {/* Teacher routes */}
         <Route exact path="/for-teacher" component={ForTeacherScreen} />

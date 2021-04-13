@@ -12,6 +12,7 @@ import { bookTime } from '../../../actions/bookingCalendarStudent'
 import ChooseTime from './ChooseTime'
 import { connect } from 'react-redux'
 import { makeStyles } from '@material-ui/styles'
+import ChoosePaymentMethod from './ChoosePaymentMethod'
 
 const useStyles = makeStyles((theme) => ({
   container: {
@@ -77,7 +78,12 @@ const BookLearningTime = ({
       prevPage={prevPage}
       lessonListState={lessons}
     />,
-    <ChooseTime prevPage={prevPage} calendarEvents={availableTime} />,
+    <ChooseTime
+      nextPage={nextPage}
+      prevPage={prevPage}
+      calendarEvents={availableTime}
+    />,
+    <ChoosePaymentMethod />,
   ]
 
   useEffect(() => {
@@ -121,6 +127,7 @@ const BookLearningTime = ({
                 <Stepper
                   activeStep={activeStep}
                   style={{ backgroundColor: '#F0F2F5' }}
+                  alternativeLabel
                 >
                   <Step>
                     <StepLabel>Chọn bài học</StepLabel>
@@ -130,6 +137,9 @@ const BookLearningTime = ({
                   </Step>
                   <Step>
                     <StepLabel>Đặt lịch</StepLabel>
+                  </Step>
+                  <Step>
+                    <StepLabel>Chọn phương thức thanh toán</StepLabel>
                   </Step>
                 </Stepper>
               </Grid>

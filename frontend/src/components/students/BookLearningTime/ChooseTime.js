@@ -13,8 +13,13 @@ import { addMinutes } from 'date-fns'
 import { useConfirm } from 'material-ui-confirm'
 import { toast } from 'react-toastify'
 
-const ChooseTime = ({ calendarEvents, getLessonById, lessons: { lesson } }) => {
-  const { setFieldValue, values, submitForm } = useFormikContext()
+const ChooseTime = ({
+  calendarEvents,
+  getLessonById,
+  lessons: { lesson },
+  nextPage,
+}) => {
+  const { setFieldValue, values } = useFormikContext()
 
   const handleEventMouseEnter = (mouseEnterInfo) => {
     const eventElement = mouseEnterInfo.el
@@ -57,12 +62,12 @@ const ChooseTime = ({ calendarEvents, getLessonById, lessons: { lesson } }) => {
             ])
             setFieldValue('id1', clickedAvailableEvent.id)
             setFieldValue('id2', adjacentAvailableEvent.id)
-            submitForm()
+            nextPage()
           } else {
             setFieldValue('bookedTime', clickedAvailableEvent)
             setFieldValue('id1', clickedAvailableEvent.id)
             setFieldValue('id2', clickedAvailableEvent.id)
-            submitForm()
+            nextPage()
           }
         })
         .catch(() => {})
