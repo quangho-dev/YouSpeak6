@@ -4,6 +4,7 @@ import config from 'config'
 import dateFormat from 'dateformat'
 import sha256 from 'sha256'
 import querystring from 'qs'
+import url from 'url'
 
 router.post('/create_payment_url', function (req, res, next) {
   var ipAddr =
@@ -11,7 +12,7 @@ router.post('/create_payment_url', function (req, res, next) {
     req.connection.remoteAddress ||
     req.socket.remoteAddress ||
     req.connection.socket.remoteAddress
-
+ 
   var tmnCode = config.get('vnp_TmnCode')
   var secretKey = config.get('vnp_HashSecret')
   var vnpUrl = config.get('vnp_Url')
@@ -23,23 +24,17 @@ router.post('/create_payment_url', function (req, res, next) {
   var orderId = dateFormat(date, 'HHmmss')
   var amount = req.body.amount
   var bankCode = req.body.bankCode
-
-  var orderInfo = req.body.orderDescription
   var orderType = req.body.orderType
-  var locale = req.body.language
-  if (locale === null || locale === '') {
-    locale = 'vn'
-  }
   var currCode = 'VND'
   var vnp_Params = {}
   vnp_Params['vnp_Version'] = '2'
   vnp_Params['vnp_Command'] = 'pay'
   vnp_Params['vnp_TmnCode'] = tmnCode
   // vnp_Params['vnp_Merchant'] = ''
-  vnp_Params['vnp_Locale'] = locale
+  vnp_Params['vnp_Locale'] = 'vn'
   vnp_Params['vnp_CurrCode'] = currCode
   vnp_Params['vnp_TxnRef'] = orderId
-  vnp_Params['vnp_OrderInfo'] = orderInfo
+  vnp_Params['vnp_OrderInfo'] = `${req.body.lesson} ${req.body.teacher} ${req.body.duration} ${bookedTime} ${title}`
   vnp_Params['vnp_OrderType'] = orderType
   vnp_Params['vnp_Amount'] = amount * 100
   vnp_Params['vnp_ReturnUrl'] = returnUrl
@@ -86,9 +81,50 @@ router.get('/vnpay_return', function (req, res, next) {
 
   if (secureHash === checkSum) {
     //Kiem tra xem du lieu trong db co hop le hay khong va thong bao ket qua
-    // res.render('success', { code: vnp_Params['vnp_ResponseCode'] })
+
+    res.redirect(
+      url.format({
+        pathname: 'http://localhost:3000/vnpay-return',
+        query: {
+          code: vnp_Params['vnp_ResponseCode'],
+        },
+      })
+    )
   } else {
-    // res.render('success', { code: '97' })
+    res.redirect(
+      url.format({
+        pathname: 'http://localhost:3000/vnpay-return',
+        query: {
+          code: '97',
+        },
+      })
+    )
+  }
+})
+
+router.get('/vnpay_ipn', function (req, res, next) {
+  console.log('vnpay IPN has been activated')
+  var vnp_Params = req.query
+  var secureHash = vnp_Params['vnp_SecureHash']
+
+  delete vnp_Params['vnp_SecureHash']
+  delete vnp_Params['vnp_SecureHashType']
+
+  vnp_Params = sortObject(vnp_Params)
+  var config = require('config')
+  var secretKey = config.get('vnp_HashSecret')
+  var signData =
+    secretKey + querystring.stringify(vnp_Params, { encode: false })
+
+  var checkSum = sha256(signData)
+
+  if (secureHash === checkSum) {
+    var orderId = vnp_Params['vnp_TxnRef']
+    var rspCode = vnp_Params['vnp_ResponseCode']
+    //Kiem tra du lieu co hop le khong, cap nhat trang thai don hang va gui ket qua cho VNPAY theo dinh dang duoi
+    res.status(200).json({ RspCode: '00', Message: 'success' })
+  } else {
+    res.status(200).json({ RspCode: '97', Message: 'Fail checksum' })
   }
 })
 

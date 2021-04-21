@@ -7,13 +7,11 @@ import { Link, Redirect } from 'react-router-dom'
 import SearchIcon from '@material-ui/icons/Search'
 import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward'
 import IconButton from '@material-ui/core/IconButton'
+import Hidden from '@material-ui/core/Hidden'
 import { Link as LinkScroll } from 'react-scroll'
 import Card from '@material-ui/core/Card'
-import CardActionArea from '@material-ui/core/CardActionArea'
 import CardContent from '@material-ui/core/CardContent'
 import CardMedia from '@material-ui/core/CardMedia'
-import Avatar from '@material-ui/core/Avatar'
-import Box from '@material-ui/core/Box'
 import useMediaQuery from '@material-ui/core/useMediaQuery'
 import { useSelector } from 'react-redux'
 import landing1 from '../assets/landing1.jpg'
@@ -146,24 +144,27 @@ const Landing = (props) => {
             </Button>
           </Grid>
         </Grid>
-        <Grid item container className={classes.arrowDownContainer}>
-          <Grid item container className={classes.arrowDown}>
-            <Grid item>
-              <LinkScroll
-                activeClass="active"
-                to="why-choose-youspeak"
-                spy={true}
-                smooth={true}
-                offset={-72}
-                duration={500}
-              >
-                <IconButton>
-                  <ArrowDownwardIcon style={{ fontSize: '1rem' }} />
-                </IconButton>
-              </LinkScroll>
+
+        <Hidden xsDown>
+          <Grid item container className={classes.arrowDownContainer}>
+            <Grid item container className={classes.arrowDown}>
+              <Grid item>
+                <LinkScroll
+                  activeClass="active"
+                  to="why-choose-youspeak"
+                  spy={true}
+                  smooth={true}
+                  offset={-72}
+                  duration={500}
+                >
+                  <IconButton>
+                    <ArrowDownwardIcon style={{ fontSize: '1rem' }} />
+                  </IconButton>
+                </LinkScroll>
+              </Grid>
             </Grid>
           </Grid>
-        </Grid>
+        </Hidden>
       </Grid>
 
       {/* Why YouSpeak */}

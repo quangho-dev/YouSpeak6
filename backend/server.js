@@ -25,14 +25,17 @@ import bookingCalendarTeacherRoutes from './routes/bookingCalendarTeacherRoutes.
 import bookingCalendarStudentRoutes from './routes/bookingCalendarStudentRoutes.js'
 import sendContactUsEmail from './routes/contactUsRoute.js'
 import vnpayRoutes from './routes/vnpayRoutes.js'
+import momoRoutes from './routes/momoRoutes.js'
+import nganluongRoutes from './routes/nganluongRoutes.js'
+import cors from 'cors'
 
 const mongoURI = config.get('mongoURI')
-const PORT = config.get('PORT')
-
 const { connect } = mongoose
 const { success, error } = consola
 
 const app = express()
+
+app.use(cors())
 
 app.use(express.json())
 
@@ -70,6 +73,12 @@ app.use('/api/booking-calendar-student', bookingCalendarStudentRoutes)
 
 // Vnpay payment method
 app.use('/api/vnpay', vnpayRoutes)
+
+// Momo payment method
+app.use('/api/momo', momoRoutes)
+
+// Ngan Luong payment method method
+app.use('/api/nganluong', nganluongRoutes)
 
 // Set up paypal payment
 const CLIENT =
@@ -175,6 +184,18 @@ app.use((error, req, res, next) => {
     },
   })
 })
+
+const PORT = process.env.PORT || 5000
+
+// Serve static assets in production
+if (process.env.NODE_ENV === 'production') {
+  // Set static folder
+  app.use(express.static('frontend/build'))
+
+  app.get('*', (req, res) => {
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  })
+}
 
 const startApp = async () => {
   try {

@@ -75,6 +75,16 @@ export default createMuiTheme({
       backgroundColor: '#F0F2F5',
     },
   },
+  breakpoints: {
+    values: {
+      zero: 0,
+      xs: 320,
+      sm: 600,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
   // // mixins: {
   // //   toolbar: {
   // //     height: 30,
