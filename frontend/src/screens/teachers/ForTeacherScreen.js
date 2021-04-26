@@ -47,7 +47,7 @@ const ForTeacherScreen = () => {
             }}
             className={classes.linkText}
           >
-            Trở về trang chủ
+            Back to home page
           </Typography>
         </Grid>
       </Grid>
@@ -63,7 +63,7 @@ const ForTeacherScreen = () => {
               style={{ color: 'white', fontWeight: '600' }}
               disableRipple
             >
-              Đăng nhập tài khoản
+              Sign in teacher account
             </Button>
           </Grid>
           <Grid item>
@@ -76,7 +76,7 @@ const ForTeacherScreen = () => {
               style={{ color: 'white', fontWeight: '600' }}
               disableRipple
             >
-              Đăng ký tài khoản
+              Sign up teacher account
             </Button>
           </Grid>
         </Grid>

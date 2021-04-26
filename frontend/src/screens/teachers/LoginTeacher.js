@@ -35,9 +35,9 @@ const LoginTeacher = () => {
 
   const validationSchema = Yup.object({
     email: Yup.string()
-      .email('Email không đúng')
-      .required('Không được để trống'),
-    password: Yup.string().required('Không được để trống'),
+      .email('Email is not correct')
+      .required('Email is required'),
+    password: Yup.string().required('Password is required'),
   })
 
   const onSubmit = async (values) => {
@@ -59,7 +59,7 @@ const LoginTeacher = () => {
         </Grid>
         <Grid item>
           <Typography variant="h4" gutterBottom>
-            Đăng nhập tài khoản giáo viên
+            Sign in teacher account
           </Typography>
         </Grid>
         <Grid item>
@@ -95,7 +95,7 @@ const LoginTeacher = () => {
                     disabled={!formik.isValid}
                     style={{ color: 'white' }}
                   >
-                    Đăng nhập
+                    Sign in
                   </Button>
                   <Grid
                     container
@@ -105,7 +105,7 @@ const LoginTeacher = () => {
                   >
                     <Grid item>
                       <Typography variant="body1">
-                        Bạn chưa có tài khoản giáo viên?
+                        You don't have an account?
                       </Typography>
                     </Grid>
                     <Grid item>
@@ -120,7 +120,7 @@ const LoginTeacher = () => {
                         }}
                         disableRipple
                       >
-                        Đăng ký
+                        Sign up
                       </Button>
                     </Grid>
                   </Grid>

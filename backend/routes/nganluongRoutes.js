@@ -16,13 +16,13 @@ router.post('/create_payment_url', function (req, res, next) {
   const receiver = 'quang.ho1804@gmail.com'
   const transaction_info = 'text'
   const order_code = 'lesson'
-  const price = '40000'
+  const price = 40000
   const currency = 'vnd'
-  const quantity = '1'
-  const tax = '0'
-  const discount = '0'
-  const fee_cal = '0'
-  const fee_shipping = '0'
+  const quantity = 1
+  const tax = 0
+  const discount = 0
+  const fee_cal = 0
+  const fee_shipping = 0
   const order_description = 'test'
   const buyer_info = 'abc*|*someone@gmail.com*|*0944810181*|*abc'
   const affiliate_code = null
@@ -32,6 +32,25 @@ router.post('/create_payment_url', function (req, res, next) {
   const time_limit = null
 
   let nganluong_Params = {}
+
+  nganluong_Params['merchant_site_code'] = merchant_site_code
+  nganluong_Params['return_url'] = return_url
+  nganluong_Params['receiver'] = receiver
+  nganluong_Params['transaction_info'] = transaction_info
+  nganluong_Params['order_code'] = order_code
+  nganluong_Params['price'] = price
+  nganluong_Params['currency'] = currency
+  nganluong_Params['tax'] = tax
+  nganluong_Params['discount'] = discount
+  nganluong_Params['fee_cal'] = fee_cal
+  nganluong_Params['fee_shipping'] = fee_shipping
+  nganluong_Params['order_description'] = order_description
+  nganluong_Params['buyer_info'] = buyer_info
+  nganluong_Params['affiliate_code'] = affiliate_code
+  nganluong_Params['lang'] = lang
+  nganluong_Params['cancel_url'] = cancel_url
+  nganluong_Params['notify_url'] = notify_url
+  nganluong_Params['time_limit'] = time_limit
 
   const secure_code = MD5(
     merchant_site_code +
@@ -67,30 +86,12 @@ router.post('/create_payment_url', function (req, res, next) {
       nganluong_secure_pass
   )
 
-  nganluong_Params['merchant_site_code'] = merchant_site_code
-  nganluong_Params['return_url'] = return_url
-  nganluong_Params['receiver'] = receiver
-  nganluong_Params['transaction_info'] = transaction_info
-  nganluong_Params['order_code'] = order_code
-  nganluong_Params['price'] = price
-  nganluong_Params['currency'] = currency
-  nganluong_Params['tax'] = tax
-  nganluong_Params['discount'] = discount
-  nganluong_Params['fee_cal'] = fee_cal
-  nganluong_Params['fee_shipping'] = fee_shipping
-  nganluong_Params['order_description'] = order_description
-  nganluong_Params['buyer_info'] = buyer_info
-  nganluong_Params['affiliate_code'] = affiliate_code
-  nganluong_Params['lang'] = lang
   nganluong_Params['secure_code'] = secure_code
-  nganluong_Params['cancel_url'] = cancel_url
-  nganluong_Params['notify_url'] = notify_url
-  nganluong_Params['time_limit'] = time_limit
 
   const nganluongUrl =
     checkoutUrl +
     '?' +
-    querystring.stringify(nganluong_Params, { encode: false })
+    querystring.stringify(nganluong_Params, { encode: true })
 
   res.status(200).json(nganluongUrl)
 

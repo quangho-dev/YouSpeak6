@@ -211,7 +211,7 @@ const Header = ({
           to="/for-teacher"
           style={{ color: 'white', textTransform: 'none' }}
         >
-          Dành cho giáo viên
+          For English teachers
         </Button>
       </Grid>
 

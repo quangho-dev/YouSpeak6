@@ -65,16 +65,14 @@ const TeacherRegisterForm = (props) => {
   const { loading } = auth
 
   const validation = object({
-    name: string().required('Bạ n cần điền tên hiển thị'),
-    email: string()
-      .email('Định dạng của email không đúng')
-      .required('Bạn cần điền email'),
+    name: string().required('Name is required'),
+    email: string().email('Email is not correct').required('Email is required'),
     password: string()
-      .min(6, 'Mật khẩu phải chứa ít nhất 6 ký tự')
-      .required('Bạn cần điền mật khẩu'),
+      .min(6, 'Password must have at least 6 characters')
+      .required('Password is required'),
     confirmPassword: string()
-      .oneOf([Yup.ref('password'), null], 'Mật khẩu chưa trùng khớp')
-      .required('Bạn cần điền xác nhận mật khẩu'),
+      .oneOf([Yup.ref('password'), null], 'Passwords are not matched')
+      .required('Confirm password is required'),
   })
 
   const onSubmitHandler = async (values, { setSubmitting, resetForm }) => {
@@ -114,7 +112,7 @@ const TeacherRegisterForm = (props) => {
                 }}
                 className={classes.linkText}
               >
-                Trở về
+                Back
               </Typography>
             </Grid>
           </Grid>
@@ -128,7 +126,7 @@ const TeacherRegisterForm = (props) => {
           >
             <Grid item>
               <Typography variant="h4" style={{ textTransform: 'uppercase' }}>
-                Đăng ký tài khoản giáo viên
+                Register teacher account
               </Typography>
             </Grid>
             <Grid
@@ -136,12 +134,7 @@ const TeacherRegisterForm = (props) => {
               className={classes.formControl}
               style={{ width: '100%' }}
             >
-              <Field
-                fullWidth
-                name="name"
-                component={TextField}
-                label="Tên hiển thị"
-              />
+              <Field fullWidth name="name" component={TextField} label="Name" />
             </Grid>
             <Grid
               item
@@ -163,7 +156,7 @@ const TeacherRegisterForm = (props) => {
               <Field
                 name="password"
                 component={TextField}
-                label="Mật khẩu"
+                label="Password"
                 fullWidth
                 type="password"
               />
@@ -177,7 +170,7 @@ const TeacherRegisterForm = (props) => {
                 fullWidth
                 name="confirmPassword"
                 component={TextField}
-                label="Xác nhận mật khẩu"
+                label="Confirm password"
                 type="password"
               />
             </Grid>
@@ -194,7 +187,7 @@ const TeacherRegisterForm = (props) => {
                 fullWidth
                 disabled={!isValid || isSubmitting}
               >
-                {loading ? <CircularProgress color="secondary" /> : 'Đăng ký'}
+                {loading ? <CircularProgress color="secondary" /> : 'Sign up'}
               </Button>
             </Grid>
           </Grid>
@@ -205,7 +198,7 @@ const TeacherRegisterForm = (props) => {
             style={{ margin: '0.7em 0' }}
           >
             <Grid item>
-              <Typography variant="body1">Bạn đã có tài khoản?</Typography>
+              <Typography variant="body1">Already registerd?</Typography>
             </Grid>
             <Grid item>
               <Button
@@ -219,7 +212,7 @@ const TeacherRegisterForm = (props) => {
                 }}
                 disableRipple
               >
-                Đăng nhập
+                Sign in
               </Button>
             </Grid>
           </Grid>
@@ -232,7 +225,7 @@ const TeacherRegisterForm = (props) => {
           >
             <Grid item>
               <Typography variant="body1">
-                Bạn đã đăng ký tài khoản nhưng chưa kích hoạt tài khoản?
+                Already signed up but not confirm account yet?
               </Typography>
             </Grid>
             <Grid item>
@@ -247,7 +240,7 @@ const TeacherRegisterForm = (props) => {
                 }}
                 disableRipple
               >
-                Yêu cầu gửi lại link kích hoạt tài khoản.
+                Request confirm account link.
               </Button>
             </Grid>
           </Grid>

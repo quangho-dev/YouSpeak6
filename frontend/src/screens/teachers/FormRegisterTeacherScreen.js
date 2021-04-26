@@ -12,13 +12,6 @@ const FormRegisterTeacherScreen = () => {
     degreeImages: [],
     expImages: [],
   }
-  // }
-  // const [name, setName] = useState('')
-  // const [email, setEmail] = useState('')
-  // const [password, setPassword] = useState('')
-  // const [confirmPassword, setConfirmPassword] = useState('')
-  // const [degreeImages, setDegreeImages] = useState([])
-  // const [expImages, setExpImages] = useState([])
 
   const [step, setStep] = useState(1)
 
@@ -68,7 +61,7 @@ const FormRegisterTeacherScreen = () => {
       {(formik) => {
         console.log('Formik props', formik)
         // <Form></Form>
-        switch (step) { 
+        switch (step) {
           case 1:
             return <RegisterTeacherStep1Screen />
 
